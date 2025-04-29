@@ -1,0 +1,6 @@
+﻿services:
+  elogbook:
+    image: elogbook
+    build:
+      context: .
+      dockerfile: ELogBook/Dockerfile
