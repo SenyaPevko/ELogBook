@@ -2,7 +2,7 @@ using Api.Models.Models.Roles;
 
 namespace Domain.Dbo;
 
-public class UserDbo : UpdatableDomainEntityDbo
+public class UserDbo : EntityDbo
 {
     /// <summary>
     /// Имя

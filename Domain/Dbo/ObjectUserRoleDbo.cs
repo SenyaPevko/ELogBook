@@ -5,7 +5,7 @@ namespace Domain.Dbo;
 /// <summary>
 /// Роль пользователя в рамках объекта
 /// </summary>
-public class ObjectUserRoleDbo : UpdatableDomainEntityDbo
+public class ObjectUserRoleDbo : EntityDbo
 {
     public required Guid ObjectId { get; set; }
     

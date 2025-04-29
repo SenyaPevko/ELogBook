@@ -3,7 +3,7 @@ namespace Domain.Dbo.RegistrationSheets;
 /// <summary>
 /// Ряд регистрационного листа
 /// </summary>
-public class RegistrationSheetItemDbo : UpdatableDomainEntityDbo
+public class RegistrationSheetItemDbo : EntityDbo
 {
     /// <summary>
     /// Id организации

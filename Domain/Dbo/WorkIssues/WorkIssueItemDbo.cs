@@ -3,7 +3,7 @@ namespace Domain.Dbo.WorkIssues;
 /// <summary>
 /// Ряд таблицы "рабочие вопросы"
 /// </summary>
-public class WorkIssueItemDbo : UpdatableDomainEntityDbo
+public class WorkIssueItemDbo : EntityDbo
 {
     /// <summary>
     /// Вопрос

@@ -3,7 +3,7 @@ namespace Domain.Dbo.RecordSheets;
 /// <summary>
 /// Ряд учетного листа
 /// </summary>
-public class RecordSheetItemDbo : UpdatableDomainEntityDbo
+public class RecordSheetItemDbo : EntityDbo
 {
     /// <summary>
     /// Дата записи

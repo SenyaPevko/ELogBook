@@ -3,7 +3,7 @@ namespace Domain.Dbo;
 /// <summary>
 /// Организация
 /// </summary>
-public class OrganizationDbo : UpdatableDomainEntityDbo
+public class OrganizationDbo : EntityDbo
 {
     /// <summary>
     /// Название организации

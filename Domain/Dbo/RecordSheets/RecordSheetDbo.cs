@@ -3,7 +3,7 @@ namespace Domain.Dbo.RecordSheets;
 /// <summary>
 /// Учетный лист
 /// </summary>
-public class RecordSheetDbo : UpdatableDomainEntityDbo
+public class RecordSheetDbo : EntityDbo
 {
     /// <summary>
     /// Номер листа

@@ -3,7 +3,7 @@ namespace Domain.Dbo;
 /// <summary>
 /// Строительный объект
 /// </summary>
-public class ConstructionSiteDbo : UpdatableDomainEntityDbo
+public class ConstructionSiteDbo : EntityDbo
 {
     /// <summary>
     /// Название объекта
