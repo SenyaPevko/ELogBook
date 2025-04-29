@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Api.Models.Models.Roles;
 
 namespace Domain.Dbo;
@@ -5,6 +6,7 @@ namespace Domain.Dbo;
 /// <summary>
 /// Роль пользователя в рамках объекта
 /// </summary>
+[Table("objectUserRoles")]
 public class ObjectUserRoleDbo : EntityDbo
 {
     public required Guid ObjectId { get; set; }

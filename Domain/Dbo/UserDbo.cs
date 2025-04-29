@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Api.Models.Models.Roles;
 
 namespace Domain.Dbo;
 
+[Table("users")]
 public class UserDbo : EntityDbo
 {
     /// <summary>

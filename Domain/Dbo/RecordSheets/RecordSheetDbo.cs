@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Domain.Dbo.RecordSheets;
 
 /// <summary>
 /// Учетный лист
 /// </summary>
+[Table("recordSheets")]
 public class RecordSheetDbo : EntityDbo
 {
     /// <summary>

@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Domain.Dbo.RegistrationSheets;
 
 /// <summary>
 /// Ряд регистрационного листа
 /// </summary>
+[Table("registrationSheetItems")]
 public class RegistrationSheetItemDbo : EntityDbo
 {
     /// <summary>

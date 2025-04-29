@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Domain.Dbo;
 
 /// <summary>
 /// Строительный объект
 /// </summary>
+[Table("constructionSites")]
 public class ConstructionSiteDbo : EntityDbo
 {
     /// <summary>

@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Domain.Dbo.WorkIssues;
 
 /// <summary>
 /// Ряд таблицы "рабочие вопросы"
 /// </summary>
+[Table("workIssueItems")]
 public class WorkIssueItemDbo : EntityDbo
 {
     /// <summary>
