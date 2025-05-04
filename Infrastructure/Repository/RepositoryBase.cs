@@ -1,0 +1,50 @@
+using Domain;
+using Domain.Entities.Base;
+using Domain.Repository;
+using Domain.RequestArgs.SearchRequest;
+using Domain.Storage;
+
+namespace Infrastructure.Repository;
+
+public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> storage)
+    : IRepository<TEntity, TInvalidReason>
+    where TEntity : EntityInfo, new()
+    where TInvalidReason : Enum
+{
+    public virtual async Task AddAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        await ValidateCreationAsync(entity, writeContext, cancellationToken);
+        if (!writeContext.IsSuccess)
+            return;
+
+        await storage.AddAsync(entity);
+    }
+
+    public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        // todo: нужен метод RemoveSensitiveData
+        return await storage.GetByIdAsync(id);
+    }
+
+    public async Task UpdateAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        // todo: валидация
+        await storage.UpdateAsync(entity);
+    }
+
+    public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
+    {
+        await storage.DeleteAsync(entity);
+    }
+
+    public async Task<List<TEntity>> SearchAsync(SearchRequest request, CancellationToken cancellationToken)
+    {
+        // todo: валидация
+        return await storage.SearchAsync(request);
+    }
+
+    protected abstract Task ValidateCreationAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
+        CancellationToken cancellationToken);
+}
