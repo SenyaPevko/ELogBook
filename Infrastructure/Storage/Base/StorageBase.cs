@@ -106,6 +106,6 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context) : IStorag
     }
 
     protected abstract Task MapEntityFromDboAsync(TEntity entity, TDbo dbo);
-    protected abstract Task MapDboFromEntityAsync(TEntity newEntity, TDbo dbo);
+    protected abstract Task MapDboFromEntityAsync(TEntity entity, TDbo dbo);
     protected abstract Task MapDboFromEntityAsync(TEntity? existingEntity, TEntity newEntity, TDbo dbo);
 }

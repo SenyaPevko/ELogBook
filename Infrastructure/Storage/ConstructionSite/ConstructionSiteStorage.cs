@@ -13,21 +13,26 @@ public class ConstructionSiteStorage(AppDbContext dbContext)
         entity.Name = dbo.Name;
         entity.Description = dbo.Description;
         entity.Address = dbo.Address;
-        entity.Image = dbo.Image;
+        entity.Image = new Uri(dbo.Image);
 
         // todo: проставлять тут модельки, после заведения стореджей
         entity.RegistrationSheet = default;
         entity.RecordSheet = default;
-        entity.Orders = dbo.Orders;
+        entity.Orders = dbo.Orders.Select(o => new Uri(o)).ToList();
         entity.ConstructionSiteUserRoleIds = default;
 
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Domain.Entities.ConstructionSite.ConstructionSite newEntity,
+    protected override Task MapDboFromEntityAsync(Domain.Entities.ConstructionSite.ConstructionSite entity,
         ConstructionSiteDbo dbo)
     {
-        throw new NotImplementedException();
+        dbo.Name = entity.Name;
+        dbo.Description = entity.Description;
+        dbo.Address = entity.Address;
+        dbo.Image = entity.Image.ToString();
+        
+        return Task.CompletedTask;
     }
 
     protected override Task MapDboFromEntityAsync(Domain.Entities.ConstructionSite.ConstructionSite? existingEntity,

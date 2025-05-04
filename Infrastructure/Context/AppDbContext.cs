@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<UserDbo> Users { get; set; }
+    public DbSet<ConstructionSiteDbo> ConstructionSites { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

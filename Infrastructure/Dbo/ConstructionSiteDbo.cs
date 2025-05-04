@@ -26,7 +26,7 @@ public class ConstructionSiteDbo : EntityDbo
     /// <summary>
     ///     Изображение
     /// </summary>
-    public Uri Image { get; set; } = null!;
+    public string Image { get; set; } = null!;
 
     /// <summary>
     ///     Идентификатор листа регистрации
@@ -41,7 +41,7 @@ public class ConstructionSiteDbo : EntityDbo
     /// <summary>
     ///     Приказы
     /// </summary>
-    public List<Uri> Orders { get; set; } = [];
+    public List<string> Orders { get; set; } = [];
 
     /// <summary>
     ///     Пользователи и их роли в этом проекте

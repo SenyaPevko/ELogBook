@@ -19,18 +19,18 @@ public class UserStorage(AppDbContext context) : StorageBase<Domain.Entities.Use
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Domain.Entities.Users.User newEntity, UserDbo dbo)
+    protected override Task MapDboFromEntityAsync(Domain.Entities.Users.User entity, UserDbo dbo)
     {
-        dbo.Name = newEntity.Name;
-        dbo.Surname = newEntity.Surname;
-        dbo.Patronymic = newEntity.Patronymic;
-        dbo.Email = newEntity.Email;
-        dbo.OrganizationName = newEntity.OrganizationName;
-        dbo.OrganizationId = newEntity.OrganizationId;
-        dbo.UserRole = newEntity.UserRole;
-        dbo.PasswordHash = newEntity.PasswordHash;
-        dbo.RefreshTokenExpiry = newEntity.RefreshTokenExpiry;
-        dbo.RefreshToken = newEntity.RefreshToken;
+        dbo.Name = entity.Name;
+        dbo.Surname = entity.Surname;
+        dbo.Patronymic = entity.Patronymic;
+        dbo.Email = entity.Email;
+        dbo.OrganizationName = entity.OrganizationName;
+        dbo.OrganizationId = entity.OrganizationId;
+        dbo.UserRole = entity.UserRole;
+        dbo.PasswordHash = entity.PasswordHash;
+        dbo.RefreshTokenExpiry = entity.RefreshTokenExpiry;
+        dbo.RefreshToken = entity.RefreshToken;
 
         return Task.CompletedTask;
     }

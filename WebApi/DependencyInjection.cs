@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Domain.Auth;
 using Domain.Commands;
 using Domain.Dtos;
@@ -44,7 +45,10 @@ public static class DependencyInjection
         services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
         services.AddScoped<CreateUserCommand>();
         
-        services.AddControllers();
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
         return services;
     }
