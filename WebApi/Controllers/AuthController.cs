@@ -11,7 +11,7 @@ using RegisterRequest = Domain.RequestArgs.Auth.RegisterRequest;
 namespace ELogBook.Controllers;
 
 [ApiController]
-[Route("api" + "[controller]")]
+[Route("api/" + "[controller]")]
 public class AuthController : ControllerBase
 {
     [HttpPost("register")]

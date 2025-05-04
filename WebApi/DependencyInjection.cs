@@ -1,13 +1,20 @@
 using System.Text;
 using Domain.Auth;
+using Domain.Commands;
+using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
+using Domain.Models.Auth;
+using Domain.Repository;
+using Domain.RequestArgs.Auth;
 using Domain.Settings;
 using Domain.Storage;
 using Infrastructure;
 using Infrastructure.Auth;
+using Infrastructure.Commands.User;
 using Infrastructure.Context;
+using Infrastructure.Repository;
 using Infrastructure.Storage.ConstructionSite;
 using Infrastructure.Storage.User;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +39,11 @@ public static class DependencyInjection
         services.AddScoped(typeof(IStorage<User>), typeof(UserStorage));
         services.AddScoped(typeof(IStorage<ConstructionSite>), typeof(ConstructionSiteStorage));
         
+        services.AddScoped<IRepository<User, InvalidUserReason>, UserRepository>();
+        
+        services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
+        services.AddScoped<CreateUserCommand>();
+        
         services.AddControllers();
 
         return services;
@@ -40,7 +52,6 @@ public static class DependencyInjection
     public static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
-        var secretKey = Encoding.UTF8.GetBytes(jwtSettings!.Secret);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -51,9 +62,9 @@ public static class DependencyInjection
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.Issuer,
+                    ValidIssuer = jwtSettings!.Issuer,
                     ValidAudience = jwtSettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(secretKey)
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 };
             });
 

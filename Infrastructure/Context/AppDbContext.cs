@@ -1,3 +1,4 @@
+using Infrastructure.Dbo;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context;
@@ -8,6 +9,8 @@ public class AppDbContext : DbContext
     {
     }
 
+    public DbSet<UserDbo> Users { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
