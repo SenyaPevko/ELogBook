@@ -5,7 +5,7 @@ using Domain.RequestArgs.CreationArgs;
 
 namespace Domain.Commands;
 
-public interface ICreateCommand<TDto, TCreationArgs, TInvalidReason>
+public interface ICreateCommand<TDto, in TCreationArgs, TInvalidReason>
     where TDto : EntityDto
     where TInvalidReason : Enum
     where TCreationArgs : IEntityCreationArgs

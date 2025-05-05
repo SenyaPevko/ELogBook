@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ELogBook.Controllers.Base;
 
-[ApiController]
-[Route("api/" + "[controller]")]
-public abstract class CreatableEntityControllerBase<TDto, TEntity, TCreationArgs, TInvalidReason> : ControllerBase
+public abstract class CreatableEntityControllerBase<TDto, TEntity, TCreationArgs, TInvalidReason>
+    : EntityControllerBase<TDto, TEntity, TCreationArgs, TInvalidReason>
     where TDto : EntityDto
     where TInvalidReason : Enum
     where TEntity : EntityInfo

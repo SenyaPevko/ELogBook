@@ -34,6 +34,7 @@ public class CreateConstructionSiteCommand(
             Image = entity.Image,
 
             // todo: преобразование внутренних entity в dto
+            // можно завести helper со всеми entity в dto, и переиспользовать его в MapToDto
             RegistrationSheet = default,
             RecordSheet = default,
             Orders = entity.Orders,

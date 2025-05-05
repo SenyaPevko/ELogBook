@@ -2,16 +2,19 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Domain.Auth;
 using Domain.Commands;
+using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
 using Domain.Models.Auth;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
+using Domain.RequestArgs.CreationArgs;
 using Domain.Settings;
 using Domain.Storage;
 using Infrastructure;
 using Infrastructure.Auth;
+using Infrastructure.Commands.Base;
 using Infrastructure.Commands.User;
 using Infrastructure.Context;
 using Infrastructure.Repository;
@@ -141,10 +144,22 @@ public static class DependencyInjection
     private static IServiceCollection AddUserCommands(this IServiceCollection services)
     {
         services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
+        services.AddScoped<IGetCommand<UserDto>, GetCommandBase<UserDto, User>>();
         services.AddScoped<CreateUserCommand>();
         services.AddScoped<LoginUserCommand>();
         services.AddScoped<RefreshUserTokenCommand>();
         services.AddScoped<RevokeUserTokenCommand>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddConstructionSiteCommands(this IServiceCollection services)
+    {
+        services
+            .AddScoped<ICreateCommand<ConstructionSiteDto, ConstructionSiteCreationArgs, InvalidConstructionSiteReason>,
+                CreateCommandBase<ConstructionSiteDto, ConstructionSite, ConstructionSiteCreationArgs,
+                    InvalidConstructionSiteReason>>();
+        services.AddScoped<IGetCommand<ConstructionSiteDto>, GetCommandBase<ConstructionSiteDto, ConstructionSite>>();
 
         return services;
     }

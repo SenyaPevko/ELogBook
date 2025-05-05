@@ -12,7 +12,7 @@ namespace Infrastructure.Commands.Base;
 
 public abstract class CreateCommandBase<TDto, TEntity, TCreationArgs, TInvalidReason>(
     IRepository<TEntity, TInvalidReason> repository)
-    : ICreateCommand<TDto, TCreationArgs, TInvalidReason>
+    : CommandBase<TDto, TEntity>, ICreateCommand<TDto, TCreationArgs, TInvalidReason>
     where TDto : EntityDto
     where TInvalidReason : Enum
     where TEntity : EntityInfo, new()
@@ -47,5 +47,4 @@ public abstract class CreateCommandBase<TDto, TEntity, TCreationArgs, TInvalidRe
     }
 
     protected abstract Task<TEntity> MapToEntityAsync(TCreationArgs args);
-    protected abstract Task<TDto> MapToDtoAsync(TEntity entity);
 }
