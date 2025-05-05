@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Domain.Auth;
 using Domain.Commands;
-using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
@@ -21,12 +20,14 @@ using Infrastructure.Storage.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 
 namespace ELogBook;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
@@ -37,23 +38,21 @@ public static class DependencyInjection
         services.AddScoped<IRequestContext>(_ => RequestContextHolder.Current);
         services.AddSingleton<EntityDboInterceptor>();
 
-        services.AddScoped(typeof(IStorage<User>), typeof(UserStorage));
-        services.AddScoped(typeof(IStorage<ConstructionSite>), typeof(ConstructionSiteStorage));
-        
-        services.AddScoped<IRepository<User, InvalidUserReason>, UserRepository>();
-        
-        services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
-        services.AddScoped<CreateUserCommand>();
-        
+        services.AddStorages();
+        services.AddRepositories();
+
         services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
 
+        services.AddCommands();
+
         return services;
     }
-    
-    public static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services, IConfiguration configuration)
+
+    public static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
@@ -78,7 +77,7 @@ public static class DependencyInjection
 
         return services;
     }
-    
+
     public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
     {
         var mongoSettings = configuration.GetSection("MongoDb").Get<MongoDbSettings>();
@@ -95,6 +94,16 @@ public static class DependencyInjection
             options.AddInterceptors(sp.GetRequiredService<EntityDboInterceptor>());
         });
 
+        services.AddSingleton<IMongoClient>(sp => new MongoClient(mongoSettings!.ConnectionString));
+        services.AddSingleton(sp =>
+        {
+            var client = sp.GetRequiredService<IMongoClient>();
+            return client.GetDatabase(mongoSettings!.DatabaseName);
+        });
+
+        services.AddSingleton<MongoIndexInitializer>();
+        services.AddHostedService<MongoIndexInitializerHostedService>();
+
         return services;
     }
 
@@ -102,7 +111,41 @@ public static class DependencyInjection
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        
+
+        return services;
+    }
+
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IRepository<User, InvalidUserReason>, UserRepository>();
+        services.AddScoped<IRepository<ConstructionSite, InvalidConstructionSiteReason>, ConstructionSiteRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddStorages(this IServiceCollection services)
+    {
+        services.AddScoped<IStorage<User>, UserStorage>();
+        services.AddScoped<IStorage<ConstructionSite>, ConstructionSiteStorage>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddCommands(this IServiceCollection services)
+    {
+        services.AddUserCommands();
+
+        return services;
+    }
+
+    private static IServiceCollection AddUserCommands(this IServiceCollection services)
+    {
+        services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
+        services.AddScoped<CreateUserCommand>();
+        services.AddScoped<LoginUserCommand>();
+        services.AddScoped<RefreshUserTokenCommand>();
+        services.AddScoped<RevokeUserTokenCommand>();
+
         return services;
     }
 }

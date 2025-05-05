@@ -16,7 +16,7 @@ public class RequestContextMiddleware(RequestDelegate next, ILogger<RequestConte
         };
 
         RequestContextHolder.Current = requestContext;
-        
+
         try
         {
             logger.LogInformation("Processing request {RequestId}", httpContext.TraceIdentifier);

@@ -1,4 +1,5 @@
 using Domain.Entities.Base;
+using Infrastructure.Context;
 using Infrastructure.Dbo;
 
 namespace Infrastructure.Storage.Base;
@@ -18,9 +19,22 @@ public static class DboHelper
     }
 
 
-    public static TDbo CreateEntityDbo<TDbo>()
+    public static TDbo CreateEntityDbo<TDbo>(IRequestContext requestContext)
         where TDbo : EntityDbo, new()
     {
-        return new TDbo();
+        return new TDbo
+        {
+            CreatedAt = DateTimeOffset.Now.ToUniversalTime(),
+            CreatedByUserId = requestContext.Auth.UserId,
+            UpdatedAt = DateTimeOffset.Now.ToUniversalTime(),
+            UpdatedByUserId = requestContext.Auth.UserId
+        };
+    }
+
+    public static void UpdateEntityDbo<TDbo>(TDbo dbo, IRequestContext requestContext)
+        where TDbo : EntityDbo, new()
+    {
+        dbo.UpdatedAt = DateTimeOffset.Now.ToUniversalTime();
+        dbo.UpdatedByUserId = requestContext.Auth.UserId;
     }
 }

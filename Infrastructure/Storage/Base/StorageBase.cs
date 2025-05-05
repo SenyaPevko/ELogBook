@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Storage.Base;
 
-public abstract class StorageBase<TEntity, TDbo>(AppDbContext context) : IStorage<TEntity>
+public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestContext requestContext)
+    : IStorage<TEntity>
     where TEntity : EntityInfo, new()
     where TDbo : EntityDbo, new()
 {
@@ -18,7 +19,8 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context) : IStorag
 
     public virtual async Task AddAsync(TEntity entity)
     {
-        var dbo = DboHelper.CreateEntityDbo<TDbo>();
+        var dbo = DboHelper.CreateEntityDbo<TDbo>(requestContext);
+        dbo.Id = entity.Id;
         await MapDboFromEntityAsync(entity, dbo);
 
         await _dbSet.AddAsync(dbo);
@@ -34,21 +36,20 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context) : IStorag
 
     public async Task UpdateAsync(TEntity entity)
     {
+        var existingDbo = await _dbSet.FindAsync(entity.Id);
         var existingEntity = await GetByIdAsync(entity.Id);
-        var dbo = DboHelper.CreateEntityDbo<TDbo>();
-        await MapDboFromEntityAsync(existingEntity, entity, dbo);
+        DboHelper.UpdateEntityDbo(existingDbo!, requestContext);
+        await MapDboFromEntityAsync(existingEntity, entity, existingDbo!);
 
-        _dbSet.Update(dbo);
+        _dbSet.Update(existingDbo!);
         await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(TEntity entity)
     {
-        var existingEntity = await GetByIdAsync(entity.Id);
-        var dbo = DboHelper.CreateEntityDbo<TDbo>();
-        await MapDboFromEntityAsync(existingEntity, entity, dbo);
+        var dbo = await _dbSet.FindAsync(entity.Id);
 
-        _dbSet.Remove(dbo);
+        _dbSet.Remove(dbo!);
         await context.SaveChangesAsync();
     }
 

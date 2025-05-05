@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Infrastructure.Dbo;
+namespace Infrastructure.Dbo.ConstructionSite;
 
 /// <summary>
 ///     Строительный объект

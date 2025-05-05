@@ -1,4 +1,5 @@
-using Infrastructure.Dbo;
+using Infrastructure.Dbo.ConstructionSite;
+using Infrastructure.Dbo.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Context;
@@ -11,7 +12,7 @@ public class AppDbContext : DbContext
 
     public DbSet<UserDbo> Users { get; set; }
     public DbSet<ConstructionSiteDbo> ConstructionSites { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

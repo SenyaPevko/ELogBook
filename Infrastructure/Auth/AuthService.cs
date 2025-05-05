@@ -16,7 +16,8 @@ public class AuthService(IJwtService jwtService) : IAuthService
         {
             Token = token,
             RefreshToken = refreshToken,
-            TokenExpiry = DateTime.UtcNow.AddMinutes(jwtService.GetTokenExpiryMinutes())
+            TokenExpiry = DateTime.UtcNow.AddMinutes(jwtService.GetTokenExpiryMinutes()),
+            Id = user.Id
         };
     }
 

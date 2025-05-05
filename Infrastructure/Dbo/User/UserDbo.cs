@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Entities.Roles;
 
-namespace Infrastructure.Dbo;
+namespace Infrastructure.Dbo.User;
 
 [Table("users")]
 public class UserDbo : EntityDbo

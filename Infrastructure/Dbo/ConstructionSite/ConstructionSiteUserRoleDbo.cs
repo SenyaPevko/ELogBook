@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Entities.Roles;
 
-namespace Infrastructure.Dbo;
+namespace Infrastructure.Dbo.ConstructionSite;
 
 /// <summary>
 ///     Роль пользователя в рамках объекта

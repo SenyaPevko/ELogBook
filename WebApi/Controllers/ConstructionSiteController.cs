@@ -5,7 +5,6 @@ using ELogBook.Controllers.Base;
 
 namespace ELogBook.Controllers;
 
-
 public class ConstructionSiteController
     : CreatableEntityControllerBase<ConstructionSiteDto, ConstructionSite, ConstructionSiteCreationArgs,
         InvalidConstructionSiteReason>
