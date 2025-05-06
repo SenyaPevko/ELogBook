@@ -25,6 +25,8 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
 
         await _dbSet.AddAsync(dbo);
         await context.SaveChangesAsync();
+
+        DboHelper.UpdateEntityInfo(entity, dbo);
     }
 
     public async Task<TEntity?> GetByIdAsync(Guid id)
@@ -41,9 +43,9 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
         DboHelper.UpdateEntityDbo(existingDbo!, requestContext);
         await MapDboFromEntityAsync(existingEntity, entity, existingDbo!);
 
-        // todo: на фронт возвращается старое updateInfo, тк оно записывается в базу, а возвращается старое updateInfo
         _dbSet.Update(existingDbo!);
         await context.SaveChangesAsync();
+        DboHelper.UpdateEntityInfo(entity, existingDbo!);
     }
 
     public async Task DeleteAsync(TEntity entity)

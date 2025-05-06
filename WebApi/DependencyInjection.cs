@@ -41,7 +41,6 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
         services.AddScoped<IRequestContext>(_ => RequestContextHolder.Current);
-        services.AddSingleton<EntityDboInterceptor>();
 
         services.AddStorages();
         services.AddRepositories();
@@ -93,14 +92,12 @@ public static class DependencyInjection
 
         services.Configure<MongoDbSettings>(configuration.GetSection("MongoDb"));
 
-        services.AddDbContext<AppDbContext>((sp, options) =>
+        services.AddDbContext<AppDbContext>(options =>
         {
             options.UseMongoDB(
                 mongoSettings!.ConnectionString,
                 mongoSettings.DatabaseName
             );
-
-            options.AddInterceptors(sp.GetRequiredService<EntityDboInterceptor>());
         });
 
         services.AddSingleton<IMongoClient>(sp => new MongoClient(mongoSettings!.ConnectionString));

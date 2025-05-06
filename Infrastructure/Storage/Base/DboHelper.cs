@@ -24,9 +24,9 @@ public static class DboHelper
     {
         return new TDbo
         {
-            CreatedAt = DateTimeOffset.Now.ToUniversalTime(),
+            CreatedAt = requestContext.RequestTime.ToUniversalTime(),
             CreatedByUserId = requestContext.Auth.UserId,
-            UpdatedAt = DateTimeOffset.Now.ToUniversalTime(),
+            UpdatedAt = requestContext.RequestTime.ToUniversalTime(),
             UpdatedByUserId = requestContext.Auth.UserId
         };
     }
@@ -34,7 +34,20 @@ public static class DboHelper
     public static void UpdateEntityDbo<TDbo>(TDbo dbo, IRequestContext requestContext)
         where TDbo : EntityDbo, new()
     {
-        dbo.UpdatedAt = DateTimeOffset.Now.ToUniversalTime();
+        dbo.UpdatedAt = requestContext.RequestTime.ToUniversalTime();
         dbo.UpdatedByUserId = requestContext.Auth.UserId;
+    }
+    
+    public static void UpdateEntityInfo<TEntity, TDbo>(TEntity entity, TDbo dbo)
+        where TEntity : EntityInfo, new()
+        where TDbo : EntityDbo, new()
+    {
+        entity.UpdateInfo = new UpdateInfo
+        {
+            CreatedAt = dbo.CreatedAt,
+            CreatedByUserId = dbo.CreatedByUserId,
+            UpdatedAt = dbo.UpdatedAt,
+            UpdatedByUserId = dbo.UpdatedByUserId
+        };
     }
 }
