@@ -77,8 +77,10 @@ public static class DependencyInjection
             });
 
         services.AddAuthorizationBuilder()
-            .AddPolicy("AdminOnly", policy =>
-                policy.RequireRole(UserRole.Admin.ToString()));
+            .AddPolicy(AuthPolicy.AdminOnly, policy =>
+                policy.RequireRole(UserRole.Admin.ToString()))
+            .AddPolicy(AuthPolicy.Authenticated, policy =>
+                policy.RequireAuthenticatedUser());
 
         return services;
     }
@@ -124,7 +126,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IRepository<User, InvalidUserReason>, UserRepository>();
         services.AddScoped<IRepository<User>, UserRepository>();
-        
+
         services.AddScoped<IRepository<ConstructionSite>, ConstructionSiteRepository>();
         services.AddScoped<IRepository<ConstructionSite, InvalidConstructionSiteReason>, ConstructionSiteRepository>();
 

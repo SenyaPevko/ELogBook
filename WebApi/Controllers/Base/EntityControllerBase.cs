@@ -5,12 +5,14 @@ using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
 using Domain.RequestArgs.SearchRequest;
 using Domain.RequestArgs.UpdateArgs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELogBook.Controllers.Base;
 
 [ApiController]
 [Route("api/" + "[controller]")]
+[Authorize]
 public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidReason> : ControllerBase
     where TDto : EntityDto
     where TInvalidReason : Enum

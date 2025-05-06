@@ -12,9 +12,11 @@ namespace ELogBook.Controllers;
 
 [ApiController]
 [Route("api/" + "[controller]")]
+[Authorize]
 public class AuthController : ControllerBase
 {
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponse, CreateErrorInfo<InvalidUserReason>>> Register(
         [FromServices] CreateUserCommand command,
         [FromBody] RegisterRequest request)
@@ -25,6 +27,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponse, UpdateErrorInfo<InvalidUserReason>>> Login(
         [FromServices] LoginUserCommand command,
         [FromBody] LoginRequest request)
@@ -41,7 +44,6 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("revoke")]
-    [Authorize]
     public async Task<ActionResult<bool, UpdateErrorInfo<InvalidUserReason>>> Revoke(
         [FromServices] RevokeUserTokenCommand command,
         [FromBody] RevokeTokenRequest request)
