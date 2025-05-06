@@ -14,12 +14,13 @@ public abstract class SearchCommandBase<TDto, TEntity>(
     where TDto : EntityDto
     where TEntity : EntityInfo, new()
 {
-    protected override Task<TDto> MapToDtoAsync(TEntity entity)
+    public Task<ActionResult<List<TDto?>, ErrorInfo>> ExecuteAsync(SearchRequest searchRequest,
+        CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
 
-    public Task<ActionResult<List<TDto?>, ErrorInfo>> ExecuteAsync(SearchRequest searchRequest, CancellationToken cancellationToken)
+    protected override Task<TDto> MapToDtoAsync(TEntity entity)
     {
         throw new NotImplementedException();
     }

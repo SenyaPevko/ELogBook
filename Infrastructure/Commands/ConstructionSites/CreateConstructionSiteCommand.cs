@@ -7,15 +7,16 @@ using Infrastructure.Commands.Base;
 namespace Infrastructure.Commands.ConstructionSites;
 
 public class CreateConstructionSiteCommand(
-    IRepository<Domain.Entities.ConstructionSite.ConstructionSite, InvalidConstructionSiteReason> repository)
-    : CreateCommandBase<ConstructionSiteDto, Domain.Entities.ConstructionSite.ConstructionSite,
+    IRepository<ConstructionSite, InvalidConstructionSiteReason> repository)
+    : CreateCommandBase<ConstructionSiteDto, ConstructionSite,
         ConstructionSiteCreationArgs, InvalidConstructionSiteReason>(repository)
 {
-    protected override Task<Domain.Entities.ConstructionSite.ConstructionSite> MapToEntityAsync(
+    protected override Task<ConstructionSite> MapToEntityAsync(
         ConstructionSiteCreationArgs args)
     {
-        return Task.FromResult(new Domain.Entities.ConstructionSite.ConstructionSite
+        return Task.FromResult(new ConstructionSite
         {
+            Id = args.Id,
             Name = args.Name,
             Description = args.Description,
             Address = args.Address,
@@ -24,5 +25,8 @@ public class CreateConstructionSiteCommand(
     }
 
     protected override async Task<ConstructionSiteDto> MapToDtoAsync(
-        Domain.Entities.ConstructionSite.ConstructionSite entity) => await entity.ToDto();
+        ConstructionSite entity)
+    {
+        return await entity.ToDto();
+    }
 }

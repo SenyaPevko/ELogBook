@@ -7,9 +7,9 @@ public interface IRepository<TEntity>
     where TEntity : EntityInfo, new()
 {
     public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-    
+
     public Task DeleteAsync(TEntity entity, CancellationToken cancellationToken);
-    
+
     public Task<List<TEntity>> SearchAsync(SearchRequest request, CancellationToken cancellationToken);
 }
 

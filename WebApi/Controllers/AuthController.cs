@@ -22,8 +22,9 @@ public class AuthController : ControllerBase
         [FromBody] RegisterRequest request)
     {
         var id = Guid.NewGuid();
+        request.Id = id;
 
-        return await command.ExecuteAsync(id, request, HttpContext.RequestAborted);
+        return await command.ExecuteAsync(request, HttpContext.RequestAborted);
     }
 
     [HttpPost("login")]

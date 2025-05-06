@@ -19,7 +19,7 @@ public class CreateUserCommand(
     {
         var user = new User
         {
-            Id = Guid.NewGuid(),
+            Id = args.Id,
             Name = args.Name,
             Surname = args.Surname,
             Patronymic = args.Patronymic,

@@ -34,14 +34,15 @@ public abstract class UpdateCommandBase<TDto, TEntity, TUpdateArgs, TInvalidReas
 
         var newEntity = existingEntity.Copy();
         await ApplyUpdatesAsync(newEntity, updateArgs);
-        
+
         // todo: валидация прав относительно изменений
 
         var writeContext = new WriteContext<TInvalidReason>();
         await repository.UpdateAsync(newEntity, writeContext, cancellationToken);
-        
+
         if (!writeContext.IsSuccess)
-            return new UpdateErrorInfo<TInvalidReason>($"Could not update {typeof(TEntity).Name}", "Invalid request data",
+            return new UpdateErrorInfo<TInvalidReason>($"Could not update {typeof(TEntity).Name}",
+                "Invalid request data",
                 HttpStatusCode.Conflict)
             {
                 Errors = writeContext.Errors

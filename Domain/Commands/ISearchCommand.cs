@@ -8,5 +8,6 @@ namespace Domain.Commands;
 public interface ISearchCommand<TDto>
     where TDto : EntityDto
 {
-    public Task<ActionResult<List<TDto?>, ErrorInfo>> ExecuteAsync(SearchRequest searchRequest, CancellationToken cancellationToken);
+    public Task<ActionResult<List<TDto?>, ErrorInfo>> ExecuteAsync(SearchRequest searchRequest,
+        CancellationToken cancellationToken);
 }

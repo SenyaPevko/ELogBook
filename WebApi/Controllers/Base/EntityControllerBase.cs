@@ -20,7 +20,7 @@ public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidR
     where TUpdateArgs : IEntityUpdateArgs
 {
     /// <summary>
-    /// Получить по id
+    ///     Получить по id
     /// </summary>
     /// <param name="command"></param>
     /// <param name="id"></param>
@@ -32,7 +32,7 @@ public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidR
     }
 
     /// <summary>
-    /// Поиск
+    ///     Поиск
     /// </summary>
     /// <param name="command"></param>
     /// <param name="request"></param>
@@ -46,7 +46,7 @@ public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidR
     }
 
     /// <summary>
-    /// Обновить
+    ///     Обновить
     /// </summary>
     /// <param name="command"></param>
     /// <param name="request"></param>

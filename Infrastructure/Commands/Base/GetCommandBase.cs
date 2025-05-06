@@ -22,7 +22,7 @@ public abstract class GetCommandBase<TDto, TEntity>(
                 $"Could not get {typeof(TEntity).Name}",
                 $"{typeof(TEntity).Name} with id {id.ToString()} not found)",
                 HttpStatusCode.NotFound);
-        
+
         return await MapToDtoAsync(entity);
     }
 }

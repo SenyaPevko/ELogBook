@@ -36,7 +36,6 @@ public class RequestContextMiddleware(RequestDelegate next, ILogger<RequestConte
             UserId = Guid.TryParse(user.FindFirstValue(ClaimTypes.NameIdentifier), out var userId)
                 ? userId
                 : null,
-            Email = user.FindFirstValue(ClaimTypes.Email),
             Role = Enum.TryParse<UserRole>(user.FindFirstValue(ClaimTypes.Role), out var role)
                 ? role
                 : UserRole.Unknown

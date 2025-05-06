@@ -6,12 +6,16 @@ using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.Users;
 
+// todo: обновлять пользователя должен либо пользователь либо админ
 public class UpdateUserCommand(
     IRepository<User, InvalidUserReason> repository)
     : UpdateCommandBase<UserDto, User,
         UserUpdateArgs, InvalidUserReason>(repository)
 {
-    protected override async Task<UserDto> MapToDtoAsync(User entity) => await entity.ToDto();
+    protected override async Task<UserDto> MapToDtoAsync(User entity)
+    {
+        return await entity.ToDto();
+    }
 
     protected override Task ApplyUpdatesAsync(User entity, UserUpdateArgs args)
     {
@@ -19,7 +23,7 @@ public class UpdateUserCommand(
         if (args.Surname is not null) entity.Surname = args.Surname;
         if (args.Patronymic is not null) entity.Patronymic = args.Patronymic;
         if (args.OrganizationId is not null) entity.OrganizationId = args.OrganizationId;
-        
+
         return Task.CompletedTask;
     }
 }

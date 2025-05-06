@@ -10,6 +10,6 @@ public interface ICreateCommand<TDto, in TCreationArgs, TInvalidReason>
     where TInvalidReason : Enum
     where TCreationArgs : IEntityCreationArgs
 {
-    public Task<ActionResult<TDto, CreateErrorInfo<TInvalidReason>>> ExecuteAsync(Guid id, TCreationArgs args,
+    public Task<ActionResult<TDto, CreateErrorInfo<TInvalidReason>>> ExecuteAsync(TCreationArgs args,
         CancellationToken cancellationToken);
 }

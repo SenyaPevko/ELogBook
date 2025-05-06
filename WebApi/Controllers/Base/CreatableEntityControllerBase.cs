@@ -28,7 +28,8 @@ public abstract class CreatableEntityControllerBase<TDto, TEntity, TCreationArgs
         [FromBody] TCreationArgs args)
     {
         var id = Guid.NewGuid();
+        args.Id = id;
 
-        return await command.ExecuteAsync(id, args, HttpContext.RequestAborted);
+        return await command.ExecuteAsync(args, HttpContext.RequestAborted);
     }
 }

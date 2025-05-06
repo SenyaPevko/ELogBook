@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using Domain.Auth;
@@ -15,7 +16,6 @@ using Domain.Settings;
 using Domain.Storage;
 using Infrastructure;
 using Infrastructure.Auth;
-using Infrastructure.Commands.Base;
 using Infrastructure.Commands.ConstructionSites;
 using Infrastructure.Commands.Users;
 using Infrastructure.Context;
@@ -72,7 +72,9 @@ public static class DependencyInjection
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSettings!.Issuer,
                     ValidAudience = jwtSettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+                    NameClaimType = ClaimTypes.NameIdentifier,
+                    RoleClaimType = ClaimTypes.Role
                 };
             });
 
@@ -165,8 +167,7 @@ public static class DependencyInjection
     {
         services
             .AddScoped<ICreateCommand<ConstructionSiteDto, ConstructionSiteCreationArgs, InvalidConstructionSiteReason>,
-                CreateCommandBase<ConstructionSiteDto, ConstructionSite, ConstructionSiteCreationArgs,
-                    InvalidConstructionSiteReason>>();
+                CreateConstructionSiteCommand>();
         services.AddScoped<IGetCommand<ConstructionSiteDto>, GetConstructionSiteCommand>();
         services
             .AddScoped<IUpdateCommand<ConstructionSiteDto, ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>,

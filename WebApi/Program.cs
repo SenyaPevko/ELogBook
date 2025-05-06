@@ -18,8 +18,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseMiddleware<RequestContextMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<RequestContextMiddleware>();
 app.MapControllers();
 app.Run();

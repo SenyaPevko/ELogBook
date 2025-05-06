@@ -18,10 +18,10 @@ public class JwtService(IOptions<JwtSettings> settings) : IJwtService
 
     public string GenerateToken(User user)
     {
+        //todo: здесь id отличается от того который в бд записывается
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Role, user.UserRole.ToString())
         };
 

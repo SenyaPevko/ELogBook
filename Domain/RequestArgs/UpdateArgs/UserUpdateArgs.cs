@@ -16,7 +16,7 @@ public class UserUpdateArgs : IEntityUpdateArgs
     ///     Отчество
     /// </summary>
     public string? Patronymic { get; set; }
-    
+
     /// <summary>
     ///     Id организации - проставляет админ при первой выдаче прав
     /// </summary>

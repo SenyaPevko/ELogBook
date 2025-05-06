@@ -41,6 +41,7 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
         DboHelper.UpdateEntityDbo(existingDbo!, requestContext);
         await MapDboFromEntityAsync(existingEntity, entity, existingDbo!);
 
+        // todo: на фронт возвращается старое updateInfo, тк оно записывается в базу, а возвращается старое updateInfo
         _dbSet.Update(existingDbo!);
         await context.SaveChangesAsync();
     }
