@@ -38,7 +38,7 @@ public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidR
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<List<TDto?>, ErrorInfo>> Search(
+    public async Task<ActionResult<List<TDto>, ErrorInfo>> Search(
         [FromServices] ISearchCommand<TDto> command,
         [FromQuery] SearchRequest request)
     {

@@ -14,14 +14,18 @@ public abstract class SearchCommandBase<TDto, TEntity>(
     where TDto : EntityDto
     where TEntity : EntityInfo, new()
 {
-    public Task<ActionResult<List<TDto?>, ErrorInfo>> ExecuteAsync(SearchRequest searchRequest,
+    public async Task<ActionResult<List<TDto>, ErrorInfo>> ExecuteAsync(SearchRequest searchRequest,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
-
-    protected override Task<TDto> MapToDtoAsync(TEntity entity)
-    {
-        throw new NotImplementedException();
+        // todo: валидация прав
+        
+        // todo: перед поиском нужно валидировать запрос поиска, это логика стореджа
+        var entities = await repository.SearchAsync(searchRequest, cancellationToken);
+        var dtos = new List<TDto>(entities.Count);
+        
+        foreach (var entity in entities)
+            dtos.Add(await MapToDtoAsync(entity));
+        
+        return dtos;
     }
 }

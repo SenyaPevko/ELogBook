@@ -143,7 +143,8 @@ public static class DependencyInjection
     private static IServiceCollection AddCommands(this IServiceCollection services)
     {
         services.AddUserCommands();
-
+        services.AddConstructionSiteCommands();
+        
         return services;
     }
 
@@ -152,6 +153,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
         services.AddScoped<IGetCommand<UserDto>, GetUserCommand>();
         services.AddScoped<IUpdateCommand<UserDto, UserUpdateArgs, InvalidUserReason>, UpdateUserCommand>();
+        services.AddScoped<ISearchCommand<UserDto>, SearchUserCommand>();
         services.AddScoped<CreateUserCommand>();
         services.AddScoped<LoginUserCommand>();
         services.AddScoped<RefreshUserTokenCommand>();
@@ -169,6 +171,7 @@ public static class DependencyInjection
         services
             .AddScoped<IUpdateCommand<ConstructionSiteDto, ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>,
                 UpdateConstructionSiteCommand>();
+        services.AddScoped<ISearchCommand<ConstructionSiteDto>, SearchConstructionSite>();
 
         return services;
     }
