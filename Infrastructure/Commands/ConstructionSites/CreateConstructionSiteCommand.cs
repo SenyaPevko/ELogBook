@@ -4,7 +4,7 @@ using Domain.Repository;
 using Domain.RequestArgs.CreationArgs;
 using Infrastructure.Commands.Base;
 
-namespace Infrastructure.Commands.ConstructionSite;
+namespace Infrastructure.Commands.ConstructionSites;
 
 public class CreateConstructionSiteCommand(
     IRepository<Domain.Entities.ConstructionSite.ConstructionSite, InvalidConstructionSiteReason> repository)
@@ -23,22 +23,6 @@ public class CreateConstructionSiteCommand(
         });
     }
 
-    protected override Task<ConstructionSiteDto>
-        MapToDtoAsync(Domain.Entities.ConstructionSite.ConstructionSite entity)
-    {
-        return Task.FromResult(new ConstructionSiteDto
-        {
-            Name = entity.Name,
-            Description = entity.Description,
-            Address = entity.Address,
-            Image = entity.Image,
-
-            // todo: преобразование внутренних entity в dto
-            // можно завести helper со всеми entity в dto, и переиспользовать его в MapToDto
-            RegistrationSheet = default,
-            RecordSheet = default,
-            Orders = entity.Orders,
-            ConstructionSiteUserRoleIds = default
-        });
-    }
+    protected override async Task<ConstructionSiteDto> MapToDtoAsync(
+        Domain.Entities.ConstructionSite.ConstructionSite entity) => await entity.ToDto();
 }

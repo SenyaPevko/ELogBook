@@ -3,7 +3,6 @@ using Domain.Dtos;
 using Domain.Entities;
 using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
-using Domain.RequestArgs.CreationArgs;
 using Domain.RequestArgs.SearchRequest;
 using Domain.RequestArgs.UpdateArgs;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +11,10 @@ namespace ELogBook.Controllers.Base;
 
 [ApiController]
 [Route("api/" + "[controller]")]
-public abstract class EntityControllerBase<TDto, TEntity, TCreationArgs, TUpdateArgs, TInvalidReason> : ControllerBase
+public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidReason> : ControllerBase
     where TDto : EntityDto
     where TInvalidReason : Enum
     where TEntity : EntityInfo
-    where TCreationArgs : EntityCreationArgs
     where TUpdateArgs : IEntityUpdateArgs
 {
     /// <summary>
@@ -55,7 +53,7 @@ public abstract class EntityControllerBase<TDto, TEntity, TCreationArgs, TUpdate
     [HttpPatch("{id:guid}")]
     public async Task<ActionResult<TDto, UpdateErrorInfo<TInvalidReason>>> Update(
         [FromServices] IUpdateCommand<TDto, TUpdateArgs, TInvalidReason> command,
-        [FromQuery] TUpdateArgs request,
+        [FromBody] TUpdateArgs request,
         [FromRoute] Guid id)
     {
         return await command.ExecuteAsync(id, request, HttpContext.RequestAborted);

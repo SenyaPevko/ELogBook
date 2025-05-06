@@ -7,17 +7,17 @@ using Domain.RequestArgs.Auth;
 using Infrastructure.Commands.Base;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Commands.User;
+namespace Infrastructure.Commands.Users;
 
 public class CreateUserCommand(
-    IRepository<Domain.Entities.Users.User, InvalidUserReason> repository,
-    IPasswordHasher<Domain.Entities.Users.User> passwordHasher,
+    IRepository<User, InvalidUserReason> repository,
+    IPasswordHasher<User> passwordHasher,
     IAuthService authService)
-    : CreateCommandBase<AuthResponse, Domain.Entities.Users.User, RegisterRequest, InvalidUserReason>(repository)
+    : CreateCommandBase<AuthResponse, User, RegisterRequest, InvalidUserReason>(repository)
 {
-    protected override Task<Domain.Entities.Users.User> MapToEntityAsync(RegisterRequest args)
+    protected override Task<User> MapToEntityAsync(RegisterRequest args)
     {
-        var user = new Domain.Entities.Users.User
+        var user = new User
         {
             Id = Guid.NewGuid(),
             Name = args.Name,
@@ -39,7 +39,7 @@ public class CreateUserCommand(
         return Task.FromResult(user);
     }
 
-    protected override Task<AuthResponse> MapToDtoAsync(Domain.Entities.Users.User entity)
+    protected override Task<AuthResponse> MapToDtoAsync(User entity)
     {
         return Task.FromResult(new AuthResponse
         {

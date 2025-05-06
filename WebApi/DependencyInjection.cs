@@ -10,12 +10,14 @@ using Domain.Models.Auth;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.CreationArgs;
+using Domain.RequestArgs.UpdateArgs;
 using Domain.Settings;
 using Domain.Storage;
 using Infrastructure;
 using Infrastructure.Auth;
 using Infrastructure.Commands.Base;
-using Infrastructure.Commands.User;
+using Infrastructure.Commands.ConstructionSites;
+using Infrastructure.Commands.Users;
 using Infrastructure.Context;
 using Infrastructure.Repository;
 using Infrastructure.Storage.ConstructionSite;
@@ -121,6 +123,9 @@ public static class DependencyInjection
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IRepository<User, InvalidUserReason>, UserRepository>();
+        services.AddScoped<IRepository<User>, UserRepository>();
+        
+        services.AddScoped<IRepository<ConstructionSite>, ConstructionSiteRepository>();
         services.AddScoped<IRepository<ConstructionSite, InvalidConstructionSiteReason>, ConstructionSiteRepository>();
 
         return services;
@@ -144,7 +149,8 @@ public static class DependencyInjection
     private static IServiceCollection AddUserCommands(this IServiceCollection services)
     {
         services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
-        services.AddScoped<IGetCommand<UserDto>, GetCommandBase<UserDto, User>>();
+        services.AddScoped<IGetCommand<UserDto>, GetUserCommand>();
+        services.AddScoped<IUpdateCommand<UserDto, UserUpdateArgs, InvalidUserReason>, UpdateUserCommand>();
         services.AddScoped<CreateUserCommand>();
         services.AddScoped<LoginUserCommand>();
         services.AddScoped<RefreshUserTokenCommand>();
@@ -159,7 +165,10 @@ public static class DependencyInjection
             .AddScoped<ICreateCommand<ConstructionSiteDto, ConstructionSiteCreationArgs, InvalidConstructionSiteReason>,
                 CreateCommandBase<ConstructionSiteDto, ConstructionSite, ConstructionSiteCreationArgs,
                     InvalidConstructionSiteReason>>();
-        services.AddScoped<IGetCommand<ConstructionSiteDto>, GetCommandBase<ConstructionSiteDto, ConstructionSite>>();
+        services.AddScoped<IGetCommand<ConstructionSiteDto>, GetConstructionSiteCommand>();
+        services
+            .AddScoped<IUpdateCommand<ConstructionSiteDto, ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>,
+                UpdateConstructionSiteCommand>();
 
         return services;
     }

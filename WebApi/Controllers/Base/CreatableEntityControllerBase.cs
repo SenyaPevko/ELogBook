@@ -4,16 +4,18 @@ using Domain.Entities;
 using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
 using Domain.RequestArgs.CreationArgs;
+using Domain.RequestArgs.UpdateArgs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELogBook.Controllers.Base;
 
-public abstract class CreatableEntityControllerBase<TDto, TEntity, TCreationArgs, TInvalidReason>
-    : EntityControllerBase<TDto, TEntity, TCreationArgs, TInvalidReason>
+public abstract class CreatableEntityControllerBase<TDto, TEntity, TCreationArgs, TUpdateArgs, TInvalidReason>
+    : EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidReason>
     where TDto : EntityDto
     where TInvalidReason : Enum
     where TEntity : EntityInfo
     where TCreationArgs : EntityCreationArgs
+    where TUpdateArgs : IEntityUpdateArgs
 {
     /// <summary>
     ///     Создать

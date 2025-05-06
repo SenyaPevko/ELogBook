@@ -9,10 +9,10 @@ using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Infrastructure.WriteContext;
 
-namespace Infrastructure.Commands.User;
+namespace Infrastructure.Commands.Users;
 
 public class RefreshUserTokenCommand(
-    IRepository<Domain.Entities.Users.User, InvalidUserReason> repository,
+    IRepository<User, InvalidUserReason> repository,
     IAuthService authService)
 {
     public async Task<ActionResult<AuthResponse, UpdateErrorInfo<InvalidUserReason>>> ExecuteAsync(

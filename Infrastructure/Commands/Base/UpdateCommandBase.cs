@@ -50,10 +50,5 @@ public abstract class UpdateCommandBase<TDto, TEntity, TUpdateArgs, TInvalidReas
         return await MapToDtoAsync(newEntity);
     }
 
-    protected override Task<TDto> MapToDtoAsync(TEntity entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    protected abstract Task<TEntity> ApplyUpdatesAsync(TEntity entity, TUpdateArgs args);
+    protected abstract Task ApplyUpdatesAsync(TEntity entity, TUpdateArgs args);
 }

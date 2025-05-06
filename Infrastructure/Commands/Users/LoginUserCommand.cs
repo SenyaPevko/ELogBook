@@ -11,11 +11,11 @@ using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.WriteContext;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Commands.User;
+namespace Infrastructure.Commands.Users;
 
 public class LoginUserCommand(
-    IRepository<Domain.Entities.Users.User, InvalidUserReason> repository,
-    IPasswordHasher<Domain.Entities.Users.User> passwordHasher,
+    IRepository<User, InvalidUserReason> repository,
+    IPasswordHasher<User> passwordHasher,
     IAuthService authService)
 {
     public async Task<ActionResult<AuthResponse, UpdateErrorInfo<InvalidUserReason>>> ExecuteAsync(
@@ -23,7 +23,7 @@ public class LoginUserCommand(
         CancellationToken cancellationToken)
     {
         var user = (await repository.SearchAsync(
-            new SearchRequest().WhereEquals<Domain.Entities.Users.User, string>(u => u.Email, request.Email)
+            new SearchRequest().WhereEquals<User, string>(u => u.Email, request.Email)
                 .SinglePage(),
             cancellationToken)).FirstOrDefault();
         if (user is null)

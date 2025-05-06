@@ -8,16 +8,16 @@ using Domain.RequestArgs.SearchRequest;
 using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.WriteContext;
 
-namespace Infrastructure.Commands.User;
+namespace Infrastructure.Commands.Users;
 
-public class RevokeUserTokenCommand(IRepository<Domain.Entities.Users.User, InvalidUserReason> repository)
+public class RevokeUserTokenCommand(IRepository<User, InvalidUserReason> repository)
 {
     public async Task<ActionResult<bool, UpdateErrorInfo<InvalidUserReason>>> ExecuteAsync(
         RevokeTokenRequest request,
         CancellationToken cancellationToken)
     {
         var user = (await repository.SearchAsync(
-            new SearchRequest().WhereEquals<Domain.Entities.Users.User, string>(u => u.RefreshToken,
+            new SearchRequest().WhereEquals<User, string>(u => u.RefreshToken,
                 request.RefreshToken),
             cancellationToken)).FirstOrDefault();
         if (user is null)

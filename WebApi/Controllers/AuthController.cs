@@ -3,7 +3,7 @@ using Domain.Entities.Users;
 using Domain.Models.Auth;
 using Domain.Models.ErrorInfo;
 using Domain.RequestArgs.Auth;
-using Infrastructure.Commands.User;
+using Infrastructure.Commands.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RegisterRequest = Domain.RequestArgs.Auth.RegisterRequest;
