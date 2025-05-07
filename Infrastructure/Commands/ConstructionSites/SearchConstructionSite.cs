@@ -8,5 +8,8 @@ namespace Infrastructure.Commands.ConstructionSites;
 public class SearchConstructionSite(IRepository<ConstructionSite> repository)
     : SearchCommandBase<ConstructionSiteDto, ConstructionSite>(repository)
 {
-    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity) => await entity.ToDto();
+    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity)
+    {
+        return await entity.ToDto();
+    }
 }

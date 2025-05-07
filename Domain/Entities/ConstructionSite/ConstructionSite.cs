@@ -25,7 +25,7 @@ public class ConstructionSite : EntityInfo
     public Uri Image { get; set; } = null!;
 
     /// <summary>
-    ///   Лист регистрации
+    ///     Лист регистрации
     /// </summary>
     public RegistrationSheet.RegistrationSheet RegistrationSheet { get; set; } = null!;
 

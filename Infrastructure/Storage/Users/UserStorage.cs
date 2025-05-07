@@ -2,12 +2,16 @@ using Domain.Entities.Users;
 using Infrastructure.Context;
 using Infrastructure.Dbo.User;
 using Infrastructure.Storage.Base;
+using MongoDB.Driver;
 
 namespace Infrastructure.Storage.Users;
 
 public class UserStorage(AppDbContext context, IRequestContext requestContext)
     : StorageBase<User, UserDbo>(context, requestContext)
 {
+    private readonly AppDbContext _context = context;
+    protected override IMongoCollection<UserDbo> Collection => _context.Users;
+
     protected override Task MapEntityFromDboAsync(User entity, UserDbo dbo)
     {
         entity.Id = dbo.Id;

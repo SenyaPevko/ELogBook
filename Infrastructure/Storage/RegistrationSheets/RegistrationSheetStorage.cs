@@ -1,27 +1,23 @@
-using System.Data.Common;
 using Domain.Entities.RegistrationSheet;
 using Infrastructure.Context;
-using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Dbo.RegistrationSheets;
 using Infrastructure.Storage.Base;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace Infrastructure.Storage.RegistrationSheets;
 
-/*public class RegistrationSheetStorage(AppDbContext context, IRequestContext requestContext)
+public class RegistrationSheetStorage(AppDbContext context, IRequestContext requestContext)
     : StorageBase<RegistrationSheet, RegistrationSheetDbo>(context, requestContext)
 {
-    public override async Task<RegistrationSheet?> GetByIdAsync(Guid id)
-    {
-
-    }
+    private readonly AppDbContext _context = context;
+    protected override IMongoCollection<RegistrationSheetDbo> Collection => _context.RegistrationSheets;
 
     protected override Task MapEntityFromDboAsync(RegistrationSheet entity, RegistrationSheetDbo dbo)
     {
         entity.Id = dbo.Id;
         // todo: маппиг в entity сторонних сущностей?
         entity.Items = default;
-        
+
         return Task.CompletedTask;
     }
 
@@ -35,4 +31,4 @@ namespace Infrastructure.Storage.RegistrationSheets;
     {
         throw new NotImplementedException();
     }
-}*/
+}

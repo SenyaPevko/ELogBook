@@ -2,12 +2,16 @@ using Domain.Entities.ConstructionSite;
 using Infrastructure.Context;
 using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Storage.Base;
+using MongoDB.Driver;
 
 namespace Infrastructure.Storage.ConstructionSites;
 
 public class ConstructionSiteStorage(AppDbContext dbContext, IRequestContext requestContext)
     : StorageBase<ConstructionSite, ConstructionSiteDbo>(dbContext, requestContext)
 {
+    private readonly AppDbContext _dbContext = dbContext;
+    protected override IMongoCollection<ConstructionSiteDbo> Collection => _dbContext.ConstructionSites;
+
     protected override Task MapEntityFromDboAsync(ConstructionSite entity,
         ConstructionSiteDbo dbo)
     {

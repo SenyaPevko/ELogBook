@@ -1,20 +1,40 @@
+using Domain.Settings;
 using Infrastructure.Dbo.ConstructionSite;
+using Infrastructure.Dbo.RecordSheets;
+using Infrastructure.Dbo.RegistrationSheets;
 using Infrastructure.Dbo.User;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 namespace Infrastructure.Context;
 
-public class AppDbContext : DbContext
+public class AppDbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    private readonly IMongoDatabase _database;
+
+    public AppDbContext(IMongoClient mongoClient, IOptions<MongoDbSettings> settings)
     {
+        _database = mongoClient.GetDatabase(settings.Value.DatabaseName);
     }
 
-    public DbSet<UserDbo> Users { get; set; }
-    public DbSet<ConstructionSiteDbo> ConstructionSites { get; set; }
+    public IMongoCollection<UserDbo> Users =>
+        _database.GetCollection<UserDbo>("users");
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-    }
+    public IMongoCollection<ConstructionSiteDbo> ConstructionSites =>
+        _database.GetCollection<ConstructionSiteDbo>("constructionSites");
+
+    public IMongoCollection<ConstructionSiteUserRoleDbo> ConstructionSiteUserRoles =>
+        _database.GetCollection<ConstructionSiteUserRoleDbo>("constructionSiteUserRoles");
+
+    public IMongoCollection<RecordSheetDbo> RecordSheets =>
+        _database.GetCollection<RecordSheetDbo>("recordSheets");
+
+    public IMongoCollection<RecordSheetItemDbo> RecordSheetItems =>
+        _database.GetCollection<RecordSheetItemDbo>("recordSheetItems");
+
+    public IMongoCollection<RegistrationSheetDbo> RegistrationSheets =>
+        _database.GetCollection<RegistrationSheetDbo>("registrationSheets");
+
+    public IMongoCollection<RegistrationSheetItemDbo> RegistrationSheetItems =>
+        _database.GetCollection<RegistrationSheetItemDbo>("registrationSheetItems");
 }

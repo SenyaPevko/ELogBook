@@ -7,5 +7,8 @@ namespace Infrastructure.Commands.Users;
 
 public class SearchUserCommand(IRepository<User> repository) : SearchCommandBase<UserDto, User>(repository)
 {
-    protected override async Task<UserDto> MapToDtoAsync(User entity) => await entity.ToDto();
+    protected override async Task<UserDto> MapToDtoAsync(User entity)
+    {
+        return await entity.ToDto();
+    }
 }

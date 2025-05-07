@@ -23,8 +23,10 @@ using Infrastructure.Repository;
 using Infrastructure.Storage.ConstructionSites;
 using Infrastructure.Storage.Users;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace ELogBook;
@@ -88,18 +90,12 @@ public static class DependencyInjection
 
     public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
     {
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+        BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
+
         var mongoSettings = configuration.GetSection("MongoDb").Get<MongoDbSettings>();
 
         services.Configure<MongoDbSettings>(configuration.GetSection("MongoDb"));
-
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseMongoDB(
-                mongoSettings!.ConnectionString,
-                mongoSettings.DatabaseName
-            );
-        });
-
         services.AddSingleton<IMongoClient>(sp => new MongoClient(mongoSettings!.ConnectionString));
         services.AddSingleton(sp =>
         {
@@ -109,6 +105,8 @@ public static class DependencyInjection
 
         services.AddSingleton<MongoIndexInitializer>();
         services.AddHostedService<MongoIndexInitializerHostedService>();
+
+        services.AddSingleton<AppDbContext>();
 
         return services;
     }
@@ -144,7 +142,7 @@ public static class DependencyInjection
     {
         services.AddUserCommands();
         services.AddConstructionSiteCommands();
-        
+
         return services;
     }
 

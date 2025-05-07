@@ -6,7 +6,8 @@ using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Infrastructure.Storage.Base;
 
@@ -15,7 +16,7 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
     where TEntity : EntityInfo, new()
     where TDbo : EntityDbo, new()
 {
-    private readonly DbSet<TDbo> _dbSet = context.Set<TDbo>();
+    protected abstract IMongoCollection<TDbo> Collection { get; }
 
     public virtual async Task AddAsync(TEntity entity)
     {
@@ -23,58 +24,58 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
         dbo.Id = entity.Id;
         await MapDboFromEntityAsync(entity, dbo);
 
-        await _dbSet.AddAsync(dbo);
-        await context.SaveChangesAsync();
-
+        await Collection.InsertOneAsync(dbo);
         DboHelper.UpdateEntityInfo(entity, dbo);
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
-        var dbo = await _dbSet.FindAsync(id);
-
-        return dbo is null ? null : await ToEntityAsync(dbo);
+        var dbo = await Collection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return dbo == null ? null : await ToEntityAsync(dbo);
     }
 
     public async Task UpdateAsync(TEntity entity)
     {
-        var existingDbo = await _dbSet.FindAsync(entity.Id);
+        var existingDbo = await Collection.Find(x => x.Id == entity.Id).FirstOrDefaultAsync();
         var existingEntity = await GetByIdAsync(entity.Id);
+
         DboHelper.UpdateEntityDbo(existingDbo!, requestContext);
         await MapDboFromEntityAsync(existingEntity, entity, existingDbo!);
 
-        _dbSet.Update(existingDbo!);
-        await context.SaveChangesAsync();
+        await Collection.ReplaceOneAsync(x => x.Id == entity.Id, existingDbo!);
         DboHelper.UpdateEntityInfo(entity, existingDbo!);
     }
 
     public async Task DeleteAsync(TEntity entity)
     {
-        var dbo = await _dbSet.FindAsync(entity.Id);
-
-        _dbSet.Remove(dbo!);
-        await context.SaveChangesAsync();
+        await Collection.DeleteOneAsync(x => x.Id == entity.Id);
     }
 
     public async Task<List<TEntity>> SearchAsync(SearchRequest request)
     {
-        var query = _dbSet.AsQueryable();
+        var query = Collection.AsQueryable();
 
-        query = (from f in request.Filters
-                let param = Expression.Parameter(typeof(TDbo), "x")
-                let member = Expression.PropertyOrField(param, f.Field)
-                let constant = Expression.Constant(Convert.ChangeType(f.Value, member.Type))
-                let predicateBody = (Expression)(f.Operator switch
-                {
-                    FilterOperator.Equals => Expression.Equal(member, constant),
-                    FilterOperator.GreaterThan => Expression.GreaterThan(member, constant),
-                    FilterOperator.LessThan => Expression.LessThan(member, constant),
-                    FilterOperator.Contains => Expression.Call(member, nameof(string.Contains), Type.EmptyTypes,
-                        Expression.Constant(f.Value?.ToString())),
-                    _ => throw new NotSupportedException($"Operator {f.Operator} not supported")
-                })
-                select Expression.Lambda<Func<TDbo, bool>>(predicateBody!, param))
-            .Aggregate(query, (current, lambda) => current.Where(lambda));
+        foreach (var filter in request.Filters)
+        {
+            var param = Expression.Parameter(typeof(TDbo), "x");
+            var member = Expression.PropertyOrField(param, filter.Field);
+            var constant = Expression.Constant(Convert.ChangeType(filter.Value, member.Type));
+
+            Expression predicateBody = filter.Operator switch
+            {
+                FilterOperator.Equals => Expression.Equal(member, constant),
+                FilterOperator.GreaterThan => Expression.GreaterThan(member, constant),
+                FilterOperator.LessThan => Expression.LessThan(member, constant),
+                FilterOperator.Contains => Expression.Call(member,
+                    nameof(string.Contains),
+                    Type.EmptyTypes,
+                    Expression.Constant(filter.Value?.ToString())),
+                _ => throw new NotSupportedException($"Operator {filter.Operator} not supported")
+            };
+
+            var lambda = Expression.Lambda<Func<TDbo, bool>>(predicateBody, param);
+            query = query.Where(lambda);
+        }
 
         if (!string.IsNullOrEmpty(request.SortBy))
         {
@@ -90,12 +91,12 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
 
         var dbos = await query.ToListAsync();
         var result = new List<TEntity>(dbos.Count);
+
         foreach (var dbo in dbos)
             result.Add(await ToEntityAsync(dbo));
 
         return result;
     }
-
 
     protected async Task<TEntity> ToEntityAsync(TDbo dbo)
     {
