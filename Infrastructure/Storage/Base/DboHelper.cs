@@ -37,7 +37,7 @@ public static class DboHelper
         dbo.UpdatedAt = requestContext.RequestTime.ToUniversalTime();
         dbo.UpdatedByUserId = requestContext.Auth.UserId;
     }
-    
+
     public static void UpdateEntityInfo<TEntity, TDbo>(TEntity entity, TDbo dbo)
         where TEntity : EntityInfo, new()
         where TDbo : EntityDbo, new()

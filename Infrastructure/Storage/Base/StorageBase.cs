@@ -29,7 +29,7 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
         DboHelper.UpdateEntityInfo(entity, dbo);
     }
 
-    public async Task<TEntity?> GetByIdAsync(Guid id)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
         var dbo = await _dbSet.FindAsync(id);
 

@@ -1,13 +1,14 @@
+using Domain.Entities.Users;
 using Infrastructure.Context;
 using Infrastructure.Dbo.User;
 using Infrastructure.Storage.Base;
 
-namespace Infrastructure.Storage.User;
+namespace Infrastructure.Storage.Users;
 
 public class UserStorage(AppDbContext context, IRequestContext requestContext)
-    : StorageBase<Domain.Entities.Users.User, UserDbo>(context, requestContext)
+    : StorageBase<User, UserDbo>(context, requestContext)
 {
-    protected override Task MapEntityFromDboAsync(Domain.Entities.Users.User entity, UserDbo dbo)
+    protected override Task MapEntityFromDboAsync(User entity, UserDbo dbo)
     {
         entity.Id = dbo.Id;
         entity.Name = dbo.Name;
@@ -24,7 +25,7 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Domain.Entities.Users.User entity, UserDbo dbo)
+    protected override Task MapDboFromEntityAsync(User entity, UserDbo dbo)
     {
         dbo.Id = entity.Id;
         dbo.Name = entity.Name;
@@ -41,8 +42,8 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Domain.Entities.Users.User? existingEntity,
-        Domain.Entities.Users.User newEntity, UserDbo dbo)
+    protected override Task MapDboFromEntityAsync(User? existingEntity,
+        User newEntity, UserDbo dbo)
     {
         dbo.Id = newEntity.Id;
         dbo.Name = newEntity.Name;

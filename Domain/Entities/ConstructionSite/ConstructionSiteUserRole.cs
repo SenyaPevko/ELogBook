@@ -1,7 +1,7 @@
 using Domain.Entities.Base;
 using Domain.Entities.Roles;
 
-namespace Domain.Entities;
+namespace Domain.Entities.ConstructionSite;
 
 public class ConstructionSiteUserRole : EntityInfo
 {

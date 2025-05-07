@@ -1,13 +1,14 @@
+using Domain.Entities.ConstructionSite;
 using Infrastructure.Context;
 using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Storage.Base;
 
-namespace Infrastructure.Storage.ConstructionSite;
+namespace Infrastructure.Storage.ConstructionSites;
 
 public class ConstructionSiteStorage(AppDbContext dbContext, IRequestContext requestContext)
-    : StorageBase<Domain.Entities.ConstructionSite.ConstructionSite, ConstructionSiteDbo>(dbContext, requestContext)
+    : StorageBase<ConstructionSite, ConstructionSiteDbo>(dbContext, requestContext)
 {
-    protected override Task MapEntityFromDboAsync(Domain.Entities.ConstructionSite.ConstructionSite entity,
+    protected override Task MapEntityFromDboAsync(ConstructionSite entity,
         ConstructionSiteDbo dbo)
     {
         entity.Id = dbo.Id;
@@ -20,12 +21,12 @@ public class ConstructionSiteStorage(AppDbContext dbContext, IRequestContext req
         entity.RegistrationSheet = default;
         entity.RecordSheet = default;
         entity.Orders = dbo.Orders.Select(o => new Uri(o)).ToList();
-        entity.ConstructionSiteUserRoleIds = default;
+        entity.ConstructionSiteUserRoles = default;
 
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Domain.Entities.ConstructionSite.ConstructionSite entity,
+    protected override Task MapDboFromEntityAsync(ConstructionSite entity,
         ConstructionSiteDbo dbo)
     {
         dbo.Id = entity.Id;
@@ -37,8 +38,8 @@ public class ConstructionSiteStorage(AppDbContext dbContext, IRequestContext req
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Domain.Entities.ConstructionSite.ConstructionSite? existingEntity,
-        Domain.Entities.ConstructionSite.ConstructionSite newEntity, ConstructionSiteDbo dbo)
+    protected override Task MapDboFromEntityAsync(ConstructionSite? existingEntity,
+        ConstructionSite newEntity, ConstructionSiteDbo dbo)
     {
         dbo.Id = newEntity.Id;
         dbo.Name = newEntity.Name;

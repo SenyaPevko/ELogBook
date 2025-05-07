@@ -14,12 +14,12 @@ public class ConstructionSiteDbo : EntityDbo
     public string Name { get; set; } = null!;
 
     /// <summary>
-    ///     Название объекта
+    ///     Описнаие объекта
     /// </summary>
     public string Description { get; set; } = null!;
 
     /// <summary>
-    ///     Название объекта
+    ///     Адрес объекта
     /// </summary>
     public string Address { get; set; } = null!;
 

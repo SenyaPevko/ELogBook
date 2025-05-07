@@ -10,12 +10,12 @@ public class ConstructionSite : EntityInfo
     public string Name { get; set; } = null!;
 
     /// <summary>
-    ///     Название объекта
+    ///     Описание объекта
     /// </summary>
     public string Description { get; set; } = null!;
 
     /// <summary>
-    ///     Название объекта
+    ///     Адрес объекта
     /// </summary>
     public string Address { get; set; } = null!;
 
@@ -25,12 +25,12 @@ public class ConstructionSite : EntityInfo
     public Uri Image { get; set; } = null!;
 
     /// <summary>
-    ///     Идентификатор листа регистрации
+    ///   Лист регистрации
     /// </summary>
     public RegistrationSheet.RegistrationSheet RegistrationSheet { get; set; } = null!;
 
     /// <summary>
-    ///     Идентификатор учетного листа
+    ///     Учетный лист
     /// </summary>
     public RecordSheet.RecordSheet RecordSheet { get; set; } = null!;
 
@@ -42,5 +42,5 @@ public class ConstructionSite : EntityInfo
     /// <summary>
     ///     Пользователи и их роли в этом проекте
     /// </summary>
-    public List<ConstructionSiteUserRole> ConstructionSiteUserRoleIds { get; set; } = [];
+    public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
 }
