@@ -2,12 +2,14 @@ using Core.Helpers;
 using Domain.Dtos;
 using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
+using Domain.Dtos.WorkIssue;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Organization;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
+using Domain.Entities.WorkIssues;
 
 namespace Infrastructure.Commands;
 
@@ -79,5 +81,16 @@ public static class DtoHelper
             SpecialistSignature = entity.SpecialistSignature,
             ComplianceNote = entity.ComplianceNoteSignature,
             RepresentativeSignature = entity.RepresentativeSignature
+        });
+    
+    public static Task<WorkIssueItemDto> ToDto(this WorkIssueItem entity) =>
+        Task.FromResult(new WorkIssueItemDto
+        {
+            Id = entity.Id,
+            UpdateInfo = entity.UpdateInfo,
+            Answer = entity.Answer,
+            AnswerDate = entity.AnswerDate,
+            Question = entity.Question,
+            QuestionDate = entity.QuestionDate,
         });
 }

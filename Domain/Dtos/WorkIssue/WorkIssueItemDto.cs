@@ -1,8 +1,6 @@
-using Domain.Entities.Base;
+namespace Domain.Dtos.WorkIssue;
 
-namespace Domain.Entities.WorkIssues;
-
-public class WorkIssueItem : EntityInfo
+public class WorkIssueItemDto : EntityDto
 {
     /// <summary>
     ///     Вопрос
@@ -23,6 +21,4 @@ public class WorkIssueItem : EntityInfo
     ///     Дата ответа
     /// </summary>
     public DateTime AnswerDate { get; set; }
-    
-    public Guid WorkIssueId { get; set; }
 }

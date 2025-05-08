@@ -11,20 +11,22 @@ public class WorkIssueItemDbo : EntityDbo
     /// <summary>
     ///     Вопрос
     /// </summary>
-    public required string Question { get; set; }
+    public  string Question { get; set; } = null!;
 
     /// <summary>
     ///     Дата вопроса
     /// </summary>
-    public required DateTime QuestionDate { get; set; }
+    public  DateTime QuestionDate { get; set; }
 
     /// <summary>
     ///     Ответ
     /// </summary>
-    public required string Answer { get; set; }
+    public  string Answer { get; set; } = null!;
 
     /// <summary>
     ///     Дата ответа
     /// </summary>
-    public required DateTime AnswerDate { get; set; }
+    public  DateTime AnswerDate { get; set; }
+    
+    public Guid WorkIssueId { get; set; }
 }

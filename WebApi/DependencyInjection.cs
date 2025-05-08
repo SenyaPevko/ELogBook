@@ -6,12 +6,14 @@ using Domain.Commands;
 using Domain.Dtos;
 using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
+using Domain.Dtos.WorkIssue;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Organization;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
+using Domain.Entities.WorkIssues;
 using Domain.Models.Auth;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
@@ -20,6 +22,7 @@ using Domain.RequestArgs.Organizations;
 using Domain.RequestArgs.RecordSheetItems;
 using Domain.RequestArgs.RegistrationSheetItems;
 using Domain.RequestArgs.Users;
+using Domain.RequestArgs.WorkIssueItems;
 using Domain.Settings;
 using Domain.Storage;
 using Infrastructure;
@@ -29,6 +32,7 @@ using Infrastructure.Commands.Organizations;
 using Infrastructure.Commands.RecordSheetItems;
 using Infrastructure.Commands.RegistrationSheetItems;
 using Infrastructure.Commands.Users;
+using Infrastructure.Commands.WorkIssueItems;
 using Infrastructure.Context;
 using Infrastructure.Repository;
 using Infrastructure.Storage.ConstructionSites;
@@ -36,6 +40,7 @@ using Infrastructure.Storage.Organizations;
 using Infrastructure.Storage.RecordSheets;
 using Infrastructure.Storage.RegistrationSheets;
 using Infrastructure.Storage.Users;
+using Infrastructure.Storage.WorkIssues;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
@@ -155,6 +160,12 @@ public static class DependencyInjection
         
         services.AddScoped<IRepository<RecordSheetItem>, RecordSheetItemRepository>();
         services.AddScoped<IRepository<RecordSheetItem, InvalidRecordSheetItemReason>, RecordSheetItemRepository>();
+        
+        services.AddScoped<IRepository<WorkIssue>, WorkIssueRepository>();
+        services.AddScoped<IRepository<WorkIssue, InvalidWorkIssueReason>, WorkIssueRepository>();
+        
+        services.AddScoped<IRepository<WorkIssueItem>, WorkIssueItemRepository>();
+        services.AddScoped<IRepository<WorkIssueItem, InvalidWorkIssueItemReason>, WorkIssueItemRepository>();
 
         return services;
     }
@@ -168,6 +179,8 @@ public static class DependencyInjection
         services.AddScoped<IStorage<RegistrationSheet>, RegistrationSheetStorage>();
         services.AddScoped<IStorage<RecordSheet>, RecordSheetStorage>();
         services.AddScoped<IStorage<RecordSheetItem>, RecordSheetItemStorage>();
+        services.AddScoped<IStorage<WorkIssue>, WorkIssueStorage>();
+        services.AddScoped<IStorage<WorkIssueItem>, WorkIssueItemStorage>();
 
         return services;
     }
@@ -179,6 +192,7 @@ public static class DependencyInjection
         services.AddOrganizationCommands();
         services.AddRegistrationSheetItemCommands();
         services.AddRecordSheetItemCommands();
+        services.AddWorkIssueItemCommands();
 
         return services;
     }
@@ -251,6 +265,21 @@ public static class DependencyInjection
             .AddScoped<IUpdateCommand<RecordSheetItemDto, RecordSheetItemUpdateArgs,
                 InvalidRecordSheetItemReason>, UpdateRecordSheetItemCommand>();
         services.AddScoped<ISearchCommand<RecordSheetItemDto>, SearchRecordSheetItemCommand>();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddWorkIssueItemCommands(this IServiceCollection services)
+    {
+        services
+            .AddScoped<ICreateCommand<WorkIssueItemDto, WorkIssueItemCreationArgs,
+                    InvalidWorkIssueItemReason>,
+                CreateWorkIssueItemCommand>();
+        services.AddScoped<IGetCommand<WorkIssueItemDto>, GetWorkIssueItemCommand>();
+        services
+            .AddScoped<IUpdateCommand<WorkIssueItemDto, WorkIssueItemUpdateArgs,
+                InvalidWorkIssueItemReason>, UpdateWorkIssueItemCommand>();
+        services.AddScoped<ISearchCommand<WorkIssueItemDto>, SearchWorkIssueItemCommand>();
 
         return services;
     }

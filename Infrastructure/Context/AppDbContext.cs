@@ -4,6 +4,7 @@ using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Dbo.RecordSheets;
 using Infrastructure.Dbo.RegistrationSheets;
 using Infrastructure.Dbo.User;
+using Infrastructure.Dbo.WorkIssues;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -41,4 +42,10 @@ public class AppDbContext
     
     public IMongoCollection<OrganizationDbo> Organizations =>
         _database.GetCollection<OrganizationDbo>("organizations");
+    
+    public IMongoCollection<WorkIssueItemDbo> WorkIssueItems =>
+        _database.GetCollection<WorkIssueItemDbo>("workIssueItems");
+    
+    public IMongoCollection<WorkIssueDbo> WorkIssues =>
+        _database.GetCollection<WorkIssueDbo>("workIssues");
 }
