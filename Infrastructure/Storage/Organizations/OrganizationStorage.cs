@@ -11,7 +11,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Storage.Organizations;
 
-public class OrganizationStorage(AppDbContext context, IRequestContext requestContext, UserStorage userStorage)
+public class OrganizationStorage(AppDbContext context, IRequestContext requestContext)
     : StorageBase<Organization, OrganizationDbo>(context, requestContext)
 {
     private readonly AppDbContext _context = context;

@@ -5,7 +5,7 @@ using ELogBook.Controllers.Base;
 
 namespace ELogBook.Controllers;
 
-public class OrganizationController
+public class OrganizationsController
     : CreatableEntityControllerBase<OrganizationDto, Organization, OrganizationCreationArgs, OrganizationUpdateArgs,
         InvalidOrganizationReason>
 {

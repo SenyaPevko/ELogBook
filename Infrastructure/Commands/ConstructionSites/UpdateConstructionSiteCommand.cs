@@ -16,6 +16,8 @@ public class UpdateConstructionSiteCommand(
         return await entity.ToDto();
     }
 
+    // todo: возможно обновление вложенные сущностей - regsheet и recsheet нужно делать через update строительного объекта
+    // todo: добавление и удаление тоже наверное тут
     protected override Task ApplyUpdatesAsync(ConstructionSite entity,
         ConstructionSiteUpdateArgs args)
     {

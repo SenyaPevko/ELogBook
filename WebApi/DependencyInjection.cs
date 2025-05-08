@@ -4,8 +4,10 @@ using System.Text.Json.Serialization;
 using Domain.Auth;
 using Domain.Commands;
 using Domain.Dtos;
+using Domain.Dtos.RegistrationSheet;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Organization;
+using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
 using Domain.Models.Auth;
@@ -13,6 +15,7 @@ using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.ConstructionSites;
 using Domain.RequestArgs.Organizations;
+using Domain.RequestArgs.RegistrationSheetItems;
 using Domain.RequestArgs.Users;
 using Domain.Settings;
 using Domain.Storage;
@@ -20,11 +23,13 @@ using Infrastructure;
 using Infrastructure.Auth;
 using Infrastructure.Commands.ConstructionSites;
 using Infrastructure.Commands.Organizations;
+using Infrastructure.Commands.RegistrationSheets;
 using Infrastructure.Commands.Users;
 using Infrastructure.Context;
 using Infrastructure.Repository;
 using Infrastructure.Storage.ConstructionSites;
 using Infrastructure.Storage.Organizations;
+using Infrastructure.Storage.RegistrationSheets;
 using Infrastructure.Storage.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -133,6 +138,9 @@ public static class DependencyInjection
 
         services.AddScoped<IRepository<Organization>, OrganizationRepository>();
         services.AddScoped<IRepository<Organization, InvalidOrganizationReason>, OrganizationRepository>();
+        
+        services.AddScoped<IRepository<RegistrationSheetItem>, RegistrationSheetItemRepository>();
+        services.AddScoped<IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason>, RegistrationSheetItemRepository>();
 
         return services;
     }
@@ -142,6 +150,7 @@ public static class DependencyInjection
         services.AddScoped<IStorage<User>, UserStorage>();
         services.AddScoped<IStorage<ConstructionSite>, ConstructionSiteStorage>();
         services.AddScoped<IStorage<Organization>, OrganizationStorage>();
+        services.AddScoped<IStorage<RegistrationSheetItem>, RegistrationSheetItemStorage>();
 
         return services;
     }
@@ -151,6 +160,7 @@ public static class DependencyInjection
         services.AddUserCommands();
         services.AddConstructionSiteCommands();
         services.AddOrganizationCommands();
+        services.AddRegistrationSheetItemCommands();
 
         return services;
     }
@@ -189,8 +199,25 @@ public static class DependencyInjection
             .AddScoped<ICreateCommand<OrganizationDto, OrganizationCreationArgs, InvalidOrganizationReason>,
                 CreateOrganizationCommand>();
         services.AddScoped<IGetCommand<OrganizationDto>, GetOrganizationCommand>();
-        services.AddScoped<IUpdateCommand<OrganizationDto, OrganizationUpdateArgs, InvalidOrganizationReason>, UpdateOrganizationCommand>();
+        services
+            .AddScoped<IUpdateCommand<OrganizationDto, OrganizationUpdateArgs, InvalidOrganizationReason>,
+                UpdateOrganizationCommand>();
         services.AddScoped<ISearchCommand<OrganizationDto>, SearchOrganizationCommand>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddRegistrationSheetItemCommands(this IServiceCollection services)
+    {
+        services
+            .AddScoped<ICreateCommand<RegistrationSheetItemDto, RegistrationSheetItemCreationArgs,
+                    InvalidRegistrationSheetItemReason>,
+                CreateRegistrationSheetItemCommand>();
+        services.AddScoped<IGetCommand<RegistrationSheetItemDto>, GetRegistrationSheetItemCommand>();
+        services
+            .AddScoped<IUpdateCommand<RegistrationSheetItemDto, RegistrationSheetItemUpdateArgs,
+                InvalidRegistrationSheetItemReason>, UpdateRegistrationSheetItemCommand>();
+        services.AddScoped<ISearchCommand<RegistrationSheetItemDto>, SearchRegistrationSheetItemCommand>();
 
         return services;
     }
