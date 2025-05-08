@@ -3,8 +3,7 @@ using Domain.Dtos;
 using Domain.Entities;
 using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
-using Domain.RequestArgs.CreationArgs;
-using Domain.RequestArgs.UpdateArgs;
+using Domain.RequestArgs.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ELogBook.Controllers.Base;

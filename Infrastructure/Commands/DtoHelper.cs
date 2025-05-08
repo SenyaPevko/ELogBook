@@ -1,14 +1,16 @@
+using Core.Helpers;
 using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
+using Domain.Entities.Organization;
+using Domain.Entities.Roles;
 using Domain.Entities.Users;
 
 namespace Infrastructure.Commands;
 
 public static class DtoHelper
 {
-    public static Task<ConstructionSiteDto> ToDto(this ConstructionSite entity)
-    {
-        return Task.FromResult(new ConstructionSiteDto
+    public static Task<ConstructionSiteDto> ToDto(this ConstructionSite entity) =>
+        Task.FromResult(new ConstructionSiteDto
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
@@ -24,11 +26,9 @@ public static class DtoHelper
             Orders = entity.Orders,
             ConstructionSiteUserRoleIds = default
         });
-    }
 
-    public static Task<UserDto> ToDto(this User entity)
-    {
-        return Task.FromResult(new UserDto
+    public static Task<UserDto> ToDto(this User entity) =>
+        Task.FromResult(new UserDto
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
@@ -40,5 +40,13 @@ public static class DtoHelper
             OrganizationId = entity.OrganizationId,
             UserRole = entity.UserRole
         });
-    }
+
+    public static Task<OrganizationDto> ToDto(this Organization entity) =>
+        Task.FromResult(new OrganizationDto
+        {
+            Id = entity.Id,
+            UpdateInfo = entity.UpdateInfo,
+            Name = entity.Name,
+            UserIds = entity.UserIds
+        });
 }

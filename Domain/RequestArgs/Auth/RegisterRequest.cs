@@ -1,4 +1,4 @@
-using Domain.RequestArgs.CreationArgs;
+using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.Auth;
 

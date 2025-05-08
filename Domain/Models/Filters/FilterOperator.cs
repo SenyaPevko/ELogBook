@@ -5,5 +5,6 @@ public enum FilterOperator
     Equals,
     Contains,
     GreaterThan,
-    LessThan
+    LessThan,
+    In
 }

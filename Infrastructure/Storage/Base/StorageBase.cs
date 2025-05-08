@@ -70,6 +70,11 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
                     nameof(string.Contains),
                     Type.EmptyTypes,
                     Expression.Constant(filter.Value?.ToString())),
+                FilterOperator.In => Expression.Call(
+                    Expression.Constant(filter.Value),
+                    nameof(List<object>.Contains),
+                    Type.EmptyTypes,
+                    member),
                 _ => throw new NotSupportedException($"Operator {filter.Operator} not supported")
             };
 

@@ -3,8 +3,8 @@ using Domain.Dtos;
 using Domain.Entities;
 using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
+using Domain.RequestArgs.Base;
 using Domain.RequestArgs.SearchRequest;
-using Domain.RequestArgs.UpdateArgs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

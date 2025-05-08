@@ -1,7 +1,7 @@
 using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
 using Domain.Repository;
-using Domain.RequestArgs.UpdateArgs;
+using Domain.RequestArgs.ConstructionSites;
 using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.ConstructionSites;

@@ -1,7 +1,6 @@
 using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
-using Domain.RequestArgs.CreationArgs;
-using Domain.RequestArgs.UpdateArgs;
+using Domain.RequestArgs.ConstructionSites;
 using ELogBook.Controllers.Base;
 
 namespace ELogBook.Controllers;

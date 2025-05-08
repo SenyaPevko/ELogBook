@@ -1,24 +1,26 @@
-namespace Domain.RequestArgs.CreationArgs;
+using Domain.RequestArgs.Base;
 
-public class ConstructionSiteCreationArgs : EntityCreationArgs
+namespace Domain.RequestArgs.ConstructionSites;
+
+public class ConstructionSiteUpdateArgs : IEntityUpdateArgs
 {
     /// <summary>
     ///     Название объекта
     /// </summary>
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     ///     Название объекта
     /// </summary>
-    public required string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     ///     Название объекта
     /// </summary>
-    public required string Address { get; set; }
+    public string? Address { get; set; }
 
     /// <summary>
     ///     Изображение
     /// </summary>
-    public required Uri Image { get; set; }
+    public Uri? Image { get; set; }
 }

@@ -5,22 +5,26 @@ using Domain.Auth;
 using Domain.Commands;
 using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
+using Domain.Entities.Organization;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
 using Domain.Models.Auth;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
-using Domain.RequestArgs.CreationArgs;
-using Domain.RequestArgs.UpdateArgs;
+using Domain.RequestArgs.ConstructionSites;
+using Domain.RequestArgs.Organizations;
+using Domain.RequestArgs.Users;
 using Domain.Settings;
 using Domain.Storage;
 using Infrastructure;
 using Infrastructure.Auth;
 using Infrastructure.Commands.ConstructionSites;
+using Infrastructure.Commands.Organizations;
 using Infrastructure.Commands.Users;
 using Infrastructure.Context;
 using Infrastructure.Repository;
 using Infrastructure.Storage.ConstructionSites;
+using Infrastructure.Storage.Organizations;
 using Infrastructure.Storage.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -127,6 +131,9 @@ public static class DependencyInjection
         services.AddScoped<IRepository<ConstructionSite>, ConstructionSiteRepository>();
         services.AddScoped<IRepository<ConstructionSite, InvalidConstructionSiteReason>, ConstructionSiteRepository>();
 
+        services.AddScoped<IRepository<Organization>, OrganizationRepository>();
+        services.AddScoped<IRepository<Organization, InvalidOrganizationReason>, OrganizationRepository>();
+
         return services;
     }
 
@@ -134,6 +141,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IStorage<User>, UserStorage>();
         services.AddScoped<IStorage<ConstructionSite>, ConstructionSiteStorage>();
+        services.AddScoped<IStorage<Organization>, OrganizationStorage>();
 
         return services;
     }
@@ -142,6 +150,7 @@ public static class DependencyInjection
     {
         services.AddUserCommands();
         services.AddConstructionSiteCommands();
+        services.AddOrganizationCommands();
 
         return services;
     }
@@ -170,6 +179,18 @@ public static class DependencyInjection
             .AddScoped<IUpdateCommand<ConstructionSiteDto, ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>,
                 UpdateConstructionSiteCommand>();
         services.AddScoped<ISearchCommand<ConstructionSiteDto>, SearchConstructionSite>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddOrganizationCommands(this IServiceCollection services)
+    {
+        services
+            .AddScoped<ICreateCommand<OrganizationDto, OrganizationCreationArgs, InvalidOrganizationReason>,
+                CreateOrganizationCommand>();
+        services.AddScoped<IGetCommand<OrganizationDto>, GetOrganizationCommand>();
+        services.AddScoped<IUpdateCommand<OrganizationDto, OrganizationUpdateArgs, InvalidOrganizationReason>, UpdateOrganizationCommand>();
+        services.AddScoped<ISearchCommand<OrganizationDto>, SearchOrganizationCommand>();
 
         return services;
     }

@@ -1,21 +1,29 @@
+using Infrastructure.Context;
+using Infrastructure.Dbo;
 using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Dbo.User;
 using MongoDB.Driver;
 
 namespace Infrastructure;
 
-public class MongoIndexInitializer(IMongoDatabase database)
+public class MongoIndexInitializer(AppDbContext appDbContext)
 {
     public async Task EnsureIndexesAsync()
     {
-        var userCollection = database.GetCollection<UserDbo>("users");
+        await CreateUserIndexesAsync(appDbContext);
+        await CreateConstructionSiteIndexesAsync(appDbContext);
+        await CreateOrganizationIndexesAsync(appDbContext);
 
-        await userCollection.Indexes.CreateOneAsync(
+    }
+
+    private static async Task CreateUserIndexesAsync(AppDbContext appDbContext)
+    {
+        await appDbContext.Users.Indexes.CreateOneAsync(
             new CreateIndexModel<UserDbo>(
                 Builders<UserDbo>.IndexKeys.Ascending(u => u.Email),
                 new CreateIndexOptions { Background = true, Unique = true }));
 
-        await userCollection.Indexes.CreateOneAsync(
+        await appDbContext.Users.Indexes.CreateOneAsync(
             new CreateIndexModel<UserDbo>(
                 Builders<UserDbo>.IndexKeys.Ascending(u => u.RefreshToken),
                 new CreateIndexOptions<UserDbo>
@@ -24,22 +32,31 @@ public class MongoIndexInitializer(IMongoDatabase database)
                     Unique = true,
                     PartialFilterExpression = Builders<UserDbo>.Filter.Exists(u => u.RefreshToken)
                 }));
+    }
 
-        var siteCollection = database.GetCollection<ConstructionSiteDbo>("constructionSites");
-
-        await siteCollection.Indexes.CreateOneAsync(
+    private static async Task CreateConstructionSiteIndexesAsync(AppDbContext appDbContext)
+    {
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.Address),
                 new CreateIndexOptions { Background = true, Unique = true }));
 
-        await siteCollection.Indexes.CreateOneAsync(
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Text(s => s.Name)
                     .Text(s => s.Description)
                     .Text(s => s.Address)));
 
-        await siteCollection.Indexes.CreateOneAsync(
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.Orders)));
+    }
+    
+    private static async Task CreateOrganizationIndexesAsync(AppDbContext appDbContext)
+    {
+        await appDbContext.Organizations.Indexes.CreateOneAsync(
+            new CreateIndexModel<OrganizationDbo>(
+                Builders<OrganizationDbo>.IndexKeys.Ascending(u => u.Name),
+                new CreateIndexOptions { Background = true, Unique = true }));
     }
 }

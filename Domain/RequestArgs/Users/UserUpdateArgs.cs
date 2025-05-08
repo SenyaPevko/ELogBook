@@ -1,4 +1,6 @@
-namespace Domain.RequestArgs.UpdateArgs;
+using Domain.RequestArgs.Base;
+
+namespace Domain.RequestArgs.Users;
 
 public class UserUpdateArgs : IEntityUpdateArgs
 {

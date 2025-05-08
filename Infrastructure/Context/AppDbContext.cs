@@ -1,4 +1,5 @@
 using Domain.Settings;
+using Infrastructure.Dbo;
 using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Dbo.RecordSheets;
 using Infrastructure.Dbo.RegistrationSheets;
@@ -37,4 +38,7 @@ public class AppDbContext
 
     public IMongoCollection<RegistrationSheetItemDbo> RegistrationSheetItems =>
         _database.GetCollection<RegistrationSheetItemDbo>("registrationSheetItems");
+    
+    public IMongoCollection<OrganizationDbo> Organizations =>
+        _database.GetCollection<OrganizationDbo>("organizations");
 }

@@ -1,4 +1,4 @@
-namespace Domain.RequestArgs.CreationArgs;
+namespace Domain.RequestArgs.Base;
 
 public interface IEntityCreationArgs
 {

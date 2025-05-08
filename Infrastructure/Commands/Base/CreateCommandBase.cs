@@ -5,7 +5,7 @@ using Domain.Entities;
 using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
 using Domain.Repository;
-using Domain.RequestArgs.CreationArgs;
+using Domain.RequestArgs.Base;
 using Infrastructure.WriteContext;
 
 namespace Infrastructure.Commands.Base;

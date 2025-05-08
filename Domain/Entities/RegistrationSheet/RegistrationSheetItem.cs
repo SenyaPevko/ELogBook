@@ -4,23 +4,23 @@ namespace Domain.Entities.RegistrationSheet;
 
 public class RegistrationSheetItem : EntityInfo
 {
-    public required string OrganizationName { get; set; }
+    public string OrganizationName { get; set; } = null!;
 
-    public required string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public required string Surname { get; set; }
+    public string Surname { get; set; } = null!;
 
-    public required string Patronymic { get; set; }
+    public string Patronymic { get; set; } = null!;
 
     /// <summary>
     ///     Дата приезда
     /// </summary>
-    public required DateTime ArrivalDate { get; set; }
+    public DateTime ArrivalDate { get; set; }
 
     /// <summary>
     ///     Дата отъезда
     /// </summary>
-    public required DateTime DepartureDate { get; set; }
+    public DateTime DepartureDate { get; set; }
 
-    public required string Signature { get; set; }
+    public string Signature { get; set; } = null!;
 }

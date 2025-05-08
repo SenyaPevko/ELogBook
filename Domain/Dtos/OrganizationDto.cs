@@ -1,12 +1,6 @@
-using System.ComponentModel.DataAnnotations.Schema;
+namespace Domain.Dtos;
 
-namespace Infrastructure.Dbo;
-
-/// <summary>
-///     Организация
-/// </summary>
-[Table("organizations")]
-public class OrganizationDbo : EntityDbo
+public class OrganizationDto : EntityDto
 {
     /// <summary>
     ///     Название организации

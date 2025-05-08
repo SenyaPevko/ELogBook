@@ -1,17 +1,17 @@
 using Domain.Entities.Base;
 using Domain.Entities.Users;
 
-namespace Domain.Entities;
+namespace Domain.Entities.Organization;
 
 public class Organization : EntityInfo
 {
     /// <summary>
     ///     Название организации
     /// </summary>
-    public required string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     ///     Id пользователей организации
     /// </summary>
-    public List<User> Users { get; set; } = [];
+    public List<Guid> UserIds { get; set; } = [];
 }
