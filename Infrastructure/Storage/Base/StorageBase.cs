@@ -1,5 +1,6 @@
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using Core.Helpers;
 using Domain.Entities.Base;
 using Domain.Models.Filters;
 using Domain.RequestArgs.SearchRequest;
@@ -95,12 +96,9 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
         }
 
         var dbos = await query.ToListAsync();
-        var result = new List<TEntity>(dbos.Count);
-
-        foreach (var dbo in dbos)
-            result.Add(await ToEntityAsync(dbo));
-
-        return result;
+        var entities = await dbos.SelectAsync(ToEntityAsync);
+        
+        return entities.ToList();
     }
 
     protected async Task<TEntity> ToEntityAsync(TDbo dbo)

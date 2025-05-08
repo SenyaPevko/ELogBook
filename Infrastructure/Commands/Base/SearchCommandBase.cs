@@ -1,3 +1,4 @@
+using Core.Helpers;
 using Domain.Commands;
 using Domain.Dtos;
 using Domain.Entities;
@@ -21,11 +22,8 @@ public abstract class SearchCommandBase<TDto, TEntity>(
 
         // todo: перед поиском нужно валидировать запрос поиска, это логика стореджа
         var entities = await repository.SearchAsync(searchRequest, cancellationToken);
-        var dtos = new List<TDto>(entities.Count);
-
-        foreach (var entity in entities)
-            dtos.Add(await MapToDtoAsync(entity));
-
-        return dtos;
+        var dtos = await entities.SelectAsync(MapToDtoAsync);
+        
+        return dtos.ToList();
     }
 }
