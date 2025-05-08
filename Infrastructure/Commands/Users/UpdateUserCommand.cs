@@ -22,8 +22,6 @@ public class UpdateUserCommand(
         if (args.Name is not null) entity.Name = args.Name;
         if (args.Surname is not null) entity.Surname = args.Surname;
         if (args.Patronymic is not null) entity.Patronymic = args.Patronymic;
-        // todo: тут нужен afterWrite чтобы после обновления добавить пользователя в организацию,
-        // а если организация сменилась, то из старой нужно удалить
         if (args.OrganizationId is not null) entity.OrganizationId = args.OrganizationId;
 
         return Task.CompletedTask;

@@ -6,5 +6,5 @@ public class ErrorDetail<TInvalidReason> where TInvalidReason : Enum
 
     public required TInvalidReason Reason { get; set; }
 
-    public required string Value { get; set; }
+    public string? Value { get; set; }
 }

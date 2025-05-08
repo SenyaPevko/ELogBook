@@ -50,7 +50,7 @@ public class RegistrationSheetItemStorage(
         dbo.ArrivalDate = entity.ArrivalDate;
         dbo.DepartureDate = entity.DepartureDate;
         dbo.RegistrationSheetId = entity.RegistrationSheetId;
-        dbo.OrganizationId = organization!.Id;
+        if(organization is not null) dbo.OrganizationId = organization.Id;
     }
 
     protected override async Task MapDboFromEntityAsync(RegistrationSheetItem? existingEntity,
@@ -60,10 +60,11 @@ public class RegistrationSheetItemStorage(
         var searchRequest = new SearchRequest().WhereEquals<Organization, string>(e => e.Name, newEntity.OrganizationName);
         var organization = (await organizationStorage.SearchAsync(searchRequest)).FirstOrDefault();
         dbo.Id = newEntity.Id;
+        // todo: кажется лучше удалить поле CreatorId и доставать его из auth
         dbo.CreatorId = newEntity.CreatorId;
         dbo.ArrivalDate = newEntity.ArrivalDate;
         dbo.DepartureDate = newEntity.DepartureDate;
         dbo.RegistrationSheetId = newEntity.RegistrationSheetId;
-        dbo.OrganizationId = organization!.Id;
+        if(organization is not null) dbo.OrganizationId = organization.Id;
     }
 }
