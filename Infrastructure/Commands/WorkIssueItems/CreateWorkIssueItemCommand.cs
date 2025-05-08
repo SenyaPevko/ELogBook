@@ -9,7 +9,7 @@ namespace Infrastructure.Commands.WorkIssueItems;
 
 public class CreateWorkIssueItemCommand(
     IRepository<WorkIssueItem, InvalidWorkIssueItemReason> repository,
-    RequestContext context)
+    IRequestContext context)
     : CreateCommandBase<WorkIssueItemDto, WorkIssueItem, WorkIssueItemCreationArgs,
         InvalidWorkIssueItemReason>(repository)
 {

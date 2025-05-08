@@ -14,7 +14,5 @@ public class RegistrationSheetItemCreationArgs : EntityCreationArgs
     /// </summary>
     public required DateTime DepartureDate { get; set; }
 
-    public required Guid CreatorId { get; set; }
-
     public required Guid RegistrationSheetId { get; set; }
 }

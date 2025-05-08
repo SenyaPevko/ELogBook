@@ -35,10 +35,10 @@ public class RequestContextMiddleware(RequestDelegate next, ILogger<RequestConte
         {
             UserId = Guid.TryParse(user.FindFirstValue(ClaimTypes.NameIdentifier), out var userId)
                 ? userId
-                : throw new Exception("Could not identify user id"),
+                : null,
             Role = Enum.TryParse<UserRole>(user.FindFirstValue(ClaimTypes.Role), out var role)
                 ? role
-                : throw new Exception("Could not identify user role")
+                : null
         };
     }
 }

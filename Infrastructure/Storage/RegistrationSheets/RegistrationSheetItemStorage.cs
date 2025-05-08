@@ -35,7 +35,6 @@ public class RegistrationSheetItemStorage(
         entity.ArrivalDate = dbo.ArrivalDate;
         entity.DepartureDate = dbo.DepartureDate;
         entity.Signature = user.GetSignature();
-        // todo: не знаю насколько это норм, но если админ забыл проставить организацию пользователю, то он сам виноват
         entity.OrganizationName = organization?.Name ?? user.OrganizationName;
         entity.CreatorId = dbo.CreatorId;
         entity.RegistrationSheetId = dbo.RegistrationSheetId;
@@ -60,7 +59,6 @@ public class RegistrationSheetItemStorage(
         var searchRequest = new SearchRequest().WhereEquals<Organization, string>(e => e.Name, newEntity.OrganizationName);
         var organization = (await organizationStorage.SearchAsync(searchRequest)).FirstOrDefault();
         dbo.Id = newEntity.Id;
-        // todo: кажется лучше удалить поле CreatorId и доставать его из auth
         dbo.CreatorId = newEntity.CreatorId;
         dbo.ArrivalDate = newEntity.ArrivalDate;
         dbo.DepartureDate = newEntity.DepartureDate;

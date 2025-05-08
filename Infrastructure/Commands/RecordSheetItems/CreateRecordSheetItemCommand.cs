@@ -9,7 +9,7 @@ namespace Infrastructure.Commands.RecordSheetItems;
 
 public class CreateRecordSheetItemCommand(
     IRepository<RecordSheetItem, InvalidRecordSheetItemReason> repository,
-    RequestContext context)
+    IRequestContext context)
     : CreateCommandBase<RecordSheetItemDto, RecordSheetItem, RecordSheetItemCreationArgs,
         InvalidRecordSheetItemReason>(repository)
 {
@@ -21,7 +21,7 @@ public class CreateRecordSheetItemCommand(
             Id = args.Id,
             Date = context.RequestTime.DateTime,
             RecordSheetId = args.RecordSheetId,
-            SpecialistId = context.Auth.UserId,
+            SpecialistId = context.Auth.UserId!.Value,
             Directions = args.Directions,
             Deviations = args.Deviations,
         });

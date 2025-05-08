@@ -3,11 +3,12 @@ using Domain.Entities.RegistrationSheet;
 using Domain.Repository;
 using Domain.RequestArgs.RegistrationSheetItems;
 using Infrastructure.Commands.Base;
+using Infrastructure.Context;
 
 namespace Infrastructure.Commands.RegistrationSheetItems;
 
 public class CreateRegistrationSheetItemCommand(
-    IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason> repository)
+    IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason> repository, IRequestContext context)
     : CreateCommandBase<RegistrationSheetItemDto, RegistrationSheetItem, RegistrationSheetItemCreationArgs,
         InvalidRegistrationSheetItemReason>(repository)
 {
@@ -19,7 +20,7 @@ public class CreateRegistrationSheetItemCommand(
             Id = args.Id,
             ArrivalDate = args.ArrivalDate,
             DepartureDate = args.DepartureDate,
-            CreatorId = args.CreatorId,
+            CreatorId = context.Auth.UserId!.Value,
             RegistrationSheetId = args.RegistrationSheetId,
         });
 }
