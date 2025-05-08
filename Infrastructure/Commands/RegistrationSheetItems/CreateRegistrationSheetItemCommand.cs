@@ -4,9 +4,8 @@ using Domain.Repository;
 using Domain.RequestArgs.RegistrationSheetItems;
 using Infrastructure.Commands.Base;
 
-namespace Infrastructure.Commands.RegistrationSheets;
+namespace Infrastructure.Commands.RegistrationSheetItems;
 
-// todo: при создании передается RegistrationSheetId - нужно сразу вставлять в список у RegistrationSheet 
 public class CreateRegistrationSheetItemCommand(
     IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason> repository)
     : CreateCommandBase<RegistrationSheetItemDto, RegistrationSheetItem, RegistrationSheetItemCreationArgs,

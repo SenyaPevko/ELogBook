@@ -3,7 +3,7 @@ using Domain.Entities.RegistrationSheet;
 using Domain.Repository;
 using Infrastructure.Commands.Base;
 
-namespace Infrastructure.Commands.RegistrationSheets;
+namespace Infrastructure.Commands.RegistrationSheetItems;
 
 public class SearchRegistrationSheetItemCommand(IRepository<RegistrationSheetItem> repository)
     : SearchCommandBase<RegistrationSheetItemDto, RegistrationSheetItem>(repository)

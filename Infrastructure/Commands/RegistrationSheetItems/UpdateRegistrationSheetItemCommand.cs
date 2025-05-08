@@ -4,7 +4,7 @@ using Domain.Repository;
 using Domain.RequestArgs.RegistrationSheetItems;
 using Infrastructure.Commands.Base;
 
-namespace Infrastructure.Commands.RegistrationSheets;
+namespace Infrastructure.Commands.RegistrationSheetItems;
 
 public class UpdateRegistrationSheetItemCommand(
     IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason> repository)

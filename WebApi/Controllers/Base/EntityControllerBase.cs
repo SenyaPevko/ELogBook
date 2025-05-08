@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ELogBook.Controllers.Base;
 
+// todo: нехватает delete метода, проверить, потому что он вроде может быть нужен
 [ApiController]
 [Route("api/" + "[controller]")]
 [Authorize]

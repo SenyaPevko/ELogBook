@@ -19,8 +19,8 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
             return;
 
         await storage.AddAsync(entity);
-        
-        await AfterWriteAsync(null, entity, writeContext, cancellationToken);
+
+        await AfterCreateAsync(entity, writeContext, cancellationToken);
     }
 
     public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
         var existingEntity = await storage.GetByIdAsync(entity.Id);
         // todo: валидация
         await storage.UpdateAsync(entity);
-        await AfterWriteAsync(existingEntity, entity, writeContext, cancellationToken);
+        await AfterUpdateAsync(existingEntity, entity, writeContext, cancellationToken);
     }
 
     public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
@@ -51,13 +51,19 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
 
     protected abstract Task ValidateCreationAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
         CancellationToken cancellationToken);
+    
+    protected virtual async Task AfterCreateAsync(
+        TEntity entity,
+        IWriteContext<TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+    }
 
-    protected virtual async Task AfterWriteAsync(
+    protected virtual async Task AfterUpdateAsync(
         TEntity? oldEntity,
         TEntity newEntity,
         IWriteContext<TInvalidReason> writeContext,
         CancellationToken cancellationToken)
     {
-        
     }
 }

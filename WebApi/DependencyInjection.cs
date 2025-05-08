@@ -23,7 +23,7 @@ using Infrastructure;
 using Infrastructure.Auth;
 using Infrastructure.Commands.ConstructionSites;
 using Infrastructure.Commands.Organizations;
-using Infrastructure.Commands.RegistrationSheets;
+using Infrastructure.Commands.RegistrationSheetItems;
 using Infrastructure.Commands.Users;
 using Infrastructure.Context;
 using Infrastructure.Repository;
@@ -141,6 +141,9 @@ public static class DependencyInjection
         
         services.AddScoped<IRepository<RegistrationSheetItem>, RegistrationSheetItemRepository>();
         services.AddScoped<IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason>, RegistrationSheetItemRepository>();
+        
+        services.AddScoped<IRepository<RegistrationSheet>, RegistrationSheetRepository>();
+        services.AddScoped<IRepository<RegistrationSheet, InvalidRegistrationSheetReason>, RegistrationSheetRepository>();
 
         return services;
     }
@@ -151,6 +154,7 @@ public static class DependencyInjection
         services.AddScoped<IStorage<ConstructionSite>, ConstructionSiteStorage>();
         services.AddScoped<IStorage<Organization>, OrganizationStorage>();
         services.AddScoped<IStorage<RegistrationSheetItem>, RegistrationSheetItemStorage>();
+        services.AddScoped<IStorage<RegistrationSheet>, RegistrationSheetStorage>();
 
         return services;
     }

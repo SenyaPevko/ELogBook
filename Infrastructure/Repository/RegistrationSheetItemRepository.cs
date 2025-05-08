@@ -1,18 +1,34 @@
 using Domain;
 using Domain.Entities.RegistrationSheet;
+using Domain.Models.ErrorInfo;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class RegistrationSheetItemRepository(IStorage<RegistrationSheetItem> storage)
+public class RegistrationSheetItemRepository(IStorage<RegistrationSheetItem> storage, IStorage<RegistrationSheet> regSheetStorage)
     : RepositoryBase<RegistrationSheetItem, InvalidRegistrationSheetItemReason>(storage)
 {
-    // todo: тут нужен некий afterWrite, чтобы после создания добавлять в RegistrationSheet
-    
-    protected override Task ValidateCreationAsync(RegistrationSheetItem entity,
+    protected override async Task ValidateCreationAsync(RegistrationSheetItem entity,
         IWriteContext<InvalidRegistrationSheetItemReason> writeContext,
         CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        var regSheet = await regSheetStorage.GetByIdAsync(entity.RegistrationSheetId);
+        if (regSheet is null)
+            writeContext.AddInvalidData(new ErrorDetail<InvalidRegistrationSheetItemReason>
+            {
+                Path = nameof(entity.RegistrationSheetId),
+                Reason = InvalidRegistrationSheetItemReason.ReferenceIsNotFound,
+                Value = entity.RegistrationSheetId.ToString()
+            });
+    }
+    
+    protected override async Task AfterCreateAsync(
+        RegistrationSheetItem entity,
+        IWriteContext<InvalidRegistrationSheetItemReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        var regSheet = await regSheetStorage.GetByIdAsync(entity.RegistrationSheetId);
+        regSheet!.Items.Add(entity);
+        await regSheetStorage.UpdateAsync(regSheet);
     }
 }

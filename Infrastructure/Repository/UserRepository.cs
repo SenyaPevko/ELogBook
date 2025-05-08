@@ -33,39 +33,57 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
                 Value = entity.Email
             });
     }
+
+    protected override async Task AfterCreateAsync(
+        User newEntity,
+        IWriteContext<InvalidUserReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        await AddUserToOrganizationAsync(newEntity, writeContext);
+    }
     
-    protected override async Task AfterWriteAsync(
+    protected override async Task AfterUpdateAsync(
         User? oldEntity,
         User newEntity,
         IWriteContext<InvalidUserReason> writeContext,
         CancellationToken cancellationToken)
     {
-        if (newEntity.OrganizationId is not null)
+        await AddUserToOrganizationAsync(newEntity, writeContext);
+
+        if (oldEntity is not null) 
+            await RemoveUserFromOrganizationAsync(oldEntity);
+    }
+
+    private async Task AddUserToOrganizationAsync(User user, IWriteContext<InvalidUserReason> writeContext)
+    {
+        if (user.OrganizationId is not null)
         {
-            var newOrganization = await organizationStorage.GetByIdAsync(newEntity.OrganizationId.Value);
+            var newOrganization = await organizationStorage.GetByIdAsync(user.OrganizationId.Value);
             if (newOrganization is null)
             {
-                writeContext.AddInvalidData(new ErrorDetail<InvalidUserReason>()
+                writeContext.AddInvalidData(new ErrorDetail<InvalidUserReason>
                 {
-                    Path = nameof(newEntity.OrganizationId),
+                    Path = nameof(user.OrganizationId),
                     Reason = InvalidUserReason.ReferenceIsNotFound,
-                    Value = newEntity.OrganizationId.ToString()
+                    Value = user.OrganizationId.ToString()
                 });
                 return;
             }
-            newOrganization.UserIds.Add(newEntity.Id);
+            newOrganization.UserIds.Add(user.Id);
 
             await organizationStorage.UpdateAsync(newOrganization);
         }
-
-        if (oldEntity?.OrganizationId is not null)
+    }
+    
+    private async Task RemoveUserFromOrganizationAsync(User user)
+    {
+        if (user.OrganizationId is not null)
         {
-            var oldOrganization = await organizationStorage.GetByIdAsync(oldEntity.OrganizationId.Value);
+            var oldOrganization = await organizationStorage.GetByIdAsync(user.OrganizationId.Value);
             if (oldOrganization is null)
-            {
                 return;
-            }
-            oldOrganization.UserIds.Remove(oldEntity.Id);
+            
+            oldOrganization.UserIds.Remove(user.Id);
 
             await organizationStorage.UpdateAsync(oldOrganization);
         }

@@ -7,30 +7,28 @@ public class RecordSheetItem : EntityInfo
     /// <summary>
     ///     Дата записи
     /// </summary>
-    public required DateTime Date { get; set; }
+    public DateTime Date { get; set; }
 
     /// <summary>
     ///     Выявленные отступления ...
     /// </summary>
-    public required string Deviations { get; set; }
+    public  string Deviations { get; set; } = null!;
 
     /// <summary>
     ///     Указания об устранении отступлений ...
     /// </summary>
-    public required string Directions { get; set; }
+    public  string Directions { get; set; } = null!;
 
     /// <summary>
     ///     Подпись специалиста ...
     /// </summary>
-    public required string SpecialistSignature { get; set; }
+    public  string SpecialistSignature { get; set; } = null!;
 
     /// <summary>
     ///     С записью ознакомлен представитель ...
     /// </summary>
-    public required string RepresentativeSignature { get; set; }
-
     /// <summary>
     ///     Отметка о выполнении указаний ...
     /// </summary>
-    public required string ComplianceNote { get; set; }
+    public  string ComplianceNote { get; set; } = null!;
 }

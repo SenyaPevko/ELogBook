@@ -3,7 +3,7 @@ using Domain.Entities.RegistrationSheet;
 using Domain.Repository;
 using Infrastructure.Commands.Base;
 
-namespace Infrastructure.Commands.RegistrationSheets;
+namespace Infrastructure.Commands.RegistrationSheetItems;
 
 public class GetRegistrationSheetItemCommand(IRepository<RegistrationSheetItem> repository)
     : GetCommandBase<RegistrationSheetItemDto, RegistrationSheetItem>(repository)
