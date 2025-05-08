@@ -42,5 +42,8 @@ public class ConstructionSite : EntityInfo
     /// <summary>
     ///     Пользователи и их роли в этом проекте
     /// </summary>
+    // todo: в dbo почему то не пишем ._. . ps в dto нет, чтобы другие не знали про роли
+    // todo: нужно сделать поиск объектов, в духе: найди все объекты, где есть userId в ConstructionSiteUserRoles,
+    // чтобы отображать на глвной странице
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
 }

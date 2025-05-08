@@ -1,3 +1,4 @@
+using Domain.Entities.ConstructionSite;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
 using Infrastructure.Dbo.ConstructionSite;
@@ -13,7 +14,7 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
         await CreateUserIndexesAsync(appDbContext);
         await CreateConstructionSiteIndexesAsync(appDbContext);
         await CreateOrganizationIndexesAsync(appDbContext);
-
+        // todo: добавить индексы для всех сущностей
     }
 
     private static async Task CreateUserIndexesAsync(AppDbContext appDbContext)
@@ -50,8 +51,20 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.Orders)));
+
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
+            new CreateIndexModel<ConstructionSiteDbo>(
+                Builders<ConstructionSiteDbo>.IndexKeys.Ascending(x => x.ConstructionSiteUserRole.First().UserId),
+                new CreateIndexOptions { Background = true }));
+
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
+            new CreateIndexModel<ConstructionSiteDbo>(
+                Builders<ConstructionSiteDbo>.IndexKeys
+                    .Ascending(x => x.ConstructionSiteUserRole.First().UserId)
+                    .Ascending(x => x.ConstructionSiteUserRole.First().Role),
+                new CreateIndexOptions { Background = true }));
     }
-    
+
     private static async Task CreateOrganizationIndexesAsync(AppDbContext appDbContext)
     {
         await appDbContext.Organizations.Indexes.CreateOneAsync(

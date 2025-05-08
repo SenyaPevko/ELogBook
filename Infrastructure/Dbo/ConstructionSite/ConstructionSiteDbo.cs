@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.ConstructionSite;
 
 namespace Infrastructure.Dbo.ConstructionSite;
 
@@ -37,6 +38,11 @@ public class ConstructionSiteDbo : EntityDbo
     ///     Идентификатор учетного листа
     /// </summary>
     public Guid RecordSheetId { get; set; }
+    
+    /// <summary>
+    ///     Идентификатор рабочих вопросов
+    /// </summary>
+    public Guid WorkIssueId { get; set; }
 
     /// <summary>
     ///     Приказы
@@ -46,5 +52,5 @@ public class ConstructionSiteDbo : EntityDbo
     /// <summary>
     ///     Пользователи и их роли в этом проекте
     /// </summary>
-    public List<Guid> ConstructionSiteUserRoleIds { get; set; } = [];
+    public List<ConstructionSiteUserRole> ConstructionSiteUserRole { get; set; } = [];
 }
