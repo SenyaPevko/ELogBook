@@ -11,30 +11,32 @@ public class RecordSheetItemDbo : EntityDbo
     /// <summary>
     ///     Дата записи
     /// </summary>
-    public required DateTime Date { get; set; }
+    public DateTime Date { get; set; }
 
     /// <summary>
     ///     Выявленные отступления ...
     /// </summary>
-    public required string Deviations { get; set; }
+    public string Deviations { get; set; } = null!;
 
     /// <summary>
     ///     Указания об устранении отступлений ...
     /// </summary>
-    public required string Directions { get; set; }
+    public string Directions { get; set; } = null!;
 
     /// <summary>
     ///     Id специалиста поставившего подпись ...
     /// </summary>
-    public required Guid SpecialistId { get; set; }
+    public Guid SpecialistId { get; set; }
 
     /// <summary>
     ///     Id представителя ознакомленного с записью ...
     /// </summary>
-    public required Guid RepresentativeId { get; set; }
+    public Guid RepresentativeId { get; set; }
 
     /// <summary>
     ///     Id пользователя оставившего отметку о выполнении указаний ...
     /// </summary>
-    public required Guid ComplianceNoteUserId { get; set; }
+    public Guid ComplianceNoteUserId { get; set; }
+    
+    public Guid RecordSheetId { get; set; }
 }

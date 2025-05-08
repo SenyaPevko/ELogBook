@@ -4,7 +4,6 @@ namespace Domain.Models.Auth;
 
 public class AuthInfo
 {
-    public Guid? UserId { get; set; }
-    public string? Email { get; set; }
-    public UserRole? Role { get; set; }
+    public Guid UserId { get; init; }
+    public UserRole Role { get; set; }
 }

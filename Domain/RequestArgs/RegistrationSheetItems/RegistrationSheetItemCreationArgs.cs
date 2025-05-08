@@ -7,14 +7,14 @@ public class RegistrationSheetItemCreationArgs : EntityCreationArgs
     /// <summary>
     ///     Дата приезда
     /// </summary>
-    public DateTime ArrivalDate { get; set; }
+    public required DateTime ArrivalDate { get; set; }
 
     /// <summary>
     ///     Дата отъезда
     /// </summary>
-    public DateTime DepartureDate { get; set; }
+    public required DateTime DepartureDate { get; set; }
 
-    public Guid CreatorId { get; set; }
+    public required Guid CreatorId { get; set; }
 
-    public Guid RegistrationSheetId { get; set; }
+    public required Guid RegistrationSheetId { get; set; }
 }

@@ -17,7 +17,7 @@ public class RegistrationSheetItemRepository(IStorage<RegistrationSheetItem> sto
             writeContext.AddInvalidData(new ErrorDetail<InvalidRegistrationSheetItemReason>
             {
                 Path = nameof(entity.RegistrationSheetId),
-                Reason = InvalidRegistrationSheetItemReason.ReferenceIsNotFound,
+                Reason = InvalidRegistrationSheetItemReason.ReferenceNotFound,
                 Value = entity.RegistrationSheetId.ToString()
             });
     }

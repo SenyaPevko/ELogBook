@@ -1,8 +1,10 @@
 using Core.Helpers;
 using Domain.Dtos;
+using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Organization;
+using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
@@ -64,5 +66,18 @@ public static class DtoHelper
             Signature = entity.Signature,
             ArrivalDate = entity.ArrivalDate,
             DepartureDate = entity.DepartureDate,
+        });
+    
+    public static Task<RecordSheetItemDto> ToDto(this RecordSheetItem entity) =>
+        Task.FromResult(new RecordSheetItemDto
+        {
+            Id = entity.Id,
+            UpdateInfo = entity.UpdateInfo,
+            Date = entity.Date,
+            Deviations = entity.Deviations,
+            Directions = entity.Directions,
+            SpecialistSignature = entity.SpecialistSignature,
+            ComplianceNote = entity.ComplianceNoteSignature,
+            RepresentativeSignature = entity.RepresentativeSignature
         });
 }

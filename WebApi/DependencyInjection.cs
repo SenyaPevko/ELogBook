@@ -4,9 +4,11 @@ using System.Text.Json.Serialization;
 using Domain.Auth;
 using Domain.Commands;
 using Domain.Dtos;
+using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Organization;
+using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
@@ -15,6 +17,7 @@ using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.ConstructionSites;
 using Domain.RequestArgs.Organizations;
+using Domain.RequestArgs.RecordSheetItems;
 using Domain.RequestArgs.RegistrationSheetItems;
 using Domain.RequestArgs.Users;
 using Domain.Settings;
@@ -23,12 +26,14 @@ using Infrastructure;
 using Infrastructure.Auth;
 using Infrastructure.Commands.ConstructionSites;
 using Infrastructure.Commands.Organizations;
+using Infrastructure.Commands.RecordSheetItems;
 using Infrastructure.Commands.RegistrationSheetItems;
 using Infrastructure.Commands.Users;
 using Infrastructure.Context;
 using Infrastructure.Repository;
 using Infrastructure.Storage.ConstructionSites;
 using Infrastructure.Storage.Organizations;
+using Infrastructure.Storage.RecordSheets;
 using Infrastructure.Storage.RegistrationSheets;
 using Infrastructure.Storage.Users;
 using Microsoft.AspNetCore.Identity;
@@ -144,6 +149,12 @@ public static class DependencyInjection
         
         services.AddScoped<IRepository<RegistrationSheet>, RegistrationSheetRepository>();
         services.AddScoped<IRepository<RegistrationSheet, InvalidRegistrationSheetReason>, RegistrationSheetRepository>();
+        
+        services.AddScoped<IRepository<RecordSheet>, RecordSheetRepository>();
+        services.AddScoped<IRepository<RecordSheet, InvalidRecordSheetReason>, RecordSheetRepository>();
+        
+        services.AddScoped<IRepository<RecordSheetItem>, RecordSheetItemRepository>();
+        services.AddScoped<IRepository<RecordSheetItem, InvalidRecordSheetItemReason>, RecordSheetItemRepository>();
 
         return services;
     }
@@ -155,6 +166,8 @@ public static class DependencyInjection
         services.AddScoped<IStorage<Organization>, OrganizationStorage>();
         services.AddScoped<IStorage<RegistrationSheetItem>, RegistrationSheetItemStorage>();
         services.AddScoped<IStorage<RegistrationSheet>, RegistrationSheetStorage>();
+        services.AddScoped<IStorage<RecordSheet>, RecordSheetStorage>();
+        services.AddScoped<IStorage<RecordSheetItem>, RecordSheetItemStorage>();
 
         return services;
     }
@@ -165,6 +178,7 @@ public static class DependencyInjection
         services.AddConstructionSiteCommands();
         services.AddOrganizationCommands();
         services.AddRegistrationSheetItemCommands();
+        services.AddRecordSheetItemCommands();
 
         return services;
     }
@@ -222,6 +236,21 @@ public static class DependencyInjection
             .AddScoped<IUpdateCommand<RegistrationSheetItemDto, RegistrationSheetItemUpdateArgs,
                 InvalidRegistrationSheetItemReason>, UpdateRegistrationSheetItemCommand>();
         services.AddScoped<ISearchCommand<RegistrationSheetItemDto>, SearchRegistrationSheetItemCommand>();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddRecordSheetItemCommands(this IServiceCollection services)
+    {
+        services
+            .AddScoped<ICreateCommand<RecordSheetItemDto, RecordSheetItemCreationArgs,
+                    InvalidRecordSheetItemReason>,
+                CreateRecordSheetItemCommand>();
+        services.AddScoped<IGetCommand<RecordSheetItemDto>, GetRecordSheetItemCommand>();
+        services
+            .AddScoped<IUpdateCommand<RecordSheetItemDto, RecordSheetItemUpdateArgs,
+                InvalidRecordSheetItemReason>, UpdateRecordSheetItemCommand>();
+        services.AddScoped<ISearchCommand<RecordSheetItemDto>, SearchRecordSheetItemCommand>();
 
         return services;
     }

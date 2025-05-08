@@ -12,23 +12,42 @@ public class RecordSheetItem : EntityInfo
     /// <summary>
     ///     Выявленные отступления ...
     /// </summary>
-    public  string Deviations { get; set; } = null!;
+    public string Deviations { get; set; } = null!;
 
     /// <summary>
     ///     Указания об устранении отступлений ...
     /// </summary>
-    public  string Directions { get; set; } = null!;
+    public string Directions { get; set; } = null!;
 
     /// <summary>
     ///     Подпись специалиста ...
     /// </summary>
-    public  string SpecialistSignature { get; set; } = null!;
+    public string SpecialistSignature { get; set; } = null!;
 
     /// <summary>
     ///     С записью ознакомлен представитель ...
     /// </summary>
+    public string RepresentativeSignature { get; set; } = null!;
+    
     /// <summary>
     ///     Отметка о выполнении указаний ...
     /// </summary>
-    public  string ComplianceNote { get; set; } = null!;
+    public string ComplianceNoteSignature { get; set; } = null!;
+    
+    /// <summary>
+    ///     Id специалиста поставившего подпись ...
+    /// </summary>
+    public Guid SpecialistId { get; set; }
+
+    /// <summary>
+    ///     Id представителя ознакомленного с записью ...
+    /// </summary>
+    public Guid RepresentativeId { get; set; }
+
+    /// <summary>
+    ///     Id пользователя оставившего отметку о выполнении указаний ...
+    /// </summary>
+    public Guid ComplianceNoteUserId { get; set; }
+    
+    public Guid RecordSheetId { get; set; }
 }

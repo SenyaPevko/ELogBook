@@ -64,7 +64,7 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
                 writeContext.AddInvalidData(new ErrorDetail<InvalidUserReason>
                 {
                     Path = nameof(user.OrganizationId),
-                    Reason = InvalidUserReason.ReferenceIsNotFound,
+                    Reason = InvalidUserReason.ReferenceNotFound,
                     Value = user.OrganizationId.ToString()
                 });
                 return;
