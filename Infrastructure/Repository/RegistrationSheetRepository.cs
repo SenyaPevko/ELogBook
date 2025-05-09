@@ -26,4 +26,11 @@ public class RegistrationSheetRepository(
                 });
         }
     }
+
+    protected override Task ValidateUpdateAsync(RegistrationSheet oldEntity, RegistrationSheet newEntity, IWriteContext<InvalidRegistrationSheetReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        // todo: нужно проверять элементы на существование
+        return Task.CompletedTask;
+    }
 }

@@ -2,7 +2,7 @@ using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.WorkIssueItems;
 
-public class WorkIssueItemUpdateArgs : IEntityUpdateArgs
+public class WorkIssueItemUpdateArgs : EntityUpdateArgs
 {
     /// <summary>
     ///     Вопрос

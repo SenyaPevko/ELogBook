@@ -19,17 +19,17 @@ public abstract class UpdateCommandBase<TDto, TEntity, TUpdateArgs, TInvalidReas
     where TEntity : EntityInfo, new()
     where TUpdateArgs : IEntityUpdateArgs
 {
-    public virtual async Task<ActionResult<TDto, UpdateErrorInfo<TInvalidReason>>> ExecuteAsync(Guid id,
+    public virtual async Task<ActionResult<TDto, UpdateErrorInfo<TInvalidReason>>> ExecuteAsync(
         TUpdateArgs updateArgs,
         CancellationToken cancellationToken)
     {
         // todo: валидация прав
 
-        var existingEntity = await repository.GetByIdAsync(id, cancellationToken);
+        var existingEntity = await repository.GetByIdAsync(updateArgs.Id, cancellationToken);
         if (existingEntity is null)
             return new UpdateErrorInfo<TInvalidReason>(
                 $"Could not update {typeof(TEntity).Name}",
-                $"Could not find {typeof(TEntity).Name} with id {id}",
+                $"Could not find {typeof(TEntity).Name} with id {updateArgs.Id}",
                 HttpStatusCode.NotFound);
 
         var newEntity = existingEntity.Copy();

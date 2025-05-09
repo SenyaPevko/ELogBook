@@ -20,7 +20,20 @@ public class RecordSheetItemRepository(IStorage<RecordSheetItem> storage, IStora
                 Value = entity.RecordSheetId.ToString()
             });
     }
-    
+
+    protected override Task ValidateUpdateAsync(
+        RecordSheetItem oldEntity,
+        RecordSheetItem newEntity,
+        IWriteContext<InvalidRecordSheetItemReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        // todo: вообще в теории здесь нужно проверять на наличие в базе RepresentativeId и ComplianceNoteUserId,
+        // но мы вроде где-то уже проверяем это, поэтому можно потом сюда написать, и подумать нужно ли как-то
+        // синхронить проверки наличия объекта в базе на разных уровнях бэка 
+        
+        return Task.CompletedTask;
+    }
+
     protected override async Task AfterCreateAsync(
         RecordSheetItem entity,
         IWriteContext<InvalidRecordSheetItemReason> writeContext,

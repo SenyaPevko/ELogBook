@@ -2,7 +2,7 @@ using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.Users;
 
-public class UserUpdateArgs : IEntityUpdateArgs
+public class UserUpdateArgs : EntityUpdateArgs
 {
     /// <summary>
     ///     Имя

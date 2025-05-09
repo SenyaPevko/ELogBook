@@ -34,6 +34,13 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
             });
     }
 
+    protected override Task ValidateUpdateAsync(User oldEntity, User newEntity, IWriteContext<InvalidUserReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        // todo: нужно проверять организацию на существование
+        return Task.CompletedTask;
+    }
+
     protected override async Task AfterCreateAsync(
         User newEntity,
         IWriteContext<InvalidUserReason> writeContext,

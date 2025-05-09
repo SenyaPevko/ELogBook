@@ -20,7 +20,13 @@ public class WorkIssueItemRepository(IStorage<WorkIssueItem> storage, IStorage<W
                 Value = entity.WorkIssueId.ToString()
             });
     }
-    
+
+    protected override Task ValidateUpdateAsync(WorkIssueItem oldEntity, WorkIssueItem newEntity, IWriteContext<InvalidWorkIssueItemReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
     protected override async Task AfterCreateAsync(
         WorkIssueItem entity,
         IWriteContext<InvalidWorkIssueItemReason> writeContext,

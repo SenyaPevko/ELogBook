@@ -1,9 +1,15 @@
 using Domain;
 using Domain.Entities.ConstructionSite;
+using Domain.Entities.Organization;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
+using Domain.Entities.Users;
 using Domain.Entities.WorkIssues;
+using Domain.Models.ErrorInfo;
+using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
+using Infrastructure.Helpers.SearchRequestHelper;
+using MongoDB.Driver.Linq;
 
 namespace Infrastructure.Repository;
 
@@ -11,7 +17,8 @@ public class ConstructionSiteRepository(
     IStorage<ConstructionSite> storage,
     IStorage<RegistrationSheet> regStorage,
     IStorage<RecordSheet> recStorage,
-    IStorage<WorkIssue> issueStorage)
+    IStorage<WorkIssue> issueStorage,
+    IStorage<User> userStorage)
     : RepositoryBase<ConstructionSite, InvalidConstructionSiteReason>(storage)
 {
     protected override Task ValidateCreationAsync(
@@ -25,6 +32,15 @@ public class ConstructionSiteRepository(
         // хотя их запись можно вообще в асинхрон увести, и кешировать, чтоб из базы не доставать
 
         return Task.CompletedTask;
+    }
+
+    protected override async Task ValidateUpdateAsync(
+        ConstructionSite oldEntity,
+        ConstructionSite newEntity,
+        IWriteContext<InvalidConstructionSiteReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        await ValidateAddedUsers(oldEntity, newEntity, writeContext);
     }
 
     protected override async Task PreprocessCreationAsync(
@@ -45,5 +61,46 @@ public class ConstructionSiteRepository(
         entity.RegistrationSheet = regSheet;
         entity.RecordSheet = recSheet;
         entity.WorkIssue = workIssue;
+    }
+    
+    protected async Task ValidateAddedUsers(
+        ConstructionSite oldEntity,
+        ConstructionSite newEntity,
+        IWriteContext<InvalidConstructionSiteReason> writeContext)
+    {
+        var oldUserIds = oldEntity.ConstructionSiteUserRoles.Select(x => x.UserId).ToHashSet();
+        var addedUserIds = newEntity.ConstructionSiteUserRoles
+            .Skip(oldUserIds.Count)
+            .Select(r => r.UserId)
+            .ToList();
+        
+        // todo: такую же логику нужно добавить в organization, чтобы там не добавляли одних и тех же пользователей
+        var notUniqueUserIds = addedUserIds.Intersect(oldUserIds).ToList();
+        foreach (var userId in notUniqueUserIds)
+        {
+            writeContext.AddInvalidData(new ErrorDetail<InvalidConstructionSiteReason>
+            {
+                Path = nameof(Organization.UserIds),
+                Reason = InvalidConstructionSiteReason.UserAlreadyHasRole,
+                Value = userId.ToString()
+            });
+        }
+        
+        if (addedUserIds.Count == 0)
+            return;
+        
+        var searchRequest = new SearchRequest().WhereIn<User, Guid>(o => o.Id, addedUserIds);
+        var addedUsers = await userStorage.SearchAsync(searchRequest);
+        var addedUsersToId = addedUsers.ToDictionary(x => x.Id);
+
+        foreach (var id in addedUserIds.Where(id => !addedUsersToId.ContainsKey(id)))
+        {
+            writeContext.AddInvalidData(new ErrorDetail<InvalidConstructionSiteReason>
+            {
+                Path = nameof(Organization.UserIds),
+                Reason = InvalidConstructionSiteReason.ReferenceNotFound,
+                Value = id.ToString()
+            });
+        }
     }
 }

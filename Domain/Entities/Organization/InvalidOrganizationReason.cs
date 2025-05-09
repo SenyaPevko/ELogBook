@@ -2,5 +2,6 @@ namespace Domain.Entities.Organization;
 
 public enum InvalidOrganizationReason
 {
-    NameAlreadyExists,
+    NameAlreadyExists = 1,
+    ReferenceNotFound = 2,
 }

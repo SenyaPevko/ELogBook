@@ -1,5 +1,7 @@
+using Domain.Entities.Base;
+
 namespace Domain.RequestArgs.Base;
 
-public interface IEntityUpdateArgs
+public interface IEntityUpdateArgs : IItemWithId
 {
 }

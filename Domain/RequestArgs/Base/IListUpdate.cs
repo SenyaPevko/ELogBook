@@ -1,7 +1,21 @@
 namespace Domain.RequestArgs.Base;
 
-public interface IListUpdate<TItem>
+public class ListUpdate<TCreationArgs, TUpdateArgs> : ListUpdate<TCreationArgs>
+    where TCreationArgs : IEntityCreationArgs 
+    where TUpdateArgs : IEntityUpdateArgs 
 {
-    public List<TItem>? Add { get; set; }
-    public List<TItem>? Remove { get; set; }
+    public List<TUpdateArgs>? Update { get; set; }
+}
+
+public class ListUpdate<TCreationArgs> 
+    where TCreationArgs : IEntityCreationArgs
+{
+    public List<TCreationArgs>? Add { get; set; }
+    public HashSet<Guid>? Remove { get; set; }
+}
+
+public class ListUpdate
+{
+    public List<Guid>? Add { get; set; }
+    public HashSet<Guid>? Remove { get; set; }
 }

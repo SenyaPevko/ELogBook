@@ -2,7 +2,7 @@ using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.RegistrationSheetItems;
 
-public class RegistrationSheetItemUpdateArgs : IEntityUpdateArgs
+public class RegistrationSheetItemUpdateArgs : EntityUpdateArgs
 {
     /// <summary>
     ///     Дата приезда

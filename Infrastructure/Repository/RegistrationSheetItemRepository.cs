@@ -21,7 +21,14 @@ public class RegistrationSheetItemRepository(IStorage<RegistrationSheetItem> sto
                 Value = entity.RegistrationSheetId.ToString()
             });
     }
-    
+
+    protected override Task ValidateUpdateAsync(RegistrationSheetItem oldEntity, RegistrationSheetItem newEntity, IWriteContext<InvalidRegistrationSheetItemReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        // todo: нужно проверять элементы на существование
+        return Task.CompletedTask;
+    }
+
     protected override async Task AfterCreateAsync(
         RegistrationSheetItem entity,
         IWriteContext<InvalidRegistrationSheetItemReason> writeContext,

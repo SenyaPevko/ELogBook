@@ -2,7 +2,7 @@ using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.RecordSheetItems;
 
-public class RecordSheetItemUpdateArgs : IEntityUpdateArgs
+public class RecordSheetItemUpdateArgs : EntityUpdateArgs
 {
     /// <summary>
     ///     Выявленные отступления ...

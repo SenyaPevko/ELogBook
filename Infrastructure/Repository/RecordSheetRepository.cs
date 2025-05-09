@@ -24,4 +24,11 @@ public class RecordSheetRepository(IStorage<RecordSheet> storage, IStorage<Recor
                 });
         }
     }
+
+    protected override Task ValidateUpdateAsync(RecordSheet oldEntity, RecordSheet newEntity, IWriteContext<InvalidRecordSheetReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        // todo: нужно проверять элементы на существование
+        return Task.CompletedTask;
+    }
 }

@@ -1,6 +1,6 @@
 namespace Domain.Entities.Base;
 
-public abstract class EntityInfo
+public abstract class EntityInfo : IItemWithId
 {
     /// <summary>
     ///     Идентификатор сущности

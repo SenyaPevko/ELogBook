@@ -15,9 +15,9 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
         CancellationToken cancellationToken)
     {
         await PreprocessCreationAsync(entity, writeContext, cancellationToken);
-        if(!writeContext.IsSuccess)
+        if (!writeContext.IsSuccess)
             return;
-        
+
         await ValidateCreationAsync(entity, writeContext, cancellationToken);
         if (!writeContext.IsSuccess)
             return;
@@ -37,6 +37,9 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
         CancellationToken cancellationToken)
     {
         var existingEntity = await storage.GetByIdAsync(entity.Id);
+        await ValidateUpdateAsync(existingEntity!, entity, writeContext, cancellationToken);
+        if (!writeContext.IsSuccess)
+            return;
         // todo: валидация
         await storage.UpdateAsync(entity);
         await AfterUpdateAsync(existingEntity, entity, writeContext, cancellationToken);
@@ -55,6 +58,9 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
 
     protected abstract Task ValidateCreationAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
         CancellationToken cancellationToken);
+
+    protected abstract Task ValidateUpdateAsync(TEntity oldEntity, TEntity newEntity,
+        IWriteContext<TInvalidReason> writeContext, CancellationToken cancellationToken);
 
     protected virtual async Task PreprocessCreationAsync(
         TEntity entity,

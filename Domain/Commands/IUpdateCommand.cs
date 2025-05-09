@@ -10,6 +10,6 @@ public interface IUpdateCommand<TDto, in TUpdateArgs, TInvalidReason>
     where TInvalidReason : Enum
     where TUpdateArgs : IEntityUpdateArgs
 {
-    public Task<ActionResult<TDto, UpdateErrorInfo<TInvalidReason>>> ExecuteAsync(Guid id, TUpdateArgs updateArgs,
+    public Task<ActionResult<TDto, UpdateErrorInfo<TInvalidReason>>> ExecuteAsync(TUpdateArgs updateArgs,
         CancellationToken cancellationToken);
 }

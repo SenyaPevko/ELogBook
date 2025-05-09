@@ -23,21 +23,51 @@ public class UpdateConstructionSiteCommand(
         if (args.Orders is not null)
         {
             if(args.Orders.Add is not null)
-                // todo: нужно id добавлять наверное
-                entity.Orders.AddRange(args.Orders.Add);
+                entity.Orders.AddRange(args.Orders.Add.Select(MapArgsToEntity));
             if(args.Orders.Remove is not null)
-                // todo: нужно except по id делать
-                // todo: мб в ListUpdate для Add сделать один тип, а для Remove просто id 
-                entity.Orders = entity.Orders.Except(args.Orders.Remove).ToList();
+                entity.Orders = entity.Orders.Where(o => !args.Orders.Remove.Contains(o.Id)).ToList();
         }
         if (args.UserRoles is not null)
         {
             if(args.UserRoles.Add is not null)
-                entity.ConstructionSiteUserRoles.AddRange(args.UserRoles.Add);
+                entity.ConstructionSiteUserRoles.AddRange(args.UserRoles.Add.Select(MapArgsToEntity));
+            // todo: какая-то хардорная логика, нужно подумать как оптимизировать
+            // todo: нужно вообще подумать как IListUpdate автоматизировать
+            if (args.UserRoles.Update is not null)
+            {
+                var idToRole = args.UserRoles.Update.ToDictionary(r => r.Id);
+                foreach (var user in entity.ConstructionSiteUserRoles)
+                {
+                    if (idToRole.TryGetValue(user.Id, out var role))
+                    {
+                        ApplyUpdate(user, role);
+                    }
+                }
+            }
+            
             if(args.UserRoles.Remove is not null)
-                entity.ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles.Except(args.UserRoles.Remove).ToList();
+                entity.ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles
+                    .Where(r => !args.UserRoles.Remove.Contains(r.Id)).ToList();
         }
 
         return Task.FromResult(entity);
+    }
+
+    private ConstructionSiteUserRole MapArgsToEntity(ConstructionSiteUserRoleCreationArgs args) => new ConstructionSiteUserRole
+    {
+        Id = Guid.NewGuid(),
+        Role = args.Role,
+        UserId = args.UserId,
+    };
+    
+    private Order MapArgsToEntity(OrderCreationArgs args) => new Order
+    {
+        Id = Guid.NewGuid(),
+        Link = args.Link,
+    };
+
+    private void ApplyUpdate(ConstructionSiteUserRole userRole, ConstructionSiteUserRoleUpdateArgs args)
+    {
+        userRole.Role = args.Role;
     }
 }
