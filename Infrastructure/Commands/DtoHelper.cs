@@ -15,8 +15,8 @@ namespace Infrastructure.Commands;
 
 public static class DtoHelper
 {
-    public static Task<ConstructionSiteDto> ToDto(this ConstructionSite entity) =>
-        Task.FromResult(new ConstructionSiteDto
+    public static async Task<ConstructionSiteDto> ToDto(this ConstructionSite entity) =>
+        new()
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
@@ -24,14 +24,38 @@ public static class DtoHelper
             Description = entity.Description,
             Address = entity.Address,
             Image = entity.Image,
-
-            // todo: преобразование внутренних entity в dto
-            // можно завести helper со всеми entity в dto, и переиспользовать его в MapToDto
-            RegistrationSheet = default,
-            RecordSheet = default,
             Orders = entity.Orders,
-            ConstructionSiteUserRoleIds = default
-        });
+            ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles,
+
+            RegistrationSheet = await entity.RegistrationSheet.ToDto(),
+            RecordSheet = await entity.RecordSheet.ToDto(),
+            WorkIssue = await entity.WorkIssue.ToDto(),
+        };
+
+    public static async Task<RegistrationSheetDto> ToDto(this RegistrationSheet entity) =>
+        new()
+        {
+            Id = entity.Id,
+            UpdateInfo = entity.UpdateInfo,
+            Items = (await entity.Items.SelectAsync(item => item.ToDto())).ToList(),
+        };
+
+    public static async Task<RecordSheetDto> ToDto(this RecordSheet entity) =>
+        new()
+        {
+            Id = entity.Id,
+            UpdateInfo = entity.UpdateInfo,
+            Number = entity.Number,
+            Items = (await entity.Items.SelectAsync(item => item.ToDto())).ToList(),
+        };
+
+    public static async Task<WorkIssueDto> ToDto(this WorkIssue entity) =>
+        new()
+        {
+            Id = entity.Id,
+            UpdateInfo = entity.UpdateInfo,
+            Items = (await entity.Items.SelectAsync(item => item.ToDto())).ToList(),
+        };
 
     public static Task<UserDto> ToDto(this User entity) =>
         Task.FromResult(new UserDto
@@ -55,7 +79,7 @@ public static class DtoHelper
             Name = entity.Name,
             UserIds = entity.UserIds
         });
-    
+
     public static Task<RegistrationSheetItemDto> ToDto(this RegistrationSheetItem entity) =>
         Task.FromResult(new RegistrationSheetItemDto
         {
@@ -69,7 +93,7 @@ public static class DtoHelper
             ArrivalDate = entity.ArrivalDate,
             DepartureDate = entity.DepartureDate,
         });
-    
+
     public static Task<RecordSheetItemDto> ToDto(this RecordSheetItem entity) =>
         Task.FromResult(new RecordSheetItemDto
         {
@@ -82,7 +106,7 @@ public static class DtoHelper
             ComplianceNote = entity.ComplianceNoteSignature,
             RepresentativeSignature = entity.RepresentativeSignature
         });
-    
+
     public static Task<WorkIssueItemDto> ToDto(this WorkIssueItem entity) =>
         Task.FromResult(new WorkIssueItemDto
         {

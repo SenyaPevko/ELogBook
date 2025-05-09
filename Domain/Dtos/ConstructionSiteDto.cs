@@ -1,5 +1,7 @@
 using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
+using Domain.Dtos.WorkIssue;
+using Domain.Entities.ConstructionSite;
 
 namespace Domain.Dtos;
 
@@ -34,14 +36,19 @@ public class ConstructionSiteDto : EntityDto
     ///     Идентификатор учетного листа
     /// </summary>
     public required RecordSheetDto RecordSheet { get; set; }
+    
+    /// <summary>
+    ///     Рабочие вопросы
+    /// </summary>
+    public required WorkIssueDto WorkIssue { get; set; }
 
     /// <summary>
     ///     Приказы
     /// </summary>
-    public List<Uri> Orders { get; set; } = [];
+    public List<Order> Orders { get; set; } = [];
 
     /// <summary>
     ///     Пользователи и их роли в этом проекте
     /// </summary>
-    public List<ConstructionSiteUserRoleDto> ConstructionSiteUserRoleIds { get; set; } = [];
+    public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
 }

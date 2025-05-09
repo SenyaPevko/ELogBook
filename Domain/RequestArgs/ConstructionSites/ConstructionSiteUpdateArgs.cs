@@ -1,7 +1,12 @@
+using Domain.Entities.ConstructionSite;
 using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.ConstructionSites;
 
+/// <summary>
+/// Обновление таких полей как RegistrationSheet, RecordSheet, WorkIssue происходит путем обновления вложенных в них
+/// сущностей через соответствующие апи
+/// </summary>
 public class ConstructionSiteUpdateArgs : IEntityUpdateArgs
 {
     /// <summary>
@@ -23,4 +28,8 @@ public class ConstructionSiteUpdateArgs : IEntityUpdateArgs
     ///     Изображение
     /// </summary>
     public Uri? Image { get; set; }
+
+    public IListUpdate<Order>? Orders { get; set; }
+    
+    public IListUpdate<ConstructionSiteUserRole>? UserRoles { get; set; }
 }

@@ -14,6 +14,10 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
     public virtual async Task AddAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
         CancellationToken cancellationToken)
     {
+        await PreprocessCreationAsync(entity, writeContext, cancellationToken);
+        if(!writeContext.IsSuccess)
+            return;
+        
         await ValidateCreationAsync(entity, writeContext, cancellationToken);
         if (!writeContext.IsSuccess)
             return;
@@ -51,7 +55,14 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
 
     protected abstract Task ValidateCreationAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
         CancellationToken cancellationToken);
-    
+
+    protected virtual async Task PreprocessCreationAsync(
+        TEntity entity,
+        IWriteContext<TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+    }
+
     protected virtual async Task AfterCreateAsync(
         TEntity entity,
         IWriteContext<TInvalidReason> writeContext,

@@ -47,10 +47,10 @@ public class ConstructionSiteDbo : EntityDbo
     /// <summary>
     ///     Приказы
     /// </summary>
-    public List<string> Orders { get; set; } = [];
+    public List<Order> Orders { get; set; } = [];
 
     /// <summary>
     ///     Пользователи и их роли в этом проекте
     /// </summary>
-    public List<ConstructionSiteUserRole> ConstructionSiteUserRole { get; set; } = [];
+    public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
 }

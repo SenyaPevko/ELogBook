@@ -54,14 +54,14 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
 
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
-                Builders<ConstructionSiteDbo>.IndexKeys.Ascending(x => x.ConstructionSiteUserRole.First().UserId),
+                Builders<ConstructionSiteDbo>.IndexKeys.Ascending(x => x.ConstructionSiteUserRoles.First().UserId),
                 new CreateIndexOptions { Background = true }));
 
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys
-                    .Ascending(x => x.ConstructionSiteUserRole.First().UserId)
-                    .Ascending(x => x.ConstructionSiteUserRole.First().Role),
+                    .Ascending(x => x.ConstructionSiteUserRoles.First().UserId)
+                    .Ascending(x => x.ConstructionSiteUserRoles.First().Role),
                 new CreateIndexOptions { Background = true }));
     }
 

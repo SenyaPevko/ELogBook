@@ -1,4 +1,5 @@
 using Domain.Entities.Base;
+using Domain.Entities.WorkIssues;
 
 namespace Domain.Entities.ConstructionSite;
 
@@ -33,16 +34,20 @@ public class ConstructionSite : EntityInfo
     ///     Учетный лист
     /// </summary>
     public RecordSheet.RecordSheet RecordSheet { get; set; } = null!;
+    
+    /// <summary>
+    ///     Рабочие вопросы
+    /// </summary>
+    public WorkIssue WorkIssue { get; set; } = null!;
 
     /// <summary>
     ///     Приказы
     /// </summary>
-    public List<Uri> Orders { get; set; } = [];
+    public List<Order> Orders { get; set; } = [];
 
     /// <summary>
     ///     Пользователи и их роли в этом проекте
     /// </summary>
-    // todo: в dbo почему то не пишем ._. . ps в dto нет, чтобы другие не знали про роли
     // todo: нужно сделать поиск объектов, в духе: найди все объекты, где есть userId в ConstructionSiteUserRoles,
     // чтобы отображать на глвной странице
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
