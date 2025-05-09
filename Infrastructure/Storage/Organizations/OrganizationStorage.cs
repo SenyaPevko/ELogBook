@@ -4,18 +4,17 @@ using Domain.Entities.Users;
 using Domain.RequestArgs.SearchRequest;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.Storage.Base;
 using Infrastructure.Storage.Users;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.Storage.Organizations;
 
 public class OrganizationStorage(AppDbContext context, IRequestContext requestContext)
-    : StorageBase<Organization, OrganizationDbo>(context, requestContext)
+    : StorageBase<Organization, OrganizationDbo, OrganizationSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<OrganizationDbo> Collection => _context.Organizations;
+    protected override IMongoCollection<OrganizationDbo> Collection => context.Organizations;
 
     protected override Task MapEntityFromDboAsync(Organization entity, OrganizationDbo dbo)
     {
@@ -43,5 +42,20 @@ public class OrganizationStorage(AppDbContext context, IRequestContext requestCo
         dbo.UserIds = newEntity.UserIds;
         
         return Task.CompletedTask;
+    }
+    
+    protected override List<FilterDefinition<OrganizationDbo>> BuildSpecificFilters(
+        OrganizationSearchRequest request)
+    {
+        var filters = new List<FilterDefinition<OrganizationDbo>>();
+        var builder = Builders<OrganizationDbo>.Filter;
+
+        if (!string.IsNullOrEmpty(request.Name))
+        {
+            filters.Add(builder.Regex(x => x.Name,
+                new BsonRegularExpression(request.Name, "i")));
+        }
+        
+        return filters;
     }
 }

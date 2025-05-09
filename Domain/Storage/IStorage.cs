@@ -10,9 +10,14 @@ public interface IStorage<TEntity>
 
     public Task<TEntity?> GetByIdAsync(Guid id);
 
-    public Task<List<TEntity>> SearchAsync(SearchRequest request);
-
     public Task UpdateAsync(TEntity entity);
 
     public Task DeleteAsync(TEntity entity);
+}
+
+public interface IStorage<TEntity, in TSearchRequest> : IStorage<TEntity>
+    where TEntity : EntityInfo, new()
+    where TSearchRequest : SearchRequestBase
+{
+    public Task<List<TEntity>> SearchAsync(TSearchRequest request);
 }

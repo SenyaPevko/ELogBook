@@ -14,11 +14,12 @@ namespace ELogBook.Controllers.Base;
 [ApiController]
 [Route("api/" + "[controller]")]
 [Authorize]
-public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidReason> : ControllerBase
+public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidReason, TSearchRequest> : ControllerBase
     where TDto : EntityDto
     where TInvalidReason : Enum
     where TEntity : EntityInfo
     where TUpdateArgs : IEntityUpdateArgs
+    where TSearchRequest : SearchRequestBase
 {
     /// <summary>
     ///     Получить по id
@@ -40,8 +41,8 @@ public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidR
     /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<List<TDto>, ErrorInfo>> Search(
-        [FromServices] ISearchCommand<TDto> command,
-        [FromQuery] SearchRequest request)
+        [FromServices] ISearchCommand<TDto, TSearchRequest> command,
+        [FromQuery] TSearchRequest request)
     {
         return await command.ExecuteAsync(request, HttpContext.RequestAborted);
     }

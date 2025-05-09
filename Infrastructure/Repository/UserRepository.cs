@@ -5,13 +5,12 @@ using Domain.Models.ErrorInfo;
 using Domain.Repository;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.WriteContext;
 
 namespace Infrastructure.Repository;
 
-public class UserRepository(IStorage<User> storage, IStorage<Organization> organizationStorage)
-    : RepositoryBase<User, InvalidUserReason>(storage)
+public class UserRepository(IStorage<User, UserSearchRequest> storage, IStorage<Organization> organizationStorage)
+    : RepositoryBase<User, InvalidUserReason, UserSearchRequest>(storage)
 {
     public override async Task AddAsync(User user, IWriteContext<InvalidUserReason> writeContext,
         CancellationToken cancellationToken)
@@ -22,8 +21,7 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
     protected override async Task ValidateCreationAsync(
         User entity, IWriteContext<InvalidUserReason> writeContext, CancellationToken cancellationToken)
     {
-        var existingUsers = await SearchAsync(
-            new SearchRequest().WhereEquals<User, string>(u => u.Email, entity.Email).SinglePage(),
+        var existingUsers = await SearchAsync(new UserSearchRequest { Email = entity.Email },
             cancellationToken);
         if (existingUsers.Count != 0)
             writeContext.AddInvalidData(new ErrorDetail<InvalidUserReason>
@@ -34,7 +32,8 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
             });
     }
 
-    protected override Task ValidateUpdateAsync(User oldEntity, User newEntity, IWriteContext<InvalidUserReason> writeContext,
+    protected override Task ValidateUpdateAsync(User oldEntity, User newEntity,
+        IWriteContext<InvalidUserReason> writeContext,
         CancellationToken cancellationToken)
     {
         // todo: нужно проверять организацию на существование
@@ -48,7 +47,7 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
     {
         await AddUserToOrganizationAsync(newEntity, writeContext);
     }
-    
+
     protected override async Task AfterUpdateAsync(
         User? oldEntity,
         User newEntity,
@@ -57,7 +56,7 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
     {
         await AddUserToOrganizationAsync(newEntity, writeContext);
 
-        if (oldEntity is not null) 
+        if (oldEntity is not null)
             await RemoveUserFromOrganizationAsync(oldEntity);
     }
 
@@ -76,12 +75,13 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
                 });
                 return;
             }
+
             newOrganization.UserIds.Add(user.Id);
 
             await organizationStorage.UpdateAsync(newOrganization);
         }
     }
-    
+
     private async Task RemoveUserFromOrganizationAsync(User user)
     {
         if (user.OrganizationId is not null)
@@ -89,7 +89,7 @@ public class UserRepository(IStorage<User> storage, IStorage<Organization> organ
             var oldOrganization = await organizationStorage.GetByIdAsync(user.OrganizationId.Value);
             if (oldOrganization is null)
                 return;
-            
+
             oldOrganization.UserIds.Remove(user.Id);
 
             await organizationStorage.UpdateAsync(oldOrganization);

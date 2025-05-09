@@ -1,4 +1,5 @@
 using Domain.Entities.WorkIssues;
+using Domain.RequestArgs.SearchRequest;
 using Infrastructure.Context;
 using Infrastructure.Dbo.WorkIssues;
 using Infrastructure.Storage.Base;
@@ -7,10 +8,9 @@ using MongoDB.Driver;
 namespace Infrastructure.Storage.WorkIssues;
 
 public class WorkIssueItemStorage(AppDbContext context, IRequestContext requestContext)
-    : StorageBase<WorkIssueItem, WorkIssueItemDbo>(context, requestContext)
+    : StorageBase<WorkIssueItem, WorkIssueItemDbo, WorkIssueItemSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<WorkIssueItemDbo> Collection => _context.WorkIssueItems;
+    protected override IMongoCollection<WorkIssueItemDbo> Collection => context.WorkIssueItems;
 
     protected override Task MapEntityFromDboAsync(WorkIssueItem entity, WorkIssueItemDbo dbo)
     {

@@ -1,12 +1,13 @@
 using Domain;
 using Domain.Entities.RecordSheet;
 using Domain.Models.ErrorInfo;
+using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class RecordSheetRepository(IStorage<RecordSheet> storage, IStorage<RecordSheetItem> recItemStorage)
-    : RepositoryBase<RecordSheet, InvalidRecordSheetReason>(storage)
+public class RecordSheetRepository(IStorage<RecordSheet, RecordSheetSearchRequest> storage, IStorage<RecordSheetItem> recItemStorage)
+    : RepositoryBase<RecordSheet, InvalidRecordSheetReason, RecordSheetSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(
         RecordSheet entity,

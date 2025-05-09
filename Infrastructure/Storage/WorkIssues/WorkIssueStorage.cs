@@ -2,21 +2,24 @@ using Domain.Entities.WorkIssues;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
+using Infrastructure.Dbo.User;
 using Infrastructure.Dbo.WorkIssues;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.Storage.Base;
 using MongoDB.Driver;
 
 namespace Infrastructure.Storage.WorkIssues;
 
-public class WorkIssueStorage(AppDbContext context, IRequestContext requestContext, IStorage<WorkIssueItem> issueItemStorage) 
-    : StorageBase<WorkIssue, WorkIssueDbo>(context, requestContext)
+public class WorkIssueStorage(
+    AppDbContext context,
+    IRequestContext requestContext,
+    IStorage<WorkIssueItem, WorkIssueItemSearchRequest> issueItemStorage)
+    : StorageBase<WorkIssue, WorkIssueDbo, WorkIssueSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<WorkIssueDbo> Collection => _context.WorkIssues;
+    protected override IMongoCollection<WorkIssueDbo> Collection => context.WorkIssues;
+
     protected override async Task MapEntityFromDboAsync(WorkIssue entity, WorkIssueDbo dbo)
     {
-        var searchRequest = new SearchRequest().WhereIn<WorkIssueItem, Guid>(item => item.Id, dbo.WorkIssueItemIds);
+        var searchRequest = new WorkIssueItemSearchRequest { Ids = dbo.WorkIssueItemIds };
         entity.Id = dbo.Id;
         entity.Items = await issueItemStorage.SearchAsync(searchRequest);
     }
@@ -25,7 +28,7 @@ public class WorkIssueStorage(AppDbContext context, IRequestContext requestConte
     {
         dbo.Id = entity.Id;
         dbo.WorkIssueItemIds = entity.Items.Select(item => item.Id).ToList();
-        
+
         return Task.CompletedTask;
     }
 
@@ -33,7 +36,7 @@ public class WorkIssueStorage(AppDbContext context, IRequestContext requestConte
     {
         dbo.Id = newEntity.Id;
         dbo.WorkIssueItemIds = newEntity.Items.Select(item => item.Id).ToList();
-        
+
         return Task.CompletedTask;
     }
 }

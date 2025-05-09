@@ -8,18 +8,17 @@ using Domain.Entities.WorkIssues;
 using Domain.Models.ErrorInfo;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
-using Infrastructure.Helpers.SearchRequestHelper;
-using MongoDB.Driver.Linq;
+using ConstructionSite = Domain.Entities.ConstructionSite.ConstructionSite;
 
 namespace Infrastructure.Repository;
 
 public class ConstructionSiteRepository(
-    IStorage<ConstructionSite> storage,
+    IStorage<ConstructionSite, ConstructionSiteSearchRequest> storage,
     IStorage<RegistrationSheet> regStorage,
     IStorage<RecordSheet> recStorage,
     IStorage<WorkIssue> issueStorage,
-    IStorage<User> userStorage)
-    : RepositoryBase<ConstructionSite, InvalidConstructionSiteReason>(storage)
+    IStorage<User, UserSearchRequest> userStorage)
+    : RepositoryBase<ConstructionSite, InvalidConstructionSiteReason, ConstructionSiteSearchRequest>(storage)
 {
     protected override Task ValidateCreationAsync(
         ConstructionSite entity,
@@ -89,7 +88,7 @@ public class ConstructionSiteRepository(
         if (addedUserIds.Count == 0)
             return;
         
-        var searchRequest = new SearchRequest().WhereIn<User, Guid>(o => o.Id, addedUserIds);
+        var searchRequest = new UserSearchRequest {Ids = addedUserIds};
         var addedUsers = await userStorage.SearchAsync(searchRequest);
         var addedUsersToId = addedUsers.ToDictionary(x => x.Id);
 

@@ -1,4 +1,5 @@
 using Domain.Entities.Users;
+using Domain.RequestArgs.SearchRequest;
 using Infrastructure.Context;
 using Infrastructure.Dbo.User;
 using Infrastructure.Storage.Base;
@@ -7,10 +8,9 @@ using MongoDB.Driver;
 namespace Infrastructure.Storage.Users;
 
 public class UserStorage(AppDbContext context, IRequestContext requestContext)
-    : StorageBase<User, UserDbo>(context, requestContext)
+    : StorageBase<User, UserDbo, UserSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<UserDbo> Collection => _context.Users;
+    protected override IMongoCollection<UserDbo> Collection => context.Users;
 
     protected override Task MapEntityFromDboAsync(User entity, UserDbo dbo)
     {
@@ -62,5 +62,22 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
         dbo.RefreshToken = newEntity.RefreshToken;
 
         return Task.CompletedTask;
+    }
+
+    protected override List<FilterDefinition<UserDbo>> BuildSpecificFilters(UserSearchRequest request)
+    {
+        var filters = new List<FilterDefinition<UserDbo>>();
+        var builder = Builders<UserDbo>.Filter;
+        
+        if (request.Emails?.Count > 0)
+            filters.Add(builder.In(x => x.Email, request.Emails));
+
+        if (!string.IsNullOrEmpty(request.Email))
+            filters.Add(builder.Eq(x => x.Email, request.Email));
+
+        if (!string.IsNullOrEmpty(request.RefreshToken))
+            filters.Add(builder.Eq(x => x.RefreshToken, request.RefreshToken));
+
+        return filters;
     }
 }

@@ -1,5 +1,6 @@
 using Domain.Entities.RecordSheet;
 using Domain.Entities.Users;
+using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo.RecordSheets;
@@ -9,10 +10,9 @@ using MongoDB.Driver;
 namespace Infrastructure.Storage.RecordSheets;
 
 public class RecordSheetItemStorage(AppDbContext context, IRequestContext requestContext, IStorage<User> userStorage)
-    : StorageBase<RecordSheetItem, RecordSheetItemDbo>(context, requestContext)
+    : StorageBase<RecordSheetItem, RecordSheetItemDbo, RecordSheetItemSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<RecordSheetItemDbo> Collection => _context.RecordSheetItems;
+    protected override IMongoCollection<RecordSheetItemDbo> Collection => context.RecordSheetItems;
 
     protected override async Task MapEntityFromDboAsync(RecordSheetItem entity, RecordSheetItemDbo dbo)
     {

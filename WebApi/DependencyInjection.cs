@@ -21,10 +21,12 @@ using Domain.RequestArgs.ConstructionSites;
 using Domain.RequestArgs.Organizations;
 using Domain.RequestArgs.RecordSheetItems;
 using Domain.RequestArgs.RegistrationSheetItems;
+using Domain.RequestArgs.SearchRequest;
 using Domain.RequestArgs.Users;
 using Domain.RequestArgs.WorkIssueItems;
 using Domain.Settings;
 using Domain.Storage;
+using ELogBook.Handlers;
 using Infrastructure;
 using Infrastructure.Auth;
 using Infrastructure.Commands.ConstructionSites;
@@ -69,9 +71,16 @@ public static class DependencyInjection
         services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            options.JsonSerializerOptions.DefaultIgnoreCondition = 
+                JsonIgnoreCondition.WhenWritingNull;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = 
+                JsonIgnoreCondition.WhenWritingDefault;
         });
 
         services.AddCommands();
+        
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
 
         return services;
     }
@@ -141,31 +150,40 @@ public static class DependencyInjection
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IRepository<User, InvalidUserReason>, UserRepository>();
+        services.AddScoped<IRepository<User, InvalidUserReason, UserSearchRequest>, UserRepository>();
         services.AddScoped<IRepository<User>, UserRepository>();
 
         services.AddScoped<IRepository<ConstructionSite>, ConstructionSiteRepository>();
         services.AddScoped<IRepository<ConstructionSite, InvalidConstructionSiteReason>, ConstructionSiteRepository>();
+        services.AddScoped<IRepository<ConstructionSite, InvalidConstructionSiteReason, ConstructionSiteSearchRequest>, ConstructionSiteRepository>();
 
         services.AddScoped<IRepository<Organization>, OrganizationRepository>();
         services.AddScoped<IRepository<Organization, InvalidOrganizationReason>, OrganizationRepository>();
+        services.AddScoped<IRepository<Organization, InvalidOrganizationReason, OrganizationSearchRequest>, OrganizationRepository>();
         
         services.AddScoped<IRepository<RegistrationSheetItem>, RegistrationSheetItemRepository>();
         services.AddScoped<IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason>, RegistrationSheetItemRepository>();
+        services.AddScoped<IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason, RegistrationSheetItemSearchRequest>, RegistrationSheetItemRepository>();
         
         services.AddScoped<IRepository<RegistrationSheet>, RegistrationSheetRepository>();
         services.AddScoped<IRepository<RegistrationSheet, InvalidRegistrationSheetReason>, RegistrationSheetRepository>();
+        services.AddScoped<IRepository<RegistrationSheet, InvalidRegistrationSheetReason, RegistrationSheetSearchRequest>, RegistrationSheetRepository>();
         
         services.AddScoped<IRepository<RecordSheet>, RecordSheetRepository>();
         services.AddScoped<IRepository<RecordSheet, InvalidRecordSheetReason>, RecordSheetRepository>();
+        services.AddScoped<IRepository<RecordSheet, InvalidRecordSheetReason, RecordSheetSearchRequest>, RecordSheetRepository>();
         
         services.AddScoped<IRepository<RecordSheetItem>, RecordSheetItemRepository>();
         services.AddScoped<IRepository<RecordSheetItem, InvalidRecordSheetItemReason>, RecordSheetItemRepository>();
+        services.AddScoped<IRepository<RecordSheetItem, InvalidRecordSheetItemReason, RecordSheetItemSearchRequest>, RecordSheetItemRepository>();
         
         services.AddScoped<IRepository<WorkIssue>, WorkIssueRepository>();
         services.AddScoped<IRepository<WorkIssue, InvalidWorkIssueReason>, WorkIssueRepository>();
+        services.AddScoped<IRepository<WorkIssue, InvalidWorkIssueReason, WorkIssueSearchRequest>, WorkIssueRepository>();
         
         services.AddScoped<IRepository<WorkIssueItem>, WorkIssueItemRepository>();
         services.AddScoped<IRepository<WorkIssueItem, InvalidWorkIssueItemReason>, WorkIssueItemRepository>();
+        services.AddScoped<IRepository<WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>, WorkIssueItemRepository>();
 
         return services;
     }
@@ -173,14 +191,31 @@ public static class DependencyInjection
     private static IServiceCollection AddStorages(this IServiceCollection services)
     {
         services.AddScoped<IStorage<User>, UserStorage>();
+        services.AddScoped<IStorage<User, UserSearchRequest>, UserStorage>();
+        
         services.AddScoped<IStorage<ConstructionSite>, ConstructionSiteStorage>();
+        services.AddScoped<IStorage<ConstructionSite, ConstructionSiteSearchRequest>, ConstructionSiteStorage>();
+        
         services.AddScoped<IStorage<Organization>, OrganizationStorage>();
+        services.AddScoped<IStorage<Organization, OrganizationSearchRequest>, OrganizationStorage>();
+        
         services.AddScoped<IStorage<RegistrationSheetItem>, RegistrationSheetItemStorage>();
+        services.AddScoped<IStorage<RegistrationSheetItem, RegistrationSheetItemSearchRequest>, RegistrationSheetItemStorage>();
+        
         services.AddScoped<IStorage<RegistrationSheet>, RegistrationSheetStorage>();
+        services.AddScoped<IStorage<RegistrationSheet, RegistrationSheetSearchRequest>, RegistrationSheetStorage>();
+        
         services.AddScoped<IStorage<RecordSheet>, RecordSheetStorage>();
+        services.AddScoped<IStorage<RecordSheet, RecordSheetSearchRequest>, RecordSheetStorage>();
+        
         services.AddScoped<IStorage<RecordSheetItem>, RecordSheetItemStorage>();
+        services.AddScoped<IStorage<RecordSheetItem, RecordSheetItemSearchRequest>, RecordSheetItemStorage>();
+        
         services.AddScoped<IStorage<WorkIssue>, WorkIssueStorage>();
+        services.AddScoped<IStorage<WorkIssue, WorkIssueSearchRequest>, WorkIssueStorage>();
+        
         services.AddScoped<IStorage<WorkIssueItem>, WorkIssueItemStorage>();
+        services.AddScoped<IStorage<WorkIssueItem, WorkIssueItemSearchRequest>, WorkIssueItemStorage>();
 
         return services;
     }
@@ -202,7 +237,7 @@ public static class DependencyInjection
         services.AddScoped<ICreateCommand<AuthResponse, RegisterRequest, InvalidUserReason>, CreateUserCommand>();
         services.AddScoped<IGetCommand<UserDto>, GetUserCommand>();
         services.AddScoped<IUpdateCommand<UserDto, UserUpdateArgs, InvalidUserReason>, UpdateUserCommand>();
-        services.AddScoped<ISearchCommand<UserDto>, SearchUserCommand>();
+        services.AddScoped<ISearchCommand<UserDto, UserSearchRequest>, SearchUserCommand>();
         services.AddScoped<CreateUserCommand>();
         services.AddScoped<LoginUserCommand>();
         services.AddScoped<RefreshUserTokenCommand>();
@@ -220,7 +255,7 @@ public static class DependencyInjection
         services
             .AddScoped<IUpdateCommand<ConstructionSiteDto, ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>,
                 UpdateConstructionSiteCommand>();
-        services.AddScoped<ISearchCommand<ConstructionSiteDto>, SearchConstructionSite>();
+        services.AddScoped<ISearchCommand<ConstructionSiteDto, ConstructionSiteSearchRequest>, SearchConstructionSite>();
 
         return services;
     }
@@ -234,7 +269,7 @@ public static class DependencyInjection
         services
             .AddScoped<IUpdateCommand<OrganizationDto, OrganizationUpdateArgs, InvalidOrganizationReason>,
                 UpdateOrganizationCommand>();
-        services.AddScoped<ISearchCommand<OrganizationDto>, SearchOrganizationCommand>();
+        services.AddScoped<ISearchCommand<OrganizationDto, OrganizationSearchRequest>, SearchOrganizationCommand>();
 
         return services;
     }
@@ -249,7 +284,7 @@ public static class DependencyInjection
         services
             .AddScoped<IUpdateCommand<RegistrationSheetItemDto, RegistrationSheetItemUpdateArgs,
                 InvalidRegistrationSheetItemReason>, UpdateRegistrationSheetItemCommand>();
-        services.AddScoped<ISearchCommand<RegistrationSheetItemDto>, SearchRegistrationSheetItemCommand>();
+        services.AddScoped<ISearchCommand<RegistrationSheetItemDto, RegistrationSheetItemSearchRequest>, SearchRegistrationSheetItemCommand>();
 
         return services;
     }
@@ -264,7 +299,7 @@ public static class DependencyInjection
         services
             .AddScoped<IUpdateCommand<RecordSheetItemDto, RecordSheetItemUpdateArgs,
                 InvalidRecordSheetItemReason>, UpdateRecordSheetItemCommand>();
-        services.AddScoped<ISearchCommand<RecordSheetItemDto>, SearchRecordSheetItemCommand>();
+        services.AddScoped<ISearchCommand<RecordSheetItemDto, RecordSheetItemSearchRequest>, SearchRecordSheetItemCommand>();
 
         return services;
     }
@@ -279,7 +314,7 @@ public static class DependencyInjection
         services
             .AddScoped<IUpdateCommand<WorkIssueItemDto, WorkIssueItemUpdateArgs,
                 InvalidWorkIssueItemReason>, UpdateWorkIssueItemCommand>();
-        services.AddScoped<ISearchCommand<WorkIssueItemDto>, SearchWorkIssueItemCommand>();
+        services.AddScoped<ISearchCommand<WorkIssueItemDto, WorkIssueItemSearchRequest>, SearchWorkIssueItemCommand>();
 
         return services;
     }

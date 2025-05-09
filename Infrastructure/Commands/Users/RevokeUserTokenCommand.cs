@@ -5,20 +5,17 @@ using Domain.Models.ErrorInfo;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.SearchRequest;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.WriteContext;
 
 namespace Infrastructure.Commands.Users;
 
-public class RevokeUserTokenCommand(IRepository<User, InvalidUserReason> repository)
+public class RevokeUserTokenCommand(IRepository<User, InvalidUserReason, UserSearchRequest> repository)
 {
     public async Task<ActionResult<bool, UpdateErrorInfo<InvalidUserReason>>> ExecuteAsync(
         RevokeTokenRequest request,
         CancellationToken cancellationToken)
     {
-        var user = (await repository.SearchAsync(
-            new SearchRequest().WhereEquals<User, string>(u => u.RefreshToken,
-                request.RefreshToken),
+        var user = (await repository.SearchAsync(new UserSearchRequest { RefreshToken = request.RefreshToken },
             cancellationToken)).FirstOrDefault();
         if (user is null)
             return new UpdateErrorInfo<InvalidUserReason>("Could not revoke token",

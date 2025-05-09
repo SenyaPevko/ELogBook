@@ -1,12 +1,13 @@
 using Domain;
 using Domain.Entities.WorkIssues;
 using Domain.Models.ErrorInfo;
+using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class WorkIssueItemRepository(IStorage<WorkIssueItem> storage, IStorage<WorkIssue> issueStorage)
-    : RepositoryBase<WorkIssueItem, InvalidWorkIssueItemReason>(storage)
+public class WorkIssueItemRepository(IStorage<WorkIssueItem, WorkIssueItemSearchRequest> storage, IStorage<WorkIssue> issueStorage)
+    : RepositoryBase<WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(WorkIssueItem entity,
         IWriteContext<InvalidWorkIssueItemReason> writeContext, CancellationToken cancellationToken)

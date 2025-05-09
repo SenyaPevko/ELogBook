@@ -1,14 +1,15 @@
 using Domain;
 using Domain.Entities.RegistrationSheet;
 using Domain.Models.ErrorInfo;
+using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
 public class RegistrationSheetRepository(
-    IStorage<RegistrationSheet> storage,
+    IStorage<RegistrationSheet, RegistrationSheetSearchRequest> storage,
     IStorage<RegistrationSheetItem> regItemStorage)
-    : RepositoryBase<RegistrationSheet, InvalidRegistrationSheetReason>(storage)
+    : RepositoryBase<RegistrationSheet, InvalidRegistrationSheetReason, RegistrationSheetSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(
         RegistrationSheet entity,

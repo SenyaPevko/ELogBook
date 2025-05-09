@@ -4,7 +4,6 @@ using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo.RecordSheets;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.Storage.Base;
 using MongoDB.Driver;
 
@@ -13,16 +12,14 @@ namespace Infrastructure.Storage.RecordSheets;
 public class RecordSheetStorage(
     AppDbContext context,
     IRequestContext requestContext,
-    IStorage<RecordSheetItem> recItemStorage)
-    : StorageBase<RecordSheet, RecordSheetDbo>(context, requestContext)
+    IStorage<RecordSheetItem, RecordSheetItemSearchRequest> recItemStorage)
+    : StorageBase<RecordSheet, RecordSheetDbo, RecordSheetSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<RecordSheetDbo> Collection => _context.RecordSheets;
+    protected override IMongoCollection<RecordSheetDbo> Collection => context.RecordSheets;
 
     protected override async Task MapEntityFromDboAsync(RecordSheet entity, RecordSheetDbo dbo)
     {
-        var searchRequest =
-            new SearchRequest().WhereIn<RegistrationSheetItem, Guid>(item => item.Id, dbo.RecordSheetItemIds);
+        var searchRequest = new RecordSheetItemSearchRequest{Ids = dbo.RecordSheetItemIds};
         entity.Id = dbo.Id;
         entity.Number = dbo.Number;
         entity.Items = await recItemStorage.SearchAsync(searchRequest);

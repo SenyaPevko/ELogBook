@@ -10,14 +10,92 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Storage.Base;
 
-public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestContext requestContext)
+public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext requestContext)
+    :  StorageBase<TEntity, TDbo>(requestContext), IStorage<TEntity, TSearchRequest>
+    where TEntity : EntityInfo, new()
+    where TDbo : EntityDbo, new()
+    where TSearchRequest : SearchRequestBase
+{
+    private static readonly FilterDefinitionBuilder<TDbo> FilterBuilder = Builders<TDbo>.Filter;
+    private static readonly SortDefinitionBuilder<TDbo> SortBuilder = Builders<TDbo>.Sort;
+
+    public async Task<List<TEntity>> SearchAsync(TSearchRequest request)
+    {
+        var filters = BuildBaseFilters(request);
+        
+        var specificFilters = BuildSpecificFilters(request);
+        if (specificFilters != null)
+        {
+            filters.AddRange(specificFilters);
+        }
+        
+        var combinedFilter = filters.Any() 
+            ? FilterBuilder.And(filters) 
+            : FilterBuilder.Empty;
+        
+        var sort = BuildSortDefinition(request);
+        var (skip, limit) = CalculatePagination(request);
+        
+        var cursor = await Collection.FindAsync(combinedFilter, new FindOptions<TDbo>
+        {
+            Sort = sort,
+            Skip = skip,
+            Limit = limit
+        });
+        
+        var dbos = await cursor.ToListAsync();
+        return await ConvertToEntitiesAsync(dbos);
+    }
+    
+    protected virtual List<FilterDefinition<TDbo>> BuildBaseFilters(TSearchRequest request)
+    {
+        var filters = new List<FilterDefinition<TDbo>>();
+        
+        if (request.Ids?.Count > 0)
+        {
+            filters.Add(FilterBuilder.In(x => x.Id, request.Ids));
+        }
+        
+        return filters;
+    }
+    
+    protected virtual List<FilterDefinition<TDbo>>? BuildSpecificFilters(TSearchRequest request)
+    {
+        return null;
+    }
+    
+    protected SortDefinition<TDbo>? BuildSortDefinition(SearchRequestBase request)
+    {
+        return !string.IsNullOrEmpty(request.SortBy)
+            ? request.SortDescending
+                ? SortBuilder.Descending(request.SortBy)
+                : SortBuilder.Ascending(request.SortBy)
+            : null;
+    }
+
+    protected (int? skip, int? limit) CalculatePagination(SearchRequestBase request)
+    {
+        return (request.Page.HasValue && request.PageSize.HasValue)
+            ? ((request.Page.Value - 1) * request.PageSize.Value, request.PageSize.Value)
+            : (null, null);
+    }
+
+    protected async Task<List<TEntity>> ConvertToEntitiesAsync(List<TDbo> dbos)
+    {
+        var entities = new List<TEntity>();
+        foreach (var dbo in dbos)
+        {
+            entities.Add(await ToEntityAsync(dbo));
+        }
+        return entities;
+    }
+}
+
+public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
     : IStorage<TEntity>
     where TEntity : EntityInfo, new()
     where TDbo : EntityDbo, new()
 {
-    private static readonly FilterDefinitionBuilder<TDbo> FilterBuilder = Builders<TDbo>.Filter;
-    private static readonly SortDefinitionBuilder<TDbo> SortBuilder = Builders<TDbo>.Sort;
-    
     protected abstract IMongoCollection<TDbo> Collection { get; }
 
     public virtual async Task AddAsync(TEntity entity)
@@ -51,59 +129,6 @@ public abstract class StorageBase<TEntity, TDbo>(AppDbContext context, IRequestC
     public async Task DeleteAsync(TEntity entity)
     {
         await Collection.DeleteOneAsync(x => x.Id == entity.Id);
-    }
-
-    public async Task<List<TEntity>> SearchAsync(SearchRequest request)
-    {
-        var filterDefinitions = new List<FilterDefinition<TDbo>>();
-
-        foreach (var filter in request.Filters)
-        {
-            FilterDefinition<TDbo> filterDefinition = filter.Operator switch
-            {
-                FilterOperator.Equals =>
-                    FilterBuilder.Eq(filter.Field, filter.Value),
-
-                FilterOperator.GreaterThan =>
-                    FilterBuilder.Gt(filter.Field, filter.Value),
-
-                FilterOperator.LessThan =>
-                    FilterBuilder.Lt(filter.Field, filter.Value),
-
-                FilterOperator.Contains when filter.Value is string stringValue =>
-                    FilterBuilder.Regex(filter.Field, new BsonRegularExpression(stringValue, "i")),
-
-                FilterOperator.In when filter.Value is System.Collections.IEnumerable enumerable =>
-                    FilterBuilder.In(filter.Field, enumerable.Cast<object>()),
-
-                _ => throw new NotSupportedException($"Operator {filter.Operator} not supported")
-            };
-
-            filterDefinitions.Add(filterDefinition);
-        }
-
-        var combinedFilter = filterDefinitions.Any()
-            ? FilterBuilder.And(filterDefinitions)
-            : FilterBuilder.Empty;
-
-        var findOptions = new FindOptions<TDbo>
-        {
-            Sort = !string.IsNullOrEmpty(request.SortBy)
-                ? request.SortDescending
-                    ? SortBuilder.Descending(request.SortBy)
-                    : SortBuilder.Ascending(request.SortBy)
-                : null,
-            Skip = request.Page.HasValue && request.PageSize.HasValue
-                ? (request.Page.Value - 1) * request.PageSize.Value
-                : (int?)null,
-            Limit = request.PageSize
-        };
-
-        var cursor = await Collection.FindAsync(combinedFilter, findOptions);
-        var dbos = await cursor.ToListAsync();
-        var entities = await dbos.SelectAsync(ToEntityAsync);
-
-        return entities.ToList();
     }
 
     protected async Task<TEntity> ToEntityAsync(TDbo dbo)

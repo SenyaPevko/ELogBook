@@ -1,12 +1,15 @@
 using Domain.Dtos.WorkIssue;
 using Domain.Entities.WorkIssues;
 using Domain.Repository;
+using Domain.RequestArgs.SearchRequest;
 using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.WorkIssueItems;
 
-public class SearchWorkIssueItemCommand(IRepository<WorkIssueItem> repository)
-    : SearchCommandBase<WorkIssueItemDto, WorkIssueItem>(repository)
+public class SearchWorkIssueItemCommand(
+    IRepository<WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest> repository)
+    : SearchCommandBase<WorkIssueItemDto, WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>(
+        repository)
 {
     protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity) => await entity.ToDto();
 }

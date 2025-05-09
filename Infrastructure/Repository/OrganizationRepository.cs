@@ -4,20 +4,20 @@ using Domain.Entities.Users;
 using Domain.Models.ErrorInfo;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
-using Infrastructure.Helpers.SearchRequestHelper;
 
 namespace Infrastructure.Repository;
 
-public class OrganizationRepository(IStorage<Organization> storage, IStorage<User> userStorage)
-    : RepositoryBase<Organization, InvalidOrganizationReason>(storage)
+public class OrganizationRepository(
+    IStorage<Organization, OrganizationSearchRequest> storage,
+    IStorage<User, UserSearchRequest> userStorage)
+    : RepositoryBase<Organization, InvalidOrganizationReason, OrganizationSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(
         Organization entity,
         IWriteContext<InvalidOrganizationReason> writeContext,
         CancellationToken cancellationToken)
     {
-        var existingOrganizations = await SearchAsync(
-            new SearchRequest().WhereEquals<Organization, string>(o => o.Name, entity.Name).SinglePage(),
+        var existingOrganizations = await SearchAsync(new OrganizationSearchRequest { Name = entity.Name },
             cancellationToken);
         if (existingOrganizations.Count != 0)
             writeContext.AddInvalidData(new ErrorDetail<InvalidOrganizationReason>
@@ -43,7 +43,7 @@ public class OrganizationRepository(IStorage<Organization> storage, IStorage<Use
         if (addedUserIds.Count == 0)
             return;
 
-        var searchRequest = new SearchRequest().WhereIn<User, Guid>(o => o.Id, addedUserIds);
+        var searchRequest = new UserSearchRequest { Ids = addedUserIds };
         var addedUsers = await userStorage.SearchAsync(searchRequest);
         var addedUsersToId = addedUsers.ToDictionary(x => x.Id);
 

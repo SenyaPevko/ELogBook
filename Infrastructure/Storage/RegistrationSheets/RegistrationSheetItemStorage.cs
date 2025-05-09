@@ -4,9 +4,9 @@ using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Users;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
+using Infrastructure.Commands.RegistrationSheetItems;
 using Infrastructure.Context;
 using Infrastructure.Dbo.RegistrationSheets;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.Storage.Base;
 using Infrastructure.Storage.Organizations;
 using Infrastructure.Storage.Users;
@@ -18,11 +18,10 @@ public class RegistrationSheetItemStorage(
     AppDbContext context,
     IRequestContext requestContext,
     IStorage<User> userStorage,
-    IStorage<Organization> organizationStorage)
-    : StorageBase<RegistrationSheetItem, RegistrationSheetItemDbo>(context, requestContext)
+    IStorage<Organization, OrganizationSearchRequest> organizationStorage)
+    : StorageBase<RegistrationSheetItem, RegistrationSheetItemDbo, RegistrationSheetItemSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<RegistrationSheetItemDbo> Collection => _context.RegistrationSheetItems;
+    protected override IMongoCollection<RegistrationSheetItemDbo> Collection => context.RegistrationSheetItems;
 
     protected override async Task MapEntityFromDboAsync(RegistrationSheetItem entity, RegistrationSheetItemDbo dbo)
     {
@@ -42,7 +41,7 @@ public class RegistrationSheetItemStorage(
 
     protected override async Task MapDboFromEntityAsync(RegistrationSheetItem entity, RegistrationSheetItemDbo dbo)
     {
-        var searchRequest = new SearchRequest().WhereEquals<Organization, string>(e => e.Name, entity.OrganizationName);
+        var searchRequest = new OrganizationSearchRequest{Name = entity.OrganizationName};
         var organization = (await organizationStorage.SearchAsync(searchRequest)).FirstOrDefault();
         dbo.Id = entity.Id;
         dbo.CreatorId = entity.CreatorId;
@@ -56,7 +55,7 @@ public class RegistrationSheetItemStorage(
         RegistrationSheetItem newEntity,
         RegistrationSheetItemDbo dbo)
     {
-        var searchRequest = new SearchRequest().WhereEquals<Organization, string>(e => e.Name, newEntity.OrganizationName);
+        var searchRequest = new OrganizationSearchRequest{Name = newEntity.OrganizationName};
         var organization = (await organizationStorage.SearchAsync(searchRequest)).FirstOrDefault();
         dbo.Id = newEntity.Id;
         dbo.CreatorId = newEntity.CreatorId;

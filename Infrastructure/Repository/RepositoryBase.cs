@@ -6,6 +6,19 @@ using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
+public abstract class RepositoryBase<TEntity, TInvalidReason, TSearchRequest>(IStorage<TEntity, TSearchRequest> storage)
+    : RepositoryBase<TEntity, TInvalidReason>(storage), IRepository<TEntity, TInvalidReason, TSearchRequest>
+    where TEntity : EntityInfo, new()
+    where TInvalidReason : Enum
+    where TSearchRequest : SearchRequestBase
+{
+    public async Task<List<TEntity>> SearchAsync(TSearchRequest request, CancellationToken cancellationToken)
+    {
+        // todo: мб валидация запроса поиска
+        return await storage.SearchAsync(request);
+    }
+}
+
 public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> storage)
     : IRepository<TEntity, TInvalidReason>
     where TEntity : EntityInfo, new()
@@ -48,12 +61,6 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
     public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
     {
         await storage.DeleteAsync(entity);
-    }
-
-    public async Task<List<TEntity>> SearchAsync(SearchRequest request, CancellationToken cancellationToken)
-    {
-        // todo: валидация
-        return await storage.SearchAsync(request);
     }
 
     protected abstract Task ValidateCreationAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,

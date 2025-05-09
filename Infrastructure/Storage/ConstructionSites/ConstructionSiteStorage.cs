@@ -2,10 +2,12 @@ using Domain.Entities.ConstructionSite;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.WorkIssues;
+using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Storage.Base;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.Storage.ConstructionSites;
@@ -16,10 +18,9 @@ public class ConstructionSiteStorage(
     IStorage<RegistrationSheet> regSheetStorage,
     IStorage<RecordSheet> recSheetStorage,
     IStorage<WorkIssue> workIssueStorage)
-    : StorageBase<ConstructionSite, ConstructionSiteDbo>(dbContext, requestContext)
+    : StorageBase<ConstructionSite, ConstructionSiteDbo, ConstructionSiteSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _dbContext = dbContext;
-    protected override IMongoCollection<ConstructionSiteDbo> Collection => _dbContext.ConstructionSites;
+    protected override IMongoCollection<ConstructionSiteDbo> Collection => dbContext.ConstructionSites;
 
     protected override async Task MapEntityFromDboAsync(ConstructionSite entity,
         ConstructionSiteDbo dbo)
@@ -69,5 +70,36 @@ public class ConstructionSiteStorage(
         dbo.WorkIssueId = newEntity.WorkIssue.Id;
 
         return Task.CompletedTask;
+    }
+
+    protected override List<FilterDefinition<ConstructionSiteDbo>> BuildSpecificFilters(
+        ConstructionSiteSearchRequest request)
+    {
+        var filters = new List<FilterDefinition<ConstructionSiteDbo>>();
+        var builder = Builders<ConstructionSiteDbo>.Filter;
+
+        if (!string.IsNullOrEmpty(request.Name))
+        {
+            filters.Add(builder.Regex(x => x.Name, 
+                new BsonRegularExpression(request.Name, "i")));
+        }
+        
+        if (!string.IsNullOrEmpty(request.Address))
+        {
+            filters.Add(builder.Regex(x => x.Address, 
+                new BsonRegularExpression(request.Address, "i")));
+        }
+        
+        if (request.UserRoleUserId.HasValue)
+        {
+            var innerBuilder = Builders<ConstructionSiteUserRole>.Filter;
+            filters.Add(builder.ElemMatch(
+                x => x.ConstructionSiteUserRoles,
+                innerBuilder.And(
+                    innerBuilder.Eq(x => x.UserId, request.UserRoleUserId.Value)
+                )));
+        }
+
+        return filters;
     }
 }

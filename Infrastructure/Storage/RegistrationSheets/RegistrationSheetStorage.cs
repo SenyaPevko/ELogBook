@@ -1,24 +1,26 @@
 using Domain.Entities.RegistrationSheet;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
+using Infrastructure.Commands.RegistrationSheetItems;
 using Infrastructure.Context;
 using Infrastructure.Dbo.RegistrationSheets;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.Storage.Base;
 using MongoDB.Driver;
 
 namespace Infrastructure.Storage.RegistrationSheets;
 
-public class RegistrationSheetStorage(AppDbContext context, IRequestContext requestContext, IStorage<RegistrationSheetItem> regItemStorage)
-    : StorageBase<RegistrationSheet, RegistrationSheetDbo>(context, requestContext)
+public class RegistrationSheetStorage(
+    AppDbContext context,
+    IRequestContext requestContext,
+    IStorage<RegistrationSheetItem, RegistrationSheetItemSearchRequest> regItemStorage)
+    : StorageBase<RegistrationSheet, RegistrationSheetDbo, RegistrationSheetSearchRequest>(requestContext)
 {
-    private readonly AppDbContext _context = context;
-    protected override IMongoCollection<RegistrationSheetDbo> Collection => _context.RegistrationSheets;
+    protected override IMongoCollection<RegistrationSheetDbo> Collection => context.RegistrationSheets;
 
     protected override async Task MapEntityFromDboAsync(RegistrationSheet entity, RegistrationSheetDbo dbo)
     {
         entity.Id = dbo.Id;
-        var searchRequest = new SearchRequest().WhereIn<RegistrationSheetItem, Guid>(item => item.Id, dbo.RegistrationSheetItemIds);
+        var searchRequest = new RegistrationSheetItemSearchRequest { Ids = dbo.RegistrationSheetItemIds };
         entity.Items = await regItemStorage.SearchAsync(searchRequest);
     }
 
@@ -26,7 +28,7 @@ public class RegistrationSheetStorage(AppDbContext context, IRequestContext requ
     {
         dbo.Id = entity.Id;
         dbo.RegistrationSheetItemIds = entity.Items.Select(item => item.Id).ToList();
-        
+
         return Task.CompletedTask;
     }
 
@@ -35,7 +37,7 @@ public class RegistrationSheetStorage(AppDbContext context, IRequestContext requ
     {
         dbo.Id = newEntity.Id;
         dbo.RegistrationSheetItemIds = newEntity.Items.Select(item => item.Id).ToList();
-        
+
         return Task.CompletedTask;
     }
 }

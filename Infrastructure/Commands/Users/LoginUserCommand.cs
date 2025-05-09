@@ -7,14 +7,13 @@ using Domain.Models.ErrorInfo;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.SearchRequest;
-using Infrastructure.Helpers.SearchRequestHelper;
 using Infrastructure.WriteContext;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Commands.Users;
 
 public class LoginUserCommand(
-    IRepository<User, InvalidUserReason> repository,
+    IRepository<User, InvalidUserReason, UserSearchRequest> repository,
     IPasswordHasher<User> passwordHasher,
     IAuthService authService)
 {
@@ -22,10 +21,8 @@ public class LoginUserCommand(
         LoginRequest request,
         CancellationToken cancellationToken)
     {
-        var user = (await repository.SearchAsync(
-            new SearchRequest().WhereEquals<User, string>(u => u.Email, request.Email)
-                .SinglePage(),
-            cancellationToken)).FirstOrDefault();
+        var user = (await repository.SearchAsync(new UserSearchRequest{Email = request.Email}, cancellationToken)).FirstOrDefault();
+        
         if (user is null)
             return new UpdateErrorInfo<InvalidUserReason>(
                 "Could not login user",
