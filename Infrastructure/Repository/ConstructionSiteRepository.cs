@@ -20,7 +20,7 @@ public class ConstructionSiteRepository(
     IStorage<User, UserSearchRequest> userStorage)
     : RepositoryBase<ConstructionSite, InvalidConstructionSiteReason, ConstructionSiteSearchRequest>(storage)
 {
-    protected override Task ValidateCreationAsync(
+    protected override async Task ValidateCreationAsync(
         ConstructionSite entity,
         IWriteContext<InvalidConstructionSiteReason> writeContext,
         CancellationToken cancellationToken)
@@ -30,9 +30,15 @@ public class ConstructionSiteRepository(
         // todo: мб здесь написать проверку на наличие RegistrationSheet RecordSheet WorkIssue в бд, мб они не записались типо
         // хотя их запись можно вообще в асинхрон увести, и кешировать, чтоб из базы не доставать
         
-        // todo: нужно проверять что адрес не повторяется
-
-        return Task.CompletedTask;
+        var existingAddresses = await SearchAsync(new ConstructionSiteSearchRequest { Address = entity.Address },
+            cancellationToken);
+        if (existingAddresses.Count != 0)
+            writeContext.AddInvalidData(new ErrorDetail<InvalidConstructionSiteReason>
+            {
+                Path = nameof(entity.Name),
+                Reason = InvalidConstructionSiteReason.AddressAlreadyExists,
+                Value = entity.Name
+            });
     }
 
     protected override async Task ValidateUpdateAsync(
