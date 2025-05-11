@@ -22,6 +22,5 @@ public class UserUpdateArgs : EntityUpdateArgs
     /// <summary>
     ///     Id организации - проставляет админ при первой выдаче прав
     /// </summary>
-    // todo: при обновлении этого поля должны быть права админа
     public Guid? OrganizationId { get; set; }
 }
