@@ -38,6 +38,7 @@ public static class DtoHelper
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
             Items = (await entity.Items.SelectAsync(item => item.ToDto())).ToList(),
+            ConstructionSiteId = entity.ConstructionSiteId,
         };
 
     public static async Task<RecordSheetDto> ToDto(this RecordSheet entity) =>
@@ -47,6 +48,7 @@ public static class DtoHelper
             UpdateInfo = entity.UpdateInfo,
             Number = entity.Number,
             Items = (await entity.Items.SelectAsync(item => item.ToDto())).ToList(),
+            ConstructionSiteId = entity.ConstructionSiteId,
         };
 
     public static async Task<WorkIssueDto> ToDto(this WorkIssue entity) =>
@@ -55,6 +57,7 @@ public static class DtoHelper
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
             Items = (await entity.Items.SelectAsync(item => item.ToDto())).ToList(),
+            ConstructionSiteId = entity.ConstructionSiteId,
         };
 
     public static Task<UserDto> ToDto(this User entity) =>

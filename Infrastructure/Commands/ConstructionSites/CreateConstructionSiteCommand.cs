@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
 using Domain.Repository;
@@ -7,9 +8,9 @@ using Infrastructure.Commands.Base;
 namespace Infrastructure.Commands.ConstructionSites;
 
 public class CreateConstructionSiteCommand(
-    IRepository<ConstructionSite, InvalidConstructionSiteReason> repository)
+    IRepository<ConstructionSite, InvalidConstructionSiteReason> repository, IAccessChecker<ConstructionSite> accessChecker)
     : CreateCommandBase<ConstructionSiteDto, ConstructionSite,
-        ConstructionSiteCreationArgs, InvalidConstructionSiteReason>(repository)
+        ConstructionSiteCreationArgs, InvalidConstructionSiteReason>(repository, accessChecker)
 {
     protected override Task<ConstructionSite> MapToEntityAsync(
         ConstructionSiteCreationArgs args)

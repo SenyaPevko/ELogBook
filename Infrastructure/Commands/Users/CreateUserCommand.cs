@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Auth;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
@@ -12,8 +13,9 @@ namespace Infrastructure.Commands.Users;
 public class CreateUserCommand(
     IRepository<User, InvalidUserReason> repository,
     IPasswordHasher<User> passwordHasher,
-    IAuthService authService)
-    : CreateCommandBase<AuthResponse, User, RegisterRequest, InvalidUserReason>(repository)
+    IAuthService authService,
+    IAccessChecker<User> accessChecker)
+    : CreateCommandBase<AuthResponse, User, RegisterRequest, InvalidUserReason>(repository, accessChecker)
 {
     protected override Task<User> MapToEntityAsync(RegisterRequest args)
     {

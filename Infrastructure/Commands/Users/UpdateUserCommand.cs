@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos;
 using Domain.Entities.Users;
 using Domain.Repository;
@@ -8,15 +9,16 @@ namespace Infrastructure.Commands.Users;
 
 // todo: обновлять пользователя должен либо пользователь либо админ
 public class UpdateUserCommand(
-    IRepository<User, InvalidUserReason> repository)
+    IRepository<User, InvalidUserReason> repository,
+    IAccessChecker<User, UserUpdateArgs> accessChecker)
     : UpdateCommandBase<UserDto, User,
-        UserUpdateArgs, InvalidUserReason>(repository)
+        UserUpdateArgs, InvalidUserReason>(repository, accessChecker)
 {
     protected override async Task<UserDto> MapToDtoAsync(User entity)
     {
         return await entity.ToDto();
     }
-    
+
     protected override Task ApplyUpdatesAsync(User entity, UserUpdateArgs args)
     {
         if (args.Name is not null) entity.Name = args.Name;

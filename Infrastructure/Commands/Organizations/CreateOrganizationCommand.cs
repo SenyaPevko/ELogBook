@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos;
 using Domain.Entities.Organization;
 using Domain.Repository;
@@ -6,8 +7,11 @@ using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.Organizations;
 
-public class CreateOrganizationCommand(IRepository<Organization, InvalidOrganizationReason> repository)
-    : CreateCommandBase<OrganizationDto, Organization, OrganizationCreationArgs, InvalidOrganizationReason>(repository)
+public class CreateOrganizationCommand(
+    IRepository<Organization, InvalidOrganizationReason> repository,
+    IAccessChecker<Organization> accessChecker)
+    : CreateCommandBase<OrganizationDto, Organization, OrganizationCreationArgs, InvalidOrganizationReason>(repository,
+        accessChecker)
 {
     protected override async Task<OrganizationDto> MapToDtoAsync(Organization entity) => await entity.ToDto();
 

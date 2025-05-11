@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos;
 using Domain.Entities.ConstructionSite;
 using Domain.Repository;
@@ -7,9 +8,10 @@ using Infrastructure.Commands.Base;
 namespace Infrastructure.Commands.ConstructionSites;
 
 public class UpdateConstructionSiteCommand(
-    IRepository<ConstructionSite, InvalidConstructionSiteReason> repository)
+    IRepository<ConstructionSite, InvalidConstructionSiteReason> repository,
+    IAccessChecker<ConstructionSite, ConstructionSiteUpdateArgs> accessChecker)
     : UpdateCommandBase<ConstructionSiteDto, ConstructionSite,
-        ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>(repository)
+        ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>(repository, accessChecker)
 {
     protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity) => await entity.ToDto();
     
@@ -60,10 +62,11 @@ public class UpdateConstructionSiteCommand(
         UserId = args.UserId,
     };
     
-    private Order MapArgsToEntity(OrderCreationArgs args) => new Order
+    private Order MapArgsToEntity(OrderCreationArgs args) => new()
     {
         Id = Guid.NewGuid(),
         Link = args.Link,
+        UserInChargeId = args.UserInChargeId,
     };
 
     private void ApplyUpdate(ConstructionSiteUserRole userRole, ConstructionSiteUserRoleUpdateArgs args)

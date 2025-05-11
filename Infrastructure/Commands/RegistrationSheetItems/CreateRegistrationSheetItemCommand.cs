@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Repository;
@@ -8,11 +9,14 @@ using Infrastructure.Context;
 namespace Infrastructure.Commands.RegistrationSheetItems;
 
 public class CreateRegistrationSheetItemCommand(
-    IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason> repository, IRequestContext context)
+    IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason> repository,
+    IRequestContext context,
+    IAccessChecker<RegistrationSheetItem> accessChecker)
     : CreateCommandBase<RegistrationSheetItemDto, RegistrationSheetItem, RegistrationSheetItemCreationArgs,
-        InvalidRegistrationSheetItemReason>(repository)
+        InvalidRegistrationSheetItemReason>(repository, accessChecker)
 {
-    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity) => await entity.ToDto();
+    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity) =>
+        await entity.ToDto();
 
     protected override Task<RegistrationSheetItem> MapToEntityAsync(RegistrationSheetItemCreationArgs args) =>
         Task.FromResult(new RegistrationSheetItem

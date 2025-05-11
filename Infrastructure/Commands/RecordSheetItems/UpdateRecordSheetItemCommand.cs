@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos.RecordSheet;
 using Domain.Entities.RecordSheet;
 using Domain.Repository;
@@ -7,9 +8,10 @@ using Infrastructure.Commands.Base;
 namespace Infrastructure.Commands.RecordSheetItems;
 
 public class UpdateRecordSheetItemCommand(
-    IRepository<RecordSheetItem, InvalidRecordSheetItemReason> repository)
+    IRepository<RecordSheetItem, InvalidRecordSheetItemReason> repository,
+    IAccessChecker<RecordSheetItem, RecordSheetItemUpdateArgs> accessChecker)
     : UpdateCommandBase<RecordSheetItemDto, RecordSheetItem, RecordSheetItemUpdateArgs,
-        InvalidRecordSheetItemReason>(repository)
+        InvalidRecordSheetItemReason>(repository, accessChecker)
 {
     protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity) => await entity.ToDto();
 
@@ -19,7 +21,7 @@ public class UpdateRecordSheetItemCommand(
         if (args.Directions is not null) entity.Directions = args.Directions;
         if (args.RepresentativeId is not null) entity.RepresentativeId = args.RepresentativeId.Value;
         if (args.ComplianceNoteUserId is not null) entity.ComplianceNoteUserId = args.ComplianceNoteUserId.Value;
-        
+
         return Task.CompletedTask;
     }
 }

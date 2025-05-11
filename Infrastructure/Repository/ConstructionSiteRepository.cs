@@ -29,6 +29,8 @@ public class ConstructionSiteRepository(
 
         // todo: мб здесь написать проверку на наличие RegistrationSheet RecordSheet WorkIssue в бд, мб они не записались типо
         // хотя их запись можно вообще в асинхрон увести, и кешировать, чтоб из базы не доставать
+        
+        // todo: нужно проверять что адрес не повторяется
 
         return Task.CompletedTask;
     }
@@ -47,11 +49,11 @@ public class ConstructionSiteRepository(
         IWriteContext<InvalidConstructionSiteReason> writeContext,
         CancellationToken cancellationToken)
     {
-        var regSheet = new RegistrationSheet { Id = Guid.NewGuid() };
+        var regSheet = new RegistrationSheet { Id = Guid.NewGuid(), ConstructionSiteId = entity.Id };
         // todo: у RecordSheet есть поле number - нужно завести счетчик в бд и просто инкрементить его - наверн
         // нужно сначала вообще понять что этот номер значит - уточнить у заказчика
-        var recSheet = new RecordSheet { Id = Guid.NewGuid() };
-        var workIssue = new WorkIssue { Id = Guid.NewGuid() };
+        var recSheet = new RecordSheet { Id = Guid.NewGuid(), ConstructionSiteId = entity.Id };
+        var workIssue = new WorkIssue { Id = Guid.NewGuid(), ConstructionSiteId = entity.Id };
 
         await regStorage.AddAsync(regSheet);
         await recStorage.AddAsync(recSheet);

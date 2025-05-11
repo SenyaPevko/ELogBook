@@ -4,5 +4,6 @@ namespace Domain.RequestArgs.ConstructionSites;
 
 public class OrderCreationArgs : EntityCreationArgs
 {
-    public string Link { get; set; } = null!;
+    public required string Link { get; set; }
+    public required Guid UserInChargeId { get; set; }
 }

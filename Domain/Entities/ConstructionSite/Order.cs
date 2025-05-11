@@ -7,4 +7,6 @@ public class Order : IItemWithId
     public Guid Id { get; set; }
 
     public string Link { get; set; } = null!;
+    
+    public Guid UserInChargeId { get; set; }
 }

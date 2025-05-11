@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Repository;
@@ -8,9 +9,10 @@ namespace Infrastructure.Commands.RegistrationSheetItems;
 
 public class SearchRegistrationSheetItemCommand(
     IRepository<RegistrationSheetItem, InvalidRegistrationSheetItemReason, RegistrationSheetItemSearchRequest>
-        repository)
+        repository,
+    IAccessChecker<RegistrationSheetItem> accessChecker)
     : SearchCommandBase<RegistrationSheetItemDto, RegistrationSheetItem, InvalidRegistrationSheetItemReason,
-        RegistrationSheetItemSearchRequest>(repository)
+        RegistrationSheetItemSearchRequest>(repository, accessChecker)
 {
     protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity) =>
         await entity.ToDto();

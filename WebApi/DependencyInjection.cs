@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
+using Domain.AccessChecker;
 using Domain.Auth;
 using Domain.Commands;
 using Domain.Dtos;
@@ -28,6 +29,12 @@ using Domain.Settings;
 using Domain.Storage;
 using ELogBook.Handlers;
 using Infrastructure;
+using Infrastructure.AccessCheckers.ConstructionSites;
+using Infrastructure.AccessCheckers.Organizations;
+using Infrastructure.AccessCheckers.RecordSheets;
+using Infrastructure.AccessCheckers.RegistrationSheets;
+using Infrastructure.AccessCheckers.Users;
+using Infrastructure.AccessCheckers.WorkIssues;
 using Infrastructure.Auth;
 using Infrastructure.Commands.ConstructionSites;
 using Infrastructure.Commands.Organizations;
@@ -67,6 +74,7 @@ public static class DependencyInjection
 
         services.AddStorages();
         services.AddRepositories();
+        services.AddAccessCheckers();
 
         services.AddControllers().AddJsonOptions(options =>
         {
@@ -147,6 +155,38 @@ public static class DependencyInjection
         return services;
     }
 
+    private static IServiceCollection AddStorages(this IServiceCollection services)
+    {
+        services.AddScoped<IStorage<User>, UserStorage>();
+        services.AddScoped<IStorage<User, UserSearchRequest>, UserStorage>();
+        
+        services.AddScoped<IStorage<ConstructionSite>, ConstructionSiteStorage>();
+        services.AddScoped<IStorage<ConstructionSite, ConstructionSiteSearchRequest>, ConstructionSiteStorage>();
+        
+        services.AddScoped<IStorage<Organization>, OrganizationStorage>();
+        services.AddScoped<IStorage<Organization, OrganizationSearchRequest>, OrganizationStorage>();
+        
+        services.AddScoped<IStorage<RegistrationSheetItem>, RegistrationSheetItemStorage>();
+        services.AddScoped<IStorage<RegistrationSheetItem, RegistrationSheetItemSearchRequest>, RegistrationSheetItemStorage>();
+        
+        services.AddScoped<IStorage<RegistrationSheet>, RegistrationSheetStorage>();
+        services.AddScoped<IStorage<RegistrationSheet, RegistrationSheetSearchRequest>, RegistrationSheetStorage>();
+        
+        services.AddScoped<IStorage<RecordSheet>, RecordSheetStorage>();
+        services.AddScoped<IStorage<RecordSheet, RecordSheetSearchRequest>, RecordSheetStorage>();
+        
+        services.AddScoped<IStorage<RecordSheetItem>, RecordSheetItemStorage>();
+        services.AddScoped<IStorage<RecordSheetItem, RecordSheetItemSearchRequest>, RecordSheetItemStorage>();
+        
+        services.AddScoped<IStorage<WorkIssue>, WorkIssueStorage>();
+        services.AddScoped<IStorage<WorkIssue, WorkIssueSearchRequest>, WorkIssueStorage>();
+        
+        services.AddScoped<IStorage<WorkIssueItem>, WorkIssueItemStorage>();
+        services.AddScoped<IStorage<WorkIssueItem, WorkIssueItemSearchRequest>, WorkIssueItemStorage>();
+
+        return services;
+    }
+    
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IRepository<User, InvalidUserReason>, UserRepository>();
@@ -188,35 +228,32 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddStorages(this IServiceCollection services)
+    private static IServiceCollection AddAccessCheckers(this IServiceCollection services)
     {
-        services.AddScoped<IStorage<User>, UserStorage>();
-        services.AddScoped<IStorage<User, UserSearchRequest>, UserStorage>();
+        services.AddScoped<IAccessChecker<User>, UserAccessChecker>();
+        services.AddScoped<IAccessChecker<User, UserUpdateArgs>, UserAccessChecker>();
         
-        services.AddScoped<IStorage<ConstructionSite>, ConstructionSiteStorage>();
-        services.AddScoped<IStorage<ConstructionSite, ConstructionSiteSearchRequest>, ConstructionSiteStorage>();
+        services.AddScoped<IAccessChecker<ConstructionSite>, ConstructionSiteAccessChecker>();
+        services.AddScoped<IAccessChecker<ConstructionSite, ConstructionSiteUpdateArgs>, ConstructionSiteAccessChecker>();
         
-        services.AddScoped<IStorage<Organization>, OrganizationStorage>();
-        services.AddScoped<IStorage<Organization, OrganizationSearchRequest>, OrganizationStorage>();
+        services.AddScoped<IAccessChecker<Organization>, OrganizationAccessChecker>();
+        services.AddScoped<IAccessChecker<Organization, OrganizationUpdateArgs>, OrganizationAccessChecker>();
         
-        services.AddScoped<IStorage<RegistrationSheetItem>, RegistrationSheetItemStorage>();
-        services.AddScoped<IStorage<RegistrationSheetItem, RegistrationSheetItemSearchRequest>, RegistrationSheetItemStorage>();
+        services.AddScoped<IAccessChecker<RecordSheet>, RecordSheetAccessChecker>();
         
-        services.AddScoped<IStorage<RegistrationSheet>, RegistrationSheetStorage>();
-        services.AddScoped<IStorage<RegistrationSheet, RegistrationSheetSearchRequest>, RegistrationSheetStorage>();
+        services.AddScoped<IAccessChecker<RecordSheetItem>, RecordSheetItemAccessChecker>();
+        services.AddScoped<IAccessChecker<RecordSheetItem, RecordSheetItemUpdateArgs>, RecordSheetItemAccessChecker>();
         
-        services.AddScoped<IStorage<RecordSheet>, RecordSheetStorage>();
-        services.AddScoped<IStorage<RecordSheet, RecordSheetSearchRequest>, RecordSheetStorage>();
+        services.AddScoped<IAccessChecker<RegistrationSheet>, RegistrationSheetAccessChecker>();
         
-        services.AddScoped<IStorage<RecordSheetItem>, RecordSheetItemStorage>();
-        services.AddScoped<IStorage<RecordSheetItem, RecordSheetItemSearchRequest>, RecordSheetItemStorage>();
+        services.AddScoped<IAccessChecker<RegistrationSheetItem>, RegistrationSheetItemAccessChecker>();
+        services.AddScoped<IAccessChecker<RegistrationSheetItem, RegistrationSheetItemUpdateArgs>, RegistrationSheetItemAccessChecker>();
         
-        services.AddScoped<IStorage<WorkIssue>, WorkIssueStorage>();
-        services.AddScoped<IStorage<WorkIssue, WorkIssueSearchRequest>, WorkIssueStorage>();
+        services.AddScoped<IAccessChecker<WorkIssueItem>, WorkIssueItemAccessChecker>();
+        services.AddScoped<IAccessChecker<WorkIssueItem, WorkIssueItemUpdateArgs>, WorkIssueItemAccessChecker>();
         
-        services.AddScoped<IStorage<WorkIssueItem>, WorkIssueItemStorage>();
-        services.AddScoped<IStorage<WorkIssueItem, WorkIssueItemSearchRequest>, WorkIssueItemStorage>();
-
+        services.AddScoped<IAccessChecker<WorkIssue>, WorkIssueAccessChecker>();
+        
         return services;
     }
 

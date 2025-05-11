@@ -32,7 +32,7 @@ public class ConstructionSiteStorage(
         entity.Image = new Uri(dbo.Image);
         entity.Orders = dbo.Orders;
         entity.ConstructionSiteUserRoles = dbo.ConstructionSiteUserRoles;
-        
+
         entity.RegistrationSheet = (await regSheetStorage.GetByIdAsync(dbo.RegistrationSheetId))!;
         entity.RecordSheet = (await recSheetStorage.GetByIdAsync(dbo.RecordSheetId))!;
         entity.WorkIssue = (await workIssueStorage.GetByIdAsync(dbo.WorkIssueId))!;
@@ -80,16 +80,16 @@ public class ConstructionSiteStorage(
 
         if (!string.IsNullOrEmpty(request.Name))
         {
-            filters.Add(builder.Regex(x => x.Name, 
+            filters.Add(builder.Regex(x => x.Name,
                 new BsonRegularExpression(request.Name, "i")));
         }
-        
+
         if (!string.IsNullOrEmpty(request.Address))
         {
-            filters.Add(builder.Regex(x => x.Address, 
+            filters.Add(builder.Regex(x => x.Address,
                 new BsonRegularExpression(request.Address, "i")));
         }
-        
+
         if (request.UserRoleUserId.HasValue)
         {
             var innerBuilder = Builders<ConstructionSiteUserRole>.Filter;
@@ -98,6 +98,24 @@ public class ConstructionSiteStorage(
                 innerBuilder.And(
                     innerBuilder.Eq(x => x.UserId, request.UserRoleUserId.Value)
                 )));
+        }
+
+        if (request.RecordSheetId is not null)
+        {
+            // todo: проверить работоспособность
+            filters.Add(builder.Eq(x => x.RecordSheetId, request.RecordSheetId));
+        }
+        
+        if (request.RegistrationSheetId is not null)
+        {
+            // todo: проверить работоспособность
+            filters.Add(builder.Eq(x => x.RegistrationSheetId, request.RegistrationSheetId));
+        }
+        
+        if (request.WorkIssueId is not null)
+        {
+            // todo: проверить работоспособность
+            filters.Add(builder.Eq(x => x.WorkIssueId, request.WorkIssueId));
         }
 
         return filters;

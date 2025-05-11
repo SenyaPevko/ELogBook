@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos.RecordSheet;
 using Domain.Entities.RecordSheet;
 using Domain.Repository;
@@ -9,9 +10,10 @@ namespace Infrastructure.Commands.RecordSheetItems;
 
 public class CreateRecordSheetItemCommand(
     IRepository<RecordSheetItem, InvalidRecordSheetItemReason> repository,
-    IRequestContext context)
+    IRequestContext context,
+    IAccessChecker<RecordSheetItem> accessChecker)
     : CreateCommandBase<RecordSheetItemDto, RecordSheetItem, RecordSheetItemCreationArgs,
-        InvalidRecordSheetItemReason>(repository)
+        InvalidRecordSheetItemReason>(repository, accessChecker)
 {
     protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity) => await entity.ToDto();
 

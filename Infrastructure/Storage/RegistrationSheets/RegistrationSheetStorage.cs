@@ -19,15 +19,17 @@ public class RegistrationSheetStorage(
 
     protected override async Task MapEntityFromDboAsync(RegistrationSheet entity, RegistrationSheetDbo dbo)
     {
-        entity.Id = dbo.Id;
         var searchRequest = new RegistrationSheetItemSearchRequest { Ids = dbo.RegistrationSheetItemIds };
+        entity.Id = dbo.Id;
         entity.Items = await regItemStorage.SearchAsync(searchRequest);
+        entity.ConstructionSiteId = dbo.ConstructionSiteId;
     }
 
     protected override Task MapDboFromEntityAsync(RegistrationSheet entity, RegistrationSheetDbo dbo)
     {
         dbo.Id = entity.Id;
         dbo.RegistrationSheetItemIds = entity.Items.Select(item => item.Id).ToList();
+        dbo.ConstructionSiteId = entity.ConstructionSiteId;
 
         return Task.CompletedTask;
     }
@@ -37,6 +39,7 @@ public class RegistrationSheetStorage(
     {
         dbo.Id = newEntity.Id;
         dbo.RegistrationSheetItemIds = newEntity.Items.Select(item => item.Id).ToList();
+        dbo.ConstructionSiteId = newEntity.ConstructionSiteId;
 
         return Task.CompletedTask;
     }

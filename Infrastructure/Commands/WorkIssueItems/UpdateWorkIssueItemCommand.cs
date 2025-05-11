@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Dtos.WorkIssue;
 using Domain.Entities.WorkIssues;
 using Domain.Repository;
@@ -9,9 +10,10 @@ namespace Infrastructure.Commands.WorkIssueItems;
 
 public class UpdateWorkIssueItemCommand(
     IRepository<WorkIssueItem, InvalidWorkIssueItemReason> repository,
-    IRequestContext context)
+    IRequestContext context,
+    IAccessChecker<WorkIssueItem, WorkIssueItemUpdateArgs> accessChecker)
     : UpdateCommandBase<WorkIssueItemDto, WorkIssueItem, WorkIssueItemUpdateArgs,
-        InvalidWorkIssueItemReason>(repository)
+        InvalidWorkIssueItemReason>(repository, accessChecker)
 {
     protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity) => await entity.ToDto();
 
@@ -23,7 +25,7 @@ public class UpdateWorkIssueItemCommand(
             entity.Answer = args.Answer;
             entity.AnswerDate = context.RequestTime.DateTime;
         }
-        
+
         return Task.CompletedTask;
     }
 }

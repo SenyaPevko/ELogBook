@@ -17,4 +17,6 @@ public class RecordSheetDbo : EntityDbo
     ///     Идентификаторы рядов учетного листа
     /// </summary>
     public List<Guid> RecordSheetItemIds { get; set; } = [];
+    
+    public Guid ConstructionSiteId { get; set; }
 }

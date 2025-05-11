@@ -22,12 +22,14 @@ public class WorkIssueStorage(
         var searchRequest = new WorkIssueItemSearchRequest { Ids = dbo.WorkIssueItemIds };
         entity.Id = dbo.Id;
         entity.Items = await issueItemStorage.SearchAsync(searchRequest);
+        entity.ConstructionSiteId = dbo.ConstructionSiteId;
     }
 
     protected override Task MapDboFromEntityAsync(WorkIssue entity, WorkIssueDbo dbo)
     {
         dbo.Id = entity.Id;
         dbo.WorkIssueItemIds = entity.Items.Select(item => item.Id).ToList();
+        dbo.ConstructionSiteId = entity.ConstructionSiteId;
 
         return Task.CompletedTask;
     }
@@ -36,7 +38,8 @@ public class WorkIssueStorage(
     {
         dbo.Id = newEntity.Id;
         dbo.WorkIssueItemIds = newEntity.Items.Select(item => item.Id).ToList();
-
+        dbo.ConstructionSiteId = newEntity.ConstructionSiteId;
+        
         return Task.CompletedTask;
     }
 }
