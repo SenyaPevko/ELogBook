@@ -1,7 +1,9 @@
+using Domain.Entities.RegistrationSheet;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
 using Infrastructure.Dbo.ConstructionSite;
 using Infrastructure.Dbo.RecordSheets;
+using Infrastructure.Dbo.RegistrationSheets;
 using Infrastructure.Dbo.User;
 using MongoDB.Driver;
 
@@ -15,6 +17,7 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
         await CreateConstructionSiteIndexesAsync(appDbContext);
         await CreateOrganizationIndexesAsync(appDbContext);
         await CreateRecordSheetItemIndexesAsync(appDbContext);
+        await CreateRegistrationSheetItemIndexesAsync(appDbContext);
         // todo: добавить индексы для всех сущностей
     }
 
@@ -94,6 +97,14 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
         await appDbContext.RecordSheetItems.Indexes.CreateOneAsync(
             new CreateIndexModel<RecordSheetItemDbo>(
                 Builders<RecordSheetItemDbo>.IndexKeys.Ascending(s => s.RecordSheetId),
+                new CreateIndexOptions { Background = true}));
+    }
+    
+    private static async Task CreateRegistrationSheetItemIndexesAsync(AppDbContext appDbContext)
+    {
+        await appDbContext.RegistrationSheetItems.Indexes.CreateOneAsync(
+            new CreateIndexModel<RegistrationSheetItemDbo>(
+                Builders<RegistrationSheetItemDbo>.IndexKeys.Ascending(s => s.RegistrationSheetId),
                 new CreateIndexOptions { Background = true}));
     }
 }
