@@ -102,19 +102,16 @@ public class ConstructionSiteStorage(
 
         if (request.RecordSheetId is not null)
         {
-            // todo: проверить работоспособность
             filters.Add(builder.Eq(x => x.RecordSheetId, request.RecordSheetId));
         }
         
         if (request.RegistrationSheetId is not null)
         {
-            // todo: проверить работоспособность
             filters.Add(builder.Eq(x => x.RegistrationSheetId, request.RegistrationSheetId));
         }
         
         if (request.WorkIssueId is not null)
         {
-            // todo: проверить работоспособность
             filters.Add(builder.Eq(x => x.WorkIssueId, request.WorkIssueId));
         }
 

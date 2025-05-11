@@ -81,7 +81,6 @@ public class ConstructionSiteRepository(
             .Select(r => r.UserId)
             .ToList();
         
-        // todo: такую же логику нужно добавить в organization, чтобы там не добавляли одних и тех же пользователей
         var notUniqueUserIds = addedUserIds.Intersect(oldUserIds).ToList();
         foreach (var userId in notUniqueUserIds)
         {

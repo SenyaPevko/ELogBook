@@ -7,7 +7,6 @@ using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.Users;
 
-// todo: обновлять пользователя должен либо пользователь либо админ
 public class UpdateUserCommand(
     IRepository<User, InvalidUserReason> repository,
     IAccessChecker<User, UserUpdateArgs> accessChecker)

@@ -53,7 +53,7 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
         await ValidateUpdateAsync(existingEntity!, entity, writeContext, cancellationToken);
         if (!writeContext.IsSuccess)
             return;
-        // todo: валидация
+
         await storage.UpdateAsync(entity);
         await AfterUpdateAsync(existingEntity, entity, writeContext, cancellationToken);
     }

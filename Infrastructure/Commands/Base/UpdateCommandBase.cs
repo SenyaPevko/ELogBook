@@ -26,7 +26,6 @@ public abstract class UpdateCommandBase<TDto, TEntity, TUpdateArgs, TInvalidReas
         TUpdateArgs updateArgs,
         CancellationToken cancellationToken)
     {
-        // todo: валидация прав
         var canUpdate = await accessChecker.CanUpdate();
         if (canUpdate is false)
             return ErrorInfoExtensions.UpdateAccessForbidden<TEntity, TInvalidReason>(updateArgs.Id);
