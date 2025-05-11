@@ -8,6 +8,6 @@ public class WorkIssueItemCreationArgs : EntityCreationArgs
     ///     Вопрос
     /// </summary>
     public required string Question { get; set; }
-    
+
     public required Guid WorkIssueId { get; set; }
 }

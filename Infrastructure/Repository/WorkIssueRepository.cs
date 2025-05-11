@@ -6,7 +6,9 @@ using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class WorkIssueRepository(IStorage<WorkIssue, WorkIssueSearchRequest> storage, IStorage<WorkIssueItem> issueItemStorage) 
+public class WorkIssueRepository(
+    IStorage<WorkIssue, WorkIssueSearchRequest> storage,
+    IStorage<WorkIssueItem> issueItemStorage)
     : RepositoryBase<WorkIssue, InvalidWorkIssueReason, WorkIssueSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(
@@ -15,7 +17,6 @@ public class WorkIssueRepository(IStorage<WorkIssue, WorkIssueSearchRequest> sto
         CancellationToken cancellationToken)
     {
         foreach (var item in entity.Items)
-        {
             if (await issueItemStorage.GetByIdAsync(item.Id) is null)
                 writeContext.AddInvalidData(new ErrorDetail<InvalidWorkIssueReason>
                 {
@@ -23,10 +24,10 @@ public class WorkIssueRepository(IStorage<WorkIssue, WorkIssueSearchRequest> sto
                     Reason = InvalidWorkIssueReason.ReferenceNotFound,
                     Value = item.Id.ToString()
                 });
-        }
     }
 
-    protected override Task ValidateUpdateAsync(WorkIssue oldEntity, WorkIssue newEntity, IWriteContext<InvalidWorkIssueReason> writeContext,
+    protected override Task ValidateUpdateAsync(WorkIssue oldEntity, WorkIssue newEntity,
+        IWriteContext<InvalidWorkIssueReason> writeContext,
         CancellationToken cancellationToken)
     {
         // todo: нужно проверять элементы на существование

@@ -29,7 +29,7 @@ public class ConstructionSiteRepository(
 
         // todo: мб здесь написать проверку на наличие RegistrationSheet RecordSheet WorkIssue в бд, мб они не записались типо
         // хотя их запись можно вообще в асинхрон увести, и кешировать, чтоб из базы не доставать
-        
+
         var existingAddresses = await SearchAsync(new ConstructionSiteSearchRequest { Address = entity.Address },
             cancellationToken);
         if (existingAddresses.Count != 0)
@@ -69,7 +69,7 @@ public class ConstructionSiteRepository(
         entity.RecordSheet = recSheet;
         entity.WorkIssue = workIssue;
     }
-    
+
     protected async Task ValidateAddedUsers(
         ConstructionSite oldEntity,
         ConstructionSite newEntity,
@@ -80,33 +80,29 @@ public class ConstructionSiteRepository(
             .Skip(oldUserIds.Count)
             .Select(r => r.UserId)
             .ToList();
-        
+
         var notUniqueUserIds = addedUserIds.Intersect(oldUserIds).ToList();
         foreach (var userId in notUniqueUserIds)
-        {
             writeContext.AddInvalidData(new ErrorDetail<InvalidConstructionSiteReason>
             {
                 Path = nameof(Organization.UserIds),
                 Reason = InvalidConstructionSiteReason.UserAlreadyHasRole,
                 Value = userId.ToString()
             });
-        }
-        
+
         if (addedUserIds.Count == 0)
             return;
-        
-        var searchRequest = new UserSearchRequest {Ids = addedUserIds};
+
+        var searchRequest = new UserSearchRequest { Ids = addedUserIds };
         var addedUsers = await userStorage.SearchAsync(searchRequest);
         var addedUsersToId = addedUsers.ToDictionary(x => x.Id);
 
         foreach (var id in addedUserIds.Where(id => !addedUsersToId.ContainsKey(id)))
-        {
             writeContext.AddInvalidData(new ErrorDetail<InvalidConstructionSiteReason>
             {
                 Path = nameof(Organization.UserIds),
                 Reason = InvalidConstructionSiteReason.ReferenceNotFound,
                 Value = id.ToString()
             });
-        }
     }
 }

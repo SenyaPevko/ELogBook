@@ -13,8 +13,10 @@ public class UpdateRegistrationSheetItemCommand(
     : UpdateCommandBase<RegistrationSheetItemDto, RegistrationSheetItem, RegistrationSheetItemUpdateArgs,
         InvalidRegistrationSheetItemReason>(repository, accessChecker)
 {
-    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity) =>
-        await entity.ToDto();
+    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity)
+    {
+        return await entity.ToDto();
+    }
 
     protected override Task ApplyUpdatesAsync(RegistrationSheetItem entity, RegistrationSheetItemUpdateArgs args)
     {

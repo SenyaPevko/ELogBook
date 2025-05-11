@@ -6,7 +6,9 @@ using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class RecordSheetRepository(IStorage<RecordSheet, RecordSheetSearchRequest> storage, IStorage<RecordSheetItem> recItemStorage)
+public class RecordSheetRepository(
+    IStorage<RecordSheet, RecordSheetSearchRequest> storage,
+    IStorage<RecordSheetItem> recItemStorage)
     : RepositoryBase<RecordSheet, InvalidRecordSheetReason, RecordSheetSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(
@@ -15,7 +17,6 @@ public class RecordSheetRepository(IStorage<RecordSheet, RecordSheetSearchReques
         CancellationToken cancellationToken)
     {
         foreach (var item in entity.Items)
-        {
             if (await recItemStorage.GetByIdAsync(item.Id) is null)
                 writeContext.AddInvalidData(new ErrorDetail<InvalidRecordSheetReason>
                 {
@@ -23,10 +24,10 @@ public class RecordSheetRepository(IStorage<RecordSheet, RecordSheetSearchReques
                     Reason = InvalidRecordSheetReason.ReferenceNotFound,
                     Value = item.Id.ToString()
                 });
-        }
     }
 
-    protected override Task ValidateUpdateAsync(RecordSheet oldEntity, RecordSheet newEntity, IWriteContext<InvalidRecordSheetReason> writeContext,
+    protected override Task ValidateUpdateAsync(RecordSheet oldEntity, RecordSheet newEntity,
+        IWriteContext<InvalidRecordSheetReason> writeContext,
         CancellationToken cancellationToken)
     {
         // todo: нужно проверять элементы на существование

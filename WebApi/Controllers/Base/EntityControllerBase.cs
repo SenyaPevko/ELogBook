@@ -61,7 +61,7 @@ public abstract class EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidR
         [FromRoute] Guid id)
     {
         request.Id = id;
-        
+
         return await command.ExecuteAsync(request, HttpContext.RequestAborted);
     }
 }

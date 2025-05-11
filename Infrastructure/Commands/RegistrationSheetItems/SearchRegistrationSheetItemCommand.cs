@@ -14,6 +14,8 @@ public class SearchRegistrationSheetItemCommand(
     : SearchCommandBase<RegistrationSheetItemDto, RegistrationSheetItem, InvalidRegistrationSheetItemReason,
         RegistrationSheetItemSearchRequest>(repository, accessChecker)
 {
-    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity) =>
-        await entity.ToDto();
+    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity)
+    {
+        return await entity.ToDto();
+    }
 }

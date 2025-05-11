@@ -17,7 +17,6 @@ public class RegistrationSheetRepository(
         CancellationToken cancellationToken)
     {
         foreach (var item in entity.Items)
-        {
             if (await regItemStorage.GetByIdAsync(item.Id) is null)
                 writeContext.AddInvalidData(new ErrorDetail<InvalidRegistrationSheetReason>
                 {
@@ -25,10 +24,10 @@ public class RegistrationSheetRepository(
                     Reason = InvalidRegistrationSheetReason.ReferenceNotFound,
                     Value = item.Id.ToString()
                 });
-        }
     }
 
-    protected override Task ValidateUpdateAsync(RegistrationSheet oldEntity, RegistrationSheet newEntity, IWriteContext<InvalidRegistrationSheetReason> writeContext,
+    protected override Task ValidateUpdateAsync(RegistrationSheet oldEntity, RegistrationSheet newEntity,
+        IWriteContext<InvalidRegistrationSheetReason> writeContext,
         CancellationToken cancellationToken)
     {
         // todo: нужно проверять элементы на существование

@@ -6,8 +6,11 @@ using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class RegistrationSheetItemRepository(IStorage<RegistrationSheetItem, RegistrationSheetItemSearchRequest> storage, IStorage<RegistrationSheet> regSheetStorage)
-    : RepositoryBase<RegistrationSheetItem, InvalidRegistrationSheetItemReason, RegistrationSheetItemSearchRequest>(storage)
+public class RegistrationSheetItemRepository(
+    IStorage<RegistrationSheetItem, RegistrationSheetItemSearchRequest> storage,
+    IStorage<RegistrationSheet> regSheetStorage)
+    : RepositoryBase<RegistrationSheetItem, InvalidRegistrationSheetItemReason, RegistrationSheetItemSearchRequest>(
+        storage)
 {
     protected override async Task ValidateCreationAsync(RegistrationSheetItem entity,
         IWriteContext<InvalidRegistrationSheetItemReason> writeContext,
@@ -23,7 +26,8 @@ public class RegistrationSheetItemRepository(IStorage<RegistrationSheetItem, Reg
             });
     }
 
-    protected override Task ValidateUpdateAsync(RegistrationSheetItem oldEntity, RegistrationSheetItem newEntity, IWriteContext<InvalidRegistrationSheetItemReason> writeContext,
+    protected override Task ValidateUpdateAsync(RegistrationSheetItem oldEntity, RegistrationSheetItem newEntity,
+        IWriteContext<InvalidRegistrationSheetItemReason> writeContext,
         CancellationToken cancellationToken)
     {
         // todo: нужно проверять элементы на существование

@@ -2,5 +2,5 @@ namespace Domain.Entities.RegistrationSheet;
 
 public enum InvalidRegistrationSheetReason
 {
-    ReferenceNotFound = 1,
+    ReferenceNotFound = 1
 }

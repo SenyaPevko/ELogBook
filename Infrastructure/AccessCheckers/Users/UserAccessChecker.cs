@@ -11,15 +11,15 @@ public class UserAccessChecker(IRequestContext context) : AccessCheckerBase<User
     {
         if (entity.Id != Context.Auth.UserId)
             return false;
-        
+
         return true;
     }
 
     public override async Task<bool> CanUpdate(UserUpdateArgs updateArgs, User oldEntity, User newEntity)
     {
-        if(updateArgs.OrganizationId is not null)
+        if (updateArgs.OrganizationId is not null)
             return context.Auth.Role is UserRole.Admin;
-        
+
         return true;
     }
 }

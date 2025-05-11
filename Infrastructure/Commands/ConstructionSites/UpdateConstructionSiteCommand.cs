@@ -13,8 +13,11 @@ public class UpdateConstructionSiteCommand(
     : UpdateCommandBase<ConstructionSiteDto, ConstructionSite,
         ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>(repository, accessChecker)
 {
-    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity) => await entity.ToDto();
-    
+    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity)
+    {
+        return await entity.ToDto();
+    }
+
     protected override Task ApplyUpdatesAsync(ConstructionSite entity,
         ConstructionSiteUpdateArgs args)
     {
@@ -24,14 +27,15 @@ public class UpdateConstructionSiteCommand(
         if (args.Image is not null) entity.Image = args.Image;
         if (args.Orders is not null)
         {
-            if(args.Orders.Add is not null)
+            if (args.Orders.Add is not null)
                 entity.Orders.AddRange(args.Orders.Add.Select(MapArgsToEntity));
-            if(args.Orders.Remove is not null)
+            if (args.Orders.Remove is not null)
                 entity.Orders = entity.Orders.Where(o => !args.Orders.Remove.Contains(o.Id)).ToList();
         }
+
         if (args.UserRoles is not null)
         {
-            if(args.UserRoles.Add is not null)
+            if (args.UserRoles.Add is not null)
                 entity.ConstructionSiteUserRoles.AddRange(args.UserRoles.Add.Select(MapArgsToEntity));
             // todo: какая-то хардорная логика, нужно подумать как оптимизировать
             // todo: нужно вообще подумать как IListUpdate автоматизировать
@@ -39,15 +43,11 @@ public class UpdateConstructionSiteCommand(
             {
                 var idToRole = args.UserRoles.Update.ToDictionary(r => r.Id);
                 foreach (var user in entity.ConstructionSiteUserRoles)
-                {
                     if (idToRole.TryGetValue(user.Id, out var role))
-                    {
                         ApplyUpdate(user, role);
-                    }
-                }
             }
-            
-            if(args.UserRoles.Remove is not null)
+
+            if (args.UserRoles.Remove is not null)
                 entity.ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles
                     .Where(r => !args.UserRoles.Remove.Contains(r.Id)).ToList();
         }
@@ -55,19 +55,25 @@ public class UpdateConstructionSiteCommand(
         return Task.FromResult(entity);
     }
 
-    private ConstructionSiteUserRole MapArgsToEntity(ConstructionSiteUserRoleCreationArgs args) => new ConstructionSiteUserRole
+    private ConstructionSiteUserRole MapArgsToEntity(ConstructionSiteUserRoleCreationArgs args)
     {
-        Id = Guid.NewGuid(),
-        Role = args.Role,
-        UserId = args.UserId,
-    };
-    
-    private Order MapArgsToEntity(OrderCreationArgs args) => new()
+        return new ConstructionSiteUserRole
+        {
+            Id = Guid.NewGuid(),
+            Role = args.Role,
+            UserId = args.UserId
+        };
+    }
+
+    private Order MapArgsToEntity(OrderCreationArgs args)
     {
-        Id = Guid.NewGuid(),
-        Link = args.Link,
-        UserInChargeId = args.UserInChargeId,
-    };
+        return new Order
+        {
+            Id = Guid.NewGuid(),
+            Link = args.Link,
+            UserInChargeId = args.UserInChargeId
+        };
+    }
 
     private void ApplyUpdate(ConstructionSiteUserRole userRole, ConstructionSiteUserRoleUpdateArgs args)
     {

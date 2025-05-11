@@ -23,8 +23,8 @@ public class RegistrationSheetItem : EntityInfo
     public DateTime DepartureDate { get; set; }
 
     public string Signature { get; set; } = null!;
-    
+
     public Guid CreatorId { get; set; }
-    
+
     public Guid RegistrationSheetId { get; set; }
 }

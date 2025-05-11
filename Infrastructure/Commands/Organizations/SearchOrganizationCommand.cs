@@ -13,5 +13,8 @@ public class SearchOrganizationCommand(
     : SearchCommandBase<OrganizationDto, Organization, InvalidOrganizationReason, OrganizationSearchRequest>(repository,
         accessChecker)
 {
-    protected override async Task<OrganizationDto> MapToDtoAsync(Organization entity) => await entity.ToDto();
+    protected override async Task<OrganizationDto> MapToDtoAsync(Organization entity)
+    {
+        return await entity.ToDto();
+    }
 }

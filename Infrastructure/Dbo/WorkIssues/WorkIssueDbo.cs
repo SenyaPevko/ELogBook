@@ -9,6 +9,6 @@ namespace Infrastructure.Dbo.WorkIssues;
 public class WorkIssueDbo : EntityDbo
 {
     public List<Guid> WorkIssueItemIds { get; set; } = [];
-    
+
     public Guid ConstructionSiteId { get; set; }
 }

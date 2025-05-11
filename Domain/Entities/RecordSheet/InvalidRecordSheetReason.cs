@@ -2,5 +2,5 @@ namespace Domain.Entities.RecordSheet;
 
 public enum InvalidRecordSheetReason
 {
-    ReferenceNotFound = 1,
+    ReferenceNotFound = 1
 }

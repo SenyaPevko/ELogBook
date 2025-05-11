@@ -1,7 +1,6 @@
 using Domain.AccessChecker;
 using Domain.Dtos;
 using Domain.Entities.Organization;
-using Domain.Entities.Users;
 using Domain.Repository;
 using Domain.RequestArgs.Organizations;
 using Infrastructure.Commands.Base;
@@ -14,7 +13,10 @@ public class UpdateOrganizationCommand(
     : UpdateCommandBase<OrganizationDto, Organization, OrganizationUpdateArgs, InvalidOrganizationReason>(repository,
         accessChecker)
 {
-    protected override async Task<OrganizationDto> MapToDtoAsync(Organization entity) => await entity.ToDto();
+    protected override async Task<OrganizationDto> MapToDtoAsync(Organization entity)
+    {
+        return await entity.ToDto();
+    }
 
     protected override Task ApplyUpdatesAsync(Organization entity, OrganizationUpdateArgs args)
     {

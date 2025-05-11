@@ -6,12 +6,15 @@ using Infrastructure.Context;
 
 namespace Infrastructure.AccessCheckers;
 
-public abstract class AccessCheckerBase<TEntity, TUpdateArgs>(IRequestContext context) 
+public abstract class AccessCheckerBase<TEntity, TUpdateArgs>(IRequestContext context)
     : AccessCheckerBase<TEntity>(context), IAccessChecker<TEntity, TUpdateArgs>
     where TEntity : EntityInfo
     where TUpdateArgs : IEntityUpdateArgs
 {
-    public virtual async Task<bool> CanUpdate(TUpdateArgs updateArgs, TEntity oldEntity, TEntity newEntity) => true;
+    public virtual async Task<bool> CanUpdate(TUpdateArgs updateArgs, TEntity oldEntity, TEntity newEntity)
+    {
+        return true;
+    }
 }
 
 public abstract class AccessCheckerBase<TEntity>(IRequestContext context) : IAccessChecker<TEntity>
@@ -27,8 +30,11 @@ public abstract class AccessCheckerBase<TEntity>(IRequestContext context) : IAcc
         return null;
     }
 
-    public virtual async Task<bool> CanRead(TEntity entity) => true;
-    
+    public virtual async Task<bool> CanRead(TEntity entity)
+    {
+        return true;
+    }
+
     public virtual async Task<bool?> CanUpdate()
     {
         if (Context.Auth.Role is UserRole.Admin)
@@ -37,7 +43,10 @@ public abstract class AccessCheckerBase<TEntity>(IRequestContext context) : IAcc
         return null;
     }
 
-    public virtual async Task<bool> CanUpdate(TEntity entity) => true;
+    public virtual async Task<bool> CanUpdate(TEntity entity)
+    {
+        return true;
+    }
 
     public virtual async Task<bool?> CanCreate()
     {
@@ -47,5 +56,8 @@ public abstract class AccessCheckerBase<TEntity>(IRequestContext context) : IAcc
         return null;
     }
 
-    public virtual async Task<bool> CanCreate(TEntity entity) => true;
+    public virtual async Task<bool> CanCreate(TEntity entity)
+    {
+        return true;
+    }
 }

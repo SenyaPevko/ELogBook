@@ -13,5 +13,8 @@ public class SearchWorkIssueItemCommand(
     : SearchCommandBase<WorkIssueItemDto, WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>(
         repository, accessChecker)
 {
-    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity) => await entity.ToDto();
+    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity)
+    {
+        return await entity.ToDto();
+    }
 }

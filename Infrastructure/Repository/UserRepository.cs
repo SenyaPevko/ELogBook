@@ -2,10 +2,8 @@ using Domain;
 using Domain.Entities.Organization;
 using Domain.Entities.Users;
 using Domain.Models.ErrorInfo;
-using Domain.Repository;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
-using Infrastructure.WriteContext;
 
 namespace Infrastructure.Repository;
 

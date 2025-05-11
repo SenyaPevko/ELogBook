@@ -5,5 +5,4 @@ namespace Infrastructure.AccessCheckers.RecordSheets;
 
 public class RecordSheetAccessChecker(IRequestContext context) : AccessCheckerBase<RecordSheet>(context)
 {
-    
 }

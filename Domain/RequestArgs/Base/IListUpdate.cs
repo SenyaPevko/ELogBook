@@ -1,13 +1,13 @@
 namespace Domain.RequestArgs.Base;
 
 public class ListUpdate<TCreationArgs, TUpdateArgs> : ListUpdate<TCreationArgs>
-    where TCreationArgs : IEntityCreationArgs 
-    where TUpdateArgs : IEntityUpdateArgs 
+    where TCreationArgs : IEntityCreationArgs
+    where TUpdateArgs : IEntityUpdateArgs
 {
     public List<TUpdateArgs>? Update { get; set; }
 }
 
-public class ListUpdate<TCreationArgs> 
+public class ListUpdate<TCreationArgs>
     where TCreationArgs : IEntityCreationArgs
 {
     public List<TCreationArgs>? Add { get; set; }

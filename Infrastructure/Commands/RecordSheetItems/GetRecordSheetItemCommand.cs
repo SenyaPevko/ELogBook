@@ -11,5 +11,8 @@ public class GetRecordSheetItemCommand(
     IAccessChecker<RecordSheetItem> accessChecker)
     : GetCommandBase<RecordSheetItemDto, RecordSheetItem>(repository, accessChecker)
 {
-    protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity) => await entity.ToDto();
+    protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity)
+    {
+        return await entity.ToDto();
+    }
 }

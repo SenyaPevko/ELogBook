@@ -27,6 +27,6 @@ public class RegistrationSheetItemDbo : EntityDbo
     ///     Дата отъезда
     /// </summary>
     public DateTime DepartureDate { get; set; }
-    
+
     public Guid RegistrationSheetId { get; set; }
 }

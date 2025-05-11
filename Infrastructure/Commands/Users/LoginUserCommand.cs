@@ -21,8 +21,9 @@ public class LoginUserCommand(
         LoginRequest request,
         CancellationToken cancellationToken)
     {
-        var user = (await repository.SearchAsync(new UserSearchRequest{Email = request.Email}, cancellationToken)).FirstOrDefault();
-        
+        var user = (await repository.SearchAsync(new UserSearchRequest { Email = request.Email }, cancellationToken))
+            .FirstOrDefault();
+
         if (user is null)
             return new UpdateErrorInfo<InvalidUserReason>(
                 "Could not login user",

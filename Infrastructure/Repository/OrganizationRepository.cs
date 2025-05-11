@@ -48,13 +48,11 @@ public class OrganizationRepository(
         var addedUsersToId = addedUsers.ToDictionary(x => x.Id);
 
         foreach (var id in addedUserIds.Where(id => !addedUsersToId.ContainsKey(id)))
-        {
             writeContext.AddInvalidData(new ErrorDetail<InvalidOrganizationReason>
             {
                 Path = nameof(Organization.UserIds),
                 Reason = InvalidOrganizationReason.ReferenceNotFound,
                 Value = id.ToString()
             });
-        }
     }
 }

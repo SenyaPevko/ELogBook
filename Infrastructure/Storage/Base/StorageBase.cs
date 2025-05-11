@@ -1,17 +1,14 @@
-using Core.Helpers;
 using Domain.Entities.Base;
-using Domain.Models.Filters;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure.Storage.Base;
 
 public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext requestContext)
-    :  StorageBase<TEntity, TDbo>(requestContext), IStorage<TEntity, TSearchRequest>
+    : StorageBase<TEntity, TDbo>(requestContext), IStorage<TEntity, TSearchRequest>
     where TEntity : EntityInfo, new()
     where TDbo : EntityDbo, new()
     where TSearchRequest : SearchRequestBase
@@ -22,48 +19,42 @@ public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext
     public async Task<List<TEntity>> SearchAsync(TSearchRequest request)
     {
         var filters = BuildBaseFilters(request);
-        
+
         var specificFilters = BuildSpecificFilters(request);
-        if (specificFilters != null)
-        {
-            filters.AddRange(specificFilters);
-        }
-        
-        var combinedFilter = filters.Any() 
-            ? FilterBuilder.And(filters) 
+        if (specificFilters != null) filters.AddRange(specificFilters);
+
+        var combinedFilter = filters.Any()
+            ? FilterBuilder.And(filters)
             : FilterBuilder.Empty;
-        
+
         var sort = BuildSortDefinition(request);
         var (skip, limit) = CalculatePagination(request);
-        
+
         var cursor = await Collection.FindAsync(combinedFilter, new FindOptions<TDbo>
         {
             Sort = sort,
             Skip = skip,
             Limit = limit
         });
-        
+
         var dbos = await cursor.ToListAsync();
         return await ConvertToEntitiesAsync(dbos);
     }
-    
+
     protected virtual List<FilterDefinition<TDbo>> BuildBaseFilters(TSearchRequest request)
     {
         var filters = new List<FilterDefinition<TDbo>>();
-        
-        if (request.Ids?.Count > 0)
-        {
-            filters.Add(FilterBuilder.In(x => x.Id, request.Ids));
-        }
-        
+
+        if (request.Ids?.Count > 0) filters.Add(FilterBuilder.In(x => x.Id, request.Ids));
+
         return filters;
     }
-    
+
     protected virtual List<FilterDefinition<TDbo>>? BuildSpecificFilters(TSearchRequest request)
     {
         return null;
     }
-    
+
     protected SortDefinition<TDbo>? BuildSortDefinition(SearchRequestBase request)
     {
         return !string.IsNullOrEmpty(request.SortBy)
@@ -75,7 +66,7 @@ public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext
 
     protected (int? skip, int? limit) CalculatePagination(SearchRequestBase request)
     {
-        return (request.Page.HasValue && request.PageSize.HasValue)
+        return request.Page.HasValue && request.PageSize.HasValue
             ? ((request.Page.Value - 1) * request.PageSize.Value, request.PageSize.Value)
             : (null, null);
     }
@@ -83,10 +74,7 @@ public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext
     protected async Task<List<TEntity>> ConvertToEntitiesAsync(List<TDbo> dbos)
     {
         var entities = new List<TEntity>();
-        foreach (var dbo in dbos)
-        {
-            entities.Add(await ToEntityAsync(dbo));
-        }
+        foreach (var dbo in dbos) entities.Add(await ToEntityAsync(dbo));
         return entities;
     }
 }

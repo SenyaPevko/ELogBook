@@ -34,7 +34,7 @@ public class ConstructionSite : EntityInfo
     ///     Учетный лист
     /// </summary>
     public RecordSheet.RecordSheet RecordSheet { get; set; } = null!;
-    
+
     /// <summary>
     ///     Рабочие вопросы
     /// </summary>

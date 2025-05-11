@@ -2,7 +2,6 @@ using Domain.Entities.WorkIssues;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
-using Infrastructure.Dbo.User;
 using Infrastructure.Dbo.WorkIssues;
 using Infrastructure.Storage.Base;
 using MongoDB.Driver;
@@ -39,7 +38,7 @@ public class WorkIssueStorage(
         dbo.Id = newEntity.Id;
         dbo.WorkIssueItemIds = newEntity.Items.Select(item => item.Id).ToList();
         dbo.ConstructionSiteId = newEntity.ConstructionSiteId;
-        
+
         return Task.CompletedTask;
     }
 }

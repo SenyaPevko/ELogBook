@@ -51,7 +51,7 @@ public class RecordSheetItemRepository(
                 Reason = InvalidRecordSheetItemReason.RecordHasBeenSigned,
                 Value = oldEntity.Directions
             });
-        
+
         return Task.CompletedTask;
     }
 

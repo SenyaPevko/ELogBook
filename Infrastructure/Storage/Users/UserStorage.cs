@@ -68,7 +68,7 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
     {
         var filters = new List<FilterDefinition<UserDbo>>();
         var builder = Builders<UserDbo>.Filter;
-        
+
         if (request.Emails?.Count > 0)
             filters.Add(builder.In(x => x.Email, request.Emails));
 

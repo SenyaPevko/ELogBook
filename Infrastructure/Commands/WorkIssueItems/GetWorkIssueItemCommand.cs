@@ -9,5 +9,8 @@ namespace Infrastructure.Commands.WorkIssueItems;
 public class GetWorkIssueItemCommand(IRepository<WorkIssueItem> repository, IAccessChecker<WorkIssueItem> accessChecker)
     : GetCommandBase<WorkIssueItemDto, WorkIssueItem>(repository, accessChecker)
 {
-    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity) => await entity.ToDto();
+    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity)
+    {
+        return await entity.ToDto();
+    }
 }

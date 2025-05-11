@@ -37,6 +37,6 @@ public class RecordSheetItemDbo : EntityDbo
     ///     Id пользователя оставившего отметку о выполнении указаний ...
     /// </summary>
     public Guid? ComplianceNoteUserId { get; set; }
-    
+
     public Guid RecordSheetId { get; set; }
 }

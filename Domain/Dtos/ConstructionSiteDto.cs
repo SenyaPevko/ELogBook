@@ -36,7 +36,7 @@ public class ConstructionSiteDto : EntityDto
     ///     Идентификатор учетного листа
     /// </summary>
     public required RecordSheetDto RecordSheet { get; set; }
-    
+
     /// <summary>
     ///     Рабочие вопросы
     /// </summary>

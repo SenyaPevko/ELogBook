@@ -13,6 +13,6 @@ public class RecordSheetItemCreationArgs : EntityCreationArgs
     ///     Указания об устранении отступлений ...
     /// </summary>
     public required string Directions { get; set; }
-    
+
     public required Guid RecordSheetId { get; set; }
 }

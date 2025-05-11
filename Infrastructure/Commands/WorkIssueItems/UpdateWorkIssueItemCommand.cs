@@ -15,7 +15,10 @@ public class UpdateWorkIssueItemCommand(
     : UpdateCommandBase<WorkIssueItemDto, WorkIssueItem, WorkIssueItemUpdateArgs,
         InvalidWorkIssueItemReason>(repository, accessChecker)
 {
-    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity) => await entity.ToDto();
+    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity)
+    {
+        return await entity.ToDto();
+    }
 
     protected override Task ApplyUpdatesAsync(WorkIssueItem entity, WorkIssueItemUpdateArgs args)
     {

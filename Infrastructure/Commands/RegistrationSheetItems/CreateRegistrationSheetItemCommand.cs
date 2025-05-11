@@ -15,16 +15,20 @@ public class CreateRegistrationSheetItemCommand(
     : CreateCommandBase<RegistrationSheetItemDto, RegistrationSheetItem, RegistrationSheetItemCreationArgs,
         InvalidRegistrationSheetItemReason>(repository, accessChecker)
 {
-    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity) =>
-        await entity.ToDto();
+    protected override async Task<RegistrationSheetItemDto> MapToDtoAsync(RegistrationSheetItem entity)
+    {
+        return await entity.ToDto();
+    }
 
-    protected override Task<RegistrationSheetItem> MapToEntityAsync(RegistrationSheetItemCreationArgs args) =>
-        Task.FromResult(new RegistrationSheetItem
+    protected override Task<RegistrationSheetItem> MapToEntityAsync(RegistrationSheetItemCreationArgs args)
+    {
+        return Task.FromResult(new RegistrationSheetItem
         {
             Id = args.Id,
             ArrivalDate = args.ArrivalDate,
             DepartureDate = args.DepartureDate,
             CreatorId = context.Auth.UserId!.Value,
-            RegistrationSheetId = args.RegistrationSheetId,
+            RegistrationSheetId = args.RegistrationSheetId
         });
+    }
 }

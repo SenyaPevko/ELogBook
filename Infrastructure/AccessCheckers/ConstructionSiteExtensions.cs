@@ -6,9 +6,12 @@ namespace Infrastructure.AccessCheckers;
 
 public static class ConstructionSiteExtensions
 {
-    public static List<ConstructionSiteUserRoleType> GetUserRoleTypes(this ConstructionSite entity, IRequestContext context) =>
-        entity.ConstructionSiteUserRoles
+    public static List<ConstructionSiteUserRoleType> GetUserRoleTypes(this ConstructionSite entity,
+        IRequestContext context)
+    {
+        return entity.ConstructionSiteUserRoles
             .Where(r => r.UserId == context.Auth.UserId)
             .Select(r => r.Role)
             .ToList();
+    }
 }

@@ -13,7 +13,7 @@ public class RecordSheetItemUpdateArgs : EntityUpdateArgs
     ///     Указания об устранении отступлений ...
     /// </summary>
     public string? Directions { get; set; }
-    
+
     /// <summary>
     ///     Id представителя ознакомленного с записью ...
     /// </summary>

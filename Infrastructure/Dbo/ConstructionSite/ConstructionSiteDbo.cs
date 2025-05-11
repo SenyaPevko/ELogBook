@@ -38,7 +38,7 @@ public class ConstructionSiteDbo : EntityDbo
     ///     Идентификатор учетного листа
     /// </summary>
     public Guid RecordSheetId { get; set; }
-    
+
     /// <summary>
     ///     Идентификатор рабочих вопросов
     /// </summary>

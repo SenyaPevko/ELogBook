@@ -1,4 +1,3 @@
-using Domain.Entities.RegistrationSheet;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
 using Infrastructure.Dbo.ConstructionSite;
@@ -46,17 +45,17 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.Address),
                 new CreateIndexOptions { Background = true, Unique = true }));
-        
+
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.RegistrationSheetId),
                 new CreateIndexOptions { Background = true, Unique = true }));
-        
+
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.RecordSheetId),
                 new CreateIndexOptions { Background = true, Unique = true }));
-        
+
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.WorkIssueId),
@@ -92,28 +91,28 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
                 Builders<OrganizationDbo>.IndexKeys.Ascending(u => u.Name),
                 new CreateIndexOptions { Background = true, Unique = true }));
     }
-    
+
     private static async Task CreateRecordSheetItemIndexesAsync(AppDbContext appDbContext)
     {
         await appDbContext.RecordSheetItems.Indexes.CreateOneAsync(
             new CreateIndexModel<RecordSheetItemDbo>(
                 Builders<RecordSheetItemDbo>.IndexKeys.Ascending(s => s.RecordSheetId),
-                new CreateIndexOptions { Background = true}));
+                new CreateIndexOptions { Background = true }));
     }
-    
+
     private static async Task CreateRegistrationSheetItemIndexesAsync(AppDbContext appDbContext)
     {
         await appDbContext.RegistrationSheetItems.Indexes.CreateOneAsync(
             new CreateIndexModel<RegistrationSheetItemDbo>(
                 Builders<RegistrationSheetItemDbo>.IndexKeys.Ascending(s => s.RegistrationSheetId),
-                new CreateIndexOptions { Background = true}));
+                new CreateIndexOptions { Background = true }));
     }
-    
+
     private static async Task CreateWorkIssueItemIndexesAsync(AppDbContext appDbContext)
     {
         await appDbContext.WorkIssueItems.Indexes.CreateOneAsync(
             new CreateIndexModel<WorkIssueItemDbo>(
                 Builders<WorkIssueItemDbo>.IndexKeys.Ascending(s => s.WorkIssueId),
-                new CreateIndexOptions { Background = true}));
+                new CreateIndexOptions { Background = true }));
     }
 }

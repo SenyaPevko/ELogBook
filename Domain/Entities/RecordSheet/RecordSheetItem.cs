@@ -28,12 +28,12 @@ public class RecordSheetItem : EntityInfo
     ///     С записью ознакомлен представитель ...
     /// </summary>
     public string? RepresentativeSignature { get; set; }
-    
+
     /// <summary>
     ///     Отметка о выполнении указаний ...
     /// </summary>
     public string? ComplianceNoteSignature { get; set; }
-    
+
     /// <summary>
     ///     Id специалиста поставившего подпись ...
     /// </summary>
@@ -48,6 +48,6 @@ public class RecordSheetItem : EntityInfo
     ///     Id пользователя оставившего отметку о выполнении указаний ...
     /// </summary>
     public Guid? ComplianceNoteUserId { get; set; }
-    
+
     public Guid RecordSheetId { get; set; }
 }

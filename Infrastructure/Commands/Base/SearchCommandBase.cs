@@ -26,13 +26,13 @@ public abstract class SearchCommandBase<TDto, TEntity, TInvalidReason, TSearchRe
         var canRead = await accessChecker.CanRead();
         if (canRead is false)
             return ErrorInfoExtensions.ReadAccessForbidden<TEntity>();
-        
+
         var entities = await repository.SearchAsync(searchRequest, cancellationToken);
         if (entities.Count > 0 && canRead is not true && !await accessChecker.CanRead(entities.First()))
             return ErrorInfoExtensions.ReadAccessForbidden<TEntity>();
-        
+
         var dtos = await entities.SelectAsync(MapToDtoAsync);
-        
+
         return dtos.ToList();
     }
 }

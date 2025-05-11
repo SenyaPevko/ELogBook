@@ -39,13 +39,13 @@ public class AppDbContext
 
     public IMongoCollection<RegistrationSheetItemDbo> RegistrationSheetItems =>
         _database.GetCollection<RegistrationSheetItemDbo>("registrationSheetItems");
-    
+
     public IMongoCollection<OrganizationDbo> Organizations =>
         _database.GetCollection<OrganizationDbo>("organizations");
-    
+
     public IMongoCollection<WorkIssueItemDbo> WorkIssueItems =>
         _database.GetCollection<WorkIssueItemDbo>("workIssueItems");
-    
+
     public IMongoCollection<WorkIssueDbo> WorkIssues =>
         _database.GetCollection<WorkIssueDbo>("workIssues");
 }

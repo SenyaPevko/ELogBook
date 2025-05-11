@@ -19,7 +19,7 @@ public class WorkIssueItemStorage(AppDbContext context, IRequestContext requestC
         entity.Answer = dbo.Answer;
         entity.AnswerDate = dbo.AnswerDate;
         entity.WorkIssueId = dbo.WorkIssueId;
-        
+
         return Task.CompletedTask;
     }
 
@@ -30,7 +30,7 @@ public class WorkIssueItemStorage(AppDbContext context, IRequestContext requestC
         dbo.Answer = entity.Answer;
         dbo.AnswerDate = entity.AnswerDate;
         dbo.WorkIssueId = entity.WorkIssueId;
-        
+
         return Task.CompletedTask;
     }
 
@@ -42,7 +42,7 @@ public class WorkIssueItemStorage(AppDbContext context, IRequestContext requestC
         dbo.Answer = newEntity.Answer;
         dbo.AnswerDate = newEntity.AnswerDate;
         dbo.WorkIssueId = newEntity.WorkIssueId;
-        
+
         return Task.CompletedTask;
     }
 }

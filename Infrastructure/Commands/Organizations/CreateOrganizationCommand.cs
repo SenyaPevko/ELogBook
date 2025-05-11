@@ -13,12 +13,17 @@ public class CreateOrganizationCommand(
     : CreateCommandBase<OrganizationDto, Organization, OrganizationCreationArgs, InvalidOrganizationReason>(repository,
         accessChecker)
 {
-    protected override async Task<OrganizationDto> MapToDtoAsync(Organization entity) => await entity.ToDto();
+    protected override async Task<OrganizationDto> MapToDtoAsync(Organization entity)
+    {
+        return await entity.ToDto();
+    }
 
-    protected override Task<Organization> MapToEntityAsync(OrganizationCreationArgs args) =>
-        Task.FromResult(new Organization
+    protected override Task<Organization> MapToEntityAsync(OrganizationCreationArgs args)
+    {
+        return Task.FromResult(new Organization
         {
             Id = args.Id,
-            Name = args.Name,
+            Name = args.Name
         });
+    }
 }

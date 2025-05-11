@@ -22,13 +22,13 @@ public class RecordSheetItemStorage(AppDbContext context, IRequestContext reques
             var representative = await userStorage.GetByIdAsync(dbo.RepresentativeId.Value);
             entity.RepresentativeSignature = representative!.GetSignature();
         }
-        
+
         if (dbo.ComplianceNoteUserId is not null)
         {
             var complianceNoteUser = await userStorage.GetByIdAsync(dbo.ComplianceNoteUserId.Value);
             entity.ComplianceNoteSignature = complianceNoteUser!.GetSignature();
         }
-        
+
         entity.Id = dbo.Id;
         entity.Date = dbo.Date;
         entity.Deviations = dbo.Deviations;
@@ -50,7 +50,7 @@ public class RecordSheetItemStorage(AppDbContext context, IRequestContext reques
         dbo.RepresentativeId = entity.RepresentativeId;
         dbo.ComplianceNoteUserId = entity.ComplianceNoteUserId;
         dbo.RecordSheetId = entity.RecordSheetId;
-        
+
         return Task.CompletedTask;
     }
 
@@ -65,7 +65,7 @@ public class RecordSheetItemStorage(AppDbContext context, IRequestContext reques
         dbo.RepresentativeId = newEntity.RepresentativeId;
         dbo.ComplianceNoteUserId = newEntity.ComplianceNoteUserId;
         dbo.RecordSheetId = newEntity.RecordSheetId;
-        
+
         return Task.CompletedTask;
     }
 }

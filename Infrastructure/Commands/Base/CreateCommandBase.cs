@@ -28,7 +28,7 @@ public abstract class CreateCommandBase<TDto, TEntity, TCreationArgs, TInvalidRe
         var canCreate = await accessChecker.CanCreate();
         if (canCreate is false)
             return ErrorInfoExtensions.CreateAccessForbidden<TEntity, TInvalidReason>();
-        
+
         if (args.Id == Guid.Empty)
             return new CreateErrorInfo<TInvalidReason>(
                 $"{typeof(TEntity).Name} creation error",
@@ -43,7 +43,7 @@ public abstract class CreateCommandBase<TDto, TEntity, TCreationArgs, TInvalidRe
         var entity = await MapToEntityAsync(args);
         if (canCreate is not true && !await accessChecker.CanCreate(entity))
             return ErrorInfoExtensions.CreateAccessForbidden<TEntity, TInvalidReason>();
-        
+
         var writeContext = new WriteContext<TInvalidReason>();
         await repository.AddAsync(entity, writeContext, cancellationToken);
 

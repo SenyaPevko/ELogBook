@@ -26,7 +26,7 @@ public class WorkIssueItemAccessChecker(
 
         return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
     }
-    
+
     private async Task<List<ConstructionSiteUserRoleType>> GetUserRoleTypes(WorkIssueItem entity)
     {
         // todo: небезопасный First, хотя логичный - нужно переписывать логику валидации зависимостей и связанности, чтобы такой фигни не было

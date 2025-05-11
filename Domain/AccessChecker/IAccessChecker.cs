@@ -3,8 +3,7 @@ using Domain.RequestArgs.Base;
 
 namespace Domain.AccessChecker;
 
-
-public interface IAccessChecker<in TEntity> 
+public interface IAccessChecker<in TEntity>
     where TEntity : EntityInfo
 {
     Task<bool?> CanRead();
@@ -17,7 +16,7 @@ public interface IAccessChecker<in TEntity>
     Task<bool> CanCreate(TEntity entity);
 }
 
-public interface IAccessChecker<in TEntity, in TUpdateArgs> : IAccessChecker<TEntity> 
+public interface IAccessChecker<in TEntity, in TUpdateArgs> : IAccessChecker<TEntity>
     where TEntity : EntityInfo
     where TUpdateArgs : IEntityUpdateArgs
 {

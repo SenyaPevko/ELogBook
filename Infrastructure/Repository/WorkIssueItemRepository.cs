@@ -6,7 +6,9 @@ using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class WorkIssueItemRepository(IStorage<WorkIssueItem, WorkIssueItemSearchRequest> storage, IStorage<WorkIssue> issueStorage)
+public class WorkIssueItemRepository(
+    IStorage<WorkIssueItem, WorkIssueItemSearchRequest> storage,
+    IStorage<WorkIssue> issueStorage)
     : RepositoryBase<WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(WorkIssueItem entity,
@@ -22,7 +24,8 @@ public class WorkIssueItemRepository(IStorage<WorkIssueItem, WorkIssueItemSearch
             });
     }
 
-    protected override Task ValidateUpdateAsync(WorkIssueItem oldEntity, WorkIssueItem newEntity, IWriteContext<InvalidWorkIssueItemReason> writeContext,
+    protected override Task ValidateUpdateAsync(WorkIssueItem oldEntity, WorkIssueItem newEntity,
+        IWriteContext<InvalidWorkIssueItemReason> writeContext,
         CancellationToken cancellationToken)
     {
         return Task.CompletedTask;

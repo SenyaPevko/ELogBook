@@ -12,6 +12,6 @@ public class RegistrationSheetDbo : EntityDbo
     ///     Идентификаторы рядов в регистрационном листе
     /// </summary>
     public List<Guid> RegistrationSheetItemIds { get; set; } = [];
-    
+
     public Guid ConstructionSiteId { get; set; }
 }

@@ -29,7 +29,7 @@ public abstract class UpdateCommandBase<TDto, TEntity, TUpdateArgs, TInvalidReas
         var canUpdate = await accessChecker.CanUpdate();
         if (canUpdate is false)
             return ErrorInfoExtensions.UpdateAccessForbidden<TEntity, TInvalidReason>(updateArgs.Id);
-        
+
         var existingEntity = await repository.GetByIdAsync(updateArgs.Id, cancellationToken);
         if (existingEntity is null)
             return new UpdateErrorInfo<TInvalidReason>(
@@ -39,7 +39,7 @@ public abstract class UpdateCommandBase<TDto, TEntity, TUpdateArgs, TInvalidReas
 
         if (canUpdate is not true && !await accessChecker.CanUpdate(existingEntity))
             return ErrorInfoExtensions.UpdateAccessForbidden<TEntity, TInvalidReason>(updateArgs.Id);
-        
+
         var newEntity = existingEntity.Copy();
         await ApplyUpdatesAsync(newEntity, updateArgs);
 

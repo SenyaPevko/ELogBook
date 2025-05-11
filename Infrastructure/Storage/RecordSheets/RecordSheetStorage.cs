@@ -1,5 +1,4 @@
 using Domain.Entities.RecordSheet;
-using Domain.Entities.RegistrationSheet;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
 using Infrastructure.Context;
@@ -19,7 +18,7 @@ public class RecordSheetStorage(
 
     protected override async Task MapEntityFromDboAsync(RecordSheet entity, RecordSheetDbo dbo)
     {
-        var searchRequest = new RecordSheetItemSearchRequest{Ids = dbo.RecordSheetItemIds};
+        var searchRequest = new RecordSheetItemSearchRequest { Ids = dbo.RecordSheetItemIds };
         entity.Id = dbo.Id;
         entity.Number = dbo.Number;
         entity.Items = await recItemStorage.SearchAsync(searchRequest);
@@ -32,7 +31,7 @@ public class RecordSheetStorage(
         dbo.Number = entity.Number;
         dbo.RecordSheetItemIds = entity.Items.Select(item => item.Id).ToList();
         dbo.ConstructionSiteId = entity.ConstructionSiteId;
-        
+
         return Task.CompletedTask;
     }
 
@@ -43,7 +42,7 @@ public class RecordSheetStorage(
         dbo.Number = newEntity.Number;
         dbo.RecordSheetItemIds = newEntity.Items.Select(item => item.Id).ToList();
         dbo.ConstructionSiteId = newEntity.ConstructionSiteId;
-        
+
         return Task.CompletedTask;
     }
 }

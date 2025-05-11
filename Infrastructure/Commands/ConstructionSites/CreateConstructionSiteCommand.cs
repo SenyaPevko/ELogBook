@@ -8,7 +8,8 @@ using Infrastructure.Commands.Base;
 namespace Infrastructure.Commands.ConstructionSites;
 
 public class CreateConstructionSiteCommand(
-    IRepository<ConstructionSite, InvalidConstructionSiteReason> repository, IAccessChecker<ConstructionSite> accessChecker)
+    IRepository<ConstructionSite, InvalidConstructionSiteReason> repository,
+    IAccessChecker<ConstructionSite> accessChecker)
     : CreateCommandBase<ConstructionSiteDto, ConstructionSite,
         ConstructionSiteCreationArgs, InvalidConstructionSiteReason>(repository, accessChecker)
 {

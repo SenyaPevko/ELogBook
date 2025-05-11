@@ -15,14 +15,19 @@ public class CreateWorkIssueItemCommand(
     : CreateCommandBase<WorkIssueItemDto, WorkIssueItem, WorkIssueItemCreationArgs,
         InvalidWorkIssueItemReason>(repository, accessChecker)
 {
-    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity) => await entity.ToDto();
+    protected override async Task<WorkIssueItemDto> MapToDtoAsync(WorkIssueItem entity)
+    {
+        return await entity.ToDto();
+    }
 
-    protected override Task<WorkIssueItem> MapToEntityAsync(WorkIssueItemCreationArgs args) =>
-        Task.FromResult(new WorkIssueItem
+    protected override Task<WorkIssueItem> MapToEntityAsync(WorkIssueItemCreationArgs args)
+    {
+        return Task.FromResult(new WorkIssueItem
         {
             Id = args.Id,
             WorkIssueId = args.WorkIssueId,
             Question = args.Question,
-            QuestionDate = context.RequestTime.DateTime,
+            QuestionDate = context.RequestTime.DateTime
         });
+    }
 }

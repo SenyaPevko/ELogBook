@@ -42,9 +42,10 @@ public class ConstructionSiteAccessChecker(IRequestContext context)
         var canUpdateImage = updateArgs.Image is null || Context.Auth.Role is UserRole.Admin;
         var canUpdateUserRoles = updateArgs.UserRoles is null || Context.Auth.Role is UserRole.Admin;
 
-        return canUpdateOrders && canUpdateName && canUpdateDescription && canUpdateAddress && canUpdateImage && canUpdateUserRoles;
+        return canUpdateOrders && canUpdateName && canUpdateDescription && canUpdateAddress && canUpdateImage &&
+               canUpdateUserRoles;
     }
-    
+
     private bool CanUpdateOrders(List<ConstructionSiteUserRoleType> userRoles)
     {
         return userRoles.Any(r =>

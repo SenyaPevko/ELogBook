@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ELogBook.Controllers.Base;
 
-public abstract class CreatableEntityControllerBase<TDto, TEntity, TCreationArgs, TUpdateArgs, TInvalidReason, TSearchRequest>
+public abstract class CreatableEntityControllerBase<TDto, TEntity, TCreationArgs, TUpdateArgs, TInvalidReason,
+    TSearchRequest>
     : EntityControllerBase<TDto, TEntity, TUpdateArgs, TInvalidReason, TSearchRequest>
     where TDto : EntityDto
     where TInvalidReason : Enum

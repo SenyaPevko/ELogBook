@@ -22,14 +22,14 @@ public abstract class GetCommandBase<TDto, TEntity>(
         var canRead = await accessChecker.CanRead();
         if (canRead is false)
             return ErrorInfoExtensions.ReadAccessForbidden<TEntity>();
-        
+
         var entity = await repository.GetByIdAsync(id, cancellationToken);
         if (entity is null)
             return new ErrorInfo(
                 $"Could not get {typeof(TEntity).Name}",
                 $"{typeof(TEntity).Name} with id {id.ToString()} not found)",
                 HttpStatusCode.NotFound);
-        
+
         if (canRead is not true && !await accessChecker.CanRead(entity))
             return ErrorInfoExtensions.ReadAccessForbidden<TEntity>();
 

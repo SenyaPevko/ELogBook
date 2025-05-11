@@ -15,16 +15,21 @@ public class CreateRecordSheetItemCommand(
     : CreateCommandBase<RecordSheetItemDto, RecordSheetItem, RecordSheetItemCreationArgs,
         InvalidRecordSheetItemReason>(repository, accessChecker)
 {
-    protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity) => await entity.ToDto();
+    protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity)
+    {
+        return await entity.ToDto();
+    }
 
-    protected override Task<RecordSheetItem> MapToEntityAsync(RecordSheetItemCreationArgs args) =>
-        Task.FromResult(new RecordSheetItem
+    protected override Task<RecordSheetItem> MapToEntityAsync(RecordSheetItemCreationArgs args)
+    {
+        return Task.FromResult(new RecordSheetItem
         {
             Id = args.Id,
             Date = context.RequestTime.DateTime,
             RecordSheetId = args.RecordSheetId,
             SpecialistId = context.Auth.UserId!.Value,
             Directions = args.Directions,
-            Deviations = args.Deviations,
+            Deviations = args.Deviations
         });
+    }
 }

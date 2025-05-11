@@ -1,11 +1,8 @@
-using Domain.Entities;
 using Domain.Entities.Organization;
-using Domain.Entities.Users;
 using Domain.RequestArgs.SearchRequest;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
 using Infrastructure.Storage.Base;
-using Infrastructure.Storage.Users;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -21,7 +18,7 @@ public class OrganizationStorage(AppDbContext context, IRequestContext requestCo
         entity.Id = dbo.Id;
         entity.Name = dbo.Name;
         entity.UserIds = dbo.UserIds;
-        
+
         return Task.CompletedTask;
     }
 
@@ -30,7 +27,7 @@ public class OrganizationStorage(AppDbContext context, IRequestContext requestCo
         dbo.Id = entity.Id;
         dbo.Name = entity.Name;
         dbo.UserIds = entity.UserIds;
-        
+
         return Task.CompletedTask;
     }
 
@@ -40,10 +37,10 @@ public class OrganizationStorage(AppDbContext context, IRequestContext requestCo
         dbo.Id = newEntity.Id;
         dbo.Name = newEntity.Name;
         dbo.UserIds = newEntity.UserIds;
-        
+
         return Task.CompletedTask;
     }
-    
+
     protected override List<FilterDefinition<OrganizationDbo>> BuildSpecificFilters(
         OrganizationSearchRequest request)
     {
@@ -51,11 +48,9 @@ public class OrganizationStorage(AppDbContext context, IRequestContext requestCo
         var builder = Builders<OrganizationDbo>.Filter;
 
         if (!string.IsNullOrEmpty(request.Name))
-        {
             filters.Add(builder.Regex(x => x.Name,
                 new BsonRegularExpression(request.Name, "i")));
-        }
-        
+
         return filters;
     }
 }

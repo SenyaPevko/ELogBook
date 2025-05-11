@@ -19,7 +19,7 @@ public class RegistrationSheetItemAccessChecker(
 
         return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
     }
-    
+
     public override async Task<bool> CanUpdate(RegistrationSheetItem entity)
     {
         var userRoles = await GetUserRoleTypes(entity);
@@ -27,7 +27,7 @@ public class RegistrationSheetItemAccessChecker(
 
         return userRoles.Any(r => r is ConstructionSiteUserRoleType.AuthorSupervision) && passedTime.TotalDays < 5;
     }
-    
+
     private async Task<List<ConstructionSiteUserRoleType>> GetUserRoleTypes(RegistrationSheetItem entity)
     {
         // todo: небезопасный First, хотя логичный - нужно переписывать логику валидации зависимостей и связанности, чтобы такой фигни не было

@@ -13,5 +13,8 @@ public class SearchRecordSheetItemCommand(
     : SearchCommandBase<RecordSheetItemDto, RecordSheetItem, InvalidRecordSheetItemReason,
         RecordSheetItemSearchRequest>(repository, accessChecker)
 {
-    protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity) => await entity.ToDto();
+    protected override async Task<RecordSheetItemDto> MapToDtoAsync(RecordSheetItem entity)
+    {
+        return await entity.ToDto();
+    }
 }

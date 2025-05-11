@@ -33,12 +33,13 @@ public class RecordSheetItemAccessChecker(
         RecordSheetItem newEntity)
     {
         var userRoles = await GetUserRoleTypes(oldEntity);
-        
+
         var canUpdateDeviations = updateArgs.Deviations is null || CanUpdateDeviations(userRoles);
         var canUpdateDirections = updateArgs.Directions is null || CanUpdateDirections(userRoles);
         var canUpdateRepresentativeId = updateArgs.RepresentativeId is null || CanUpdateRepresentativeId(userRoles);
-        var canUpdateComplianceNoteUserId = updateArgs.ComplianceNoteUserId is null || CanUpdateComplianceNoteUserId(userRoles);
-        
+        var canUpdateComplianceNoteUserId =
+            updateArgs.ComplianceNoteUserId is null || CanUpdateComplianceNoteUserId(userRoles);
+
         return canUpdateDeviations && canUpdateDirections && canUpdateRepresentativeId && canUpdateComplianceNoteUserId;
     }
 
@@ -51,15 +52,23 @@ public class RecordSheetItemAccessChecker(
         return constructionSite.GetUserRoleTypes(Context);
     }
 
-    private bool CanUpdateDeviations(List<ConstructionSiteUserRoleType> userRoles) =>
-        userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+    private bool CanUpdateDeviations(List<ConstructionSiteUserRoleType> userRoles)
+    {
+        return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+    }
 
-    private bool CanUpdateDirections(List<ConstructionSiteUserRoleType> userRoles) =>
-        userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+    private bool CanUpdateDirections(List<ConstructionSiteUserRoleType> userRoles)
+    {
+        return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+    }
 
-    private bool CanUpdateRepresentativeId(List<ConstructionSiteUserRoleType> userRoles) =>
-        userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator);
-    
-    private bool CanUpdateComplianceNoteUserId(List<ConstructionSiteUserRoleType> userRoles) =>
-        userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator);
+    private bool CanUpdateRepresentativeId(List<ConstructionSiteUserRoleType> userRoles)
+    {
+        return userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator);
+    }
+
+    private bool CanUpdateComplianceNoteUserId(List<ConstructionSiteUserRoleType> userRoles)
+    {
+        return userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator);
+    }
 }
