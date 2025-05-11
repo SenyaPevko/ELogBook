@@ -1,4 +1,3 @@
-using Domain.Entities.ConstructionSite;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
 using Infrastructure.Dbo.ConstructionSite;
@@ -40,6 +39,21 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
                 Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.Address),
+                new CreateIndexOptions { Background = true, Unique = true }));
+        
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
+            new CreateIndexModel<ConstructionSiteDbo>(
+                Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.RegistrationSheetId),
+                new CreateIndexOptions { Background = true, Unique = true }));
+        
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
+            new CreateIndexModel<ConstructionSiteDbo>(
+                Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.RecordSheetId),
+                new CreateIndexOptions { Background = true, Unique = true }));
+        
+        await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
+            new CreateIndexModel<ConstructionSiteDbo>(
+                Builders<ConstructionSiteDbo>.IndexKeys.Ascending(s => s.WorkIssueId),
                 new CreateIndexOptions { Background = true, Unique = true }));
 
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
