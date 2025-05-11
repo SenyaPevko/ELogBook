@@ -25,10 +25,10 @@ public class RecordSheetItemDto : EntityDto
     /// <summary>
     ///     С записью ознакомлен представитель ...
     /// </summary>
-    public required string RepresentativeSignature { get; set; }
+    public string? RepresentativeSignature { get; set; }
 
     /// <summary>
     ///     Отметка о выполнении указаний ...
     /// </summary>
-    public required string ComplianceNote { get; set; }
+    public string? ComplianceNote { get; set; }
 }

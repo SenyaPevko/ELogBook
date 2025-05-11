@@ -6,7 +6,9 @@ using Domain.Storage;
 
 namespace Infrastructure.Repository;
 
-public class RecordSheetItemRepository(IStorage<RecordSheetItem, RecordSheetItemSearchRequest> storage, IStorage<RecordSheet> recSheetStorage)
+public class RecordSheetItemRepository(
+    IStorage<RecordSheetItem, RecordSheetItemSearchRequest> storage,
+    IStorage<RecordSheet> recSheetStorage)
     : RepositoryBase<RecordSheetItem, InvalidRecordSheetItemReason, RecordSheetItemSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(RecordSheetItem entity,
@@ -31,6 +33,24 @@ public class RecordSheetItemRepository(IStorage<RecordSheetItem, RecordSheetItem
         // todo: вообще в теории здесь нужно проверять на наличие в базе RepresentativeId и ComplianceNoteUserId,
         // но мы вроде где-то уже проверяем это, поэтому можно потом сюда написать, и подумать нужно ли как-то
         // синхронить проверки наличия объекта в базе на разных уровнях бэка 
+
+        if (oldEntity.Deviations != newEntity.Deviations &&
+            (newEntity.RepresentativeId is not null || newEntity.ComplianceNoteUserId is not null))
+            writeContext.AddInvalidData(new ErrorDetail<InvalidRecordSheetItemReason>
+            {
+                Path = nameof(RecordSheetItem.Deviations),
+                Reason = InvalidRecordSheetItemReason.RecordHasBeenSigned,
+                Value = oldEntity.Deviations
+            });
+
+        if (oldEntity.Directions != newEntity.Directions &&
+            (newEntity.RepresentativeId is not null || newEntity.ComplianceNoteUserId is not null))
+            writeContext.AddInvalidData(new ErrorDetail<InvalidRecordSheetItemReason>
+            {
+                Path = nameof(RecordSheetItem.Directions),
+                Reason = InvalidRecordSheetItemReason.RecordHasBeenSigned,
+                Value = oldEntity.Directions
+            });
         
         return Task.CompletedTask;
     }

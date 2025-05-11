@@ -17,15 +17,23 @@ public class RecordSheetItemStorage(AppDbContext context, IRequestContext reques
     protected override async Task MapEntityFromDboAsync(RecordSheetItem entity, RecordSheetItemDbo dbo)
     {
         var specialist = await userStorage.GetByIdAsync(dbo.SpecialistId);
-        var representative = await userStorage.GetByIdAsync(dbo.RepresentativeId);
-        var complianceNoteUser = await userStorage.GetByIdAsync(dbo.ComplianceNoteUserId);
+        if (dbo.RepresentativeId is not null)
+        {
+            var representative = await userStorage.GetByIdAsync(dbo.RepresentativeId.Value);
+            entity.RepresentativeSignature = representative!.GetSignature();
+        }
+        
+        if (dbo.ComplianceNoteUserId is not null)
+        {
+            var complianceNoteUser = await userStorage.GetByIdAsync(dbo.ComplianceNoteUserId.Value);
+            entity.ComplianceNoteSignature = complianceNoteUser!.GetSignature();
+        }
+        
         entity.Id = dbo.Id;
         entity.Date = dbo.Date;
         entity.Deviations = dbo.Deviations;
         entity.Directions = dbo.Directions;
         entity.SpecialistSignature = specialist!.GetSignature();
-        entity.RepresentativeSignature = representative!.GetSignature();
-        entity.ComplianceNoteSignature = complianceNoteUser!.GetSignature();
         entity.SpecialistId = dbo.SpecialistId;
         entity.RepresentativeId = dbo.RepresentativeId;
         entity.ComplianceNoteUserId = dbo.ComplianceNoteUserId;

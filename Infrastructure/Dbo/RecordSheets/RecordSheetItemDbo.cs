@@ -31,12 +31,12 @@ public class RecordSheetItemDbo : EntityDbo
     /// <summary>
     ///     Id представителя ознакомленного с записью ...
     /// </summary>
-    public Guid RepresentativeId { get; set; }
+    public Guid? RepresentativeId { get; set; }
 
     /// <summary>
     ///     Id пользователя оставившего отметку о выполнении указаний ...
     /// </summary>
-    public Guid ComplianceNoteUserId { get; set; }
+    public Guid? ComplianceNoteUserId { get; set; }
     
     public Guid RecordSheetId { get; set; }
 }

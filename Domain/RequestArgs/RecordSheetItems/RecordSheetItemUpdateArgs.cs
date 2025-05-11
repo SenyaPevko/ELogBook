@@ -2,8 +2,6 @@ using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.RecordSheetItems;
 
-// todo: редактировать Deviations и Directions может только AuthorSupervision, пока не была
-// поставлена подпись RepresentativeId или ComplianceNoteUserId
 public class RecordSheetItemUpdateArgs : EntityUpdateArgs
 {
     /// <summary>
