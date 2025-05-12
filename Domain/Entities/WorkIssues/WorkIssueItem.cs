@@ -23,6 +23,8 @@ public class WorkIssueItem : EntityInfo
     ///     Дата ответа
     /// </summary>
     public DateTime AnswerDate { get; set; }
+    
+    public Guid? AnswerUserId { get; set; }
 
     public Guid WorkIssueId { get; set; }
 }

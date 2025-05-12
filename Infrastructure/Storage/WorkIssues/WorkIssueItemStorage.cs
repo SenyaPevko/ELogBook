@@ -18,7 +18,9 @@ public class WorkIssueItemStorage(AppDbContext context, IRequestContext requestC
         entity.Question = dbo.Question;
         entity.Answer = dbo.Answer;
         entity.AnswerDate = dbo.AnswerDate;
+        entity.QuestionDate = dbo.QuestionDate;
         entity.WorkIssueId = dbo.WorkIssueId;
+        entity.AnswerUserId = dbo.AnswerUserId;
 
         return Task.CompletedTask;
     }
@@ -29,7 +31,9 @@ public class WorkIssueItemStorage(AppDbContext context, IRequestContext requestC
         dbo.Question = entity.Question;
         dbo.Answer = entity.Answer;
         dbo.AnswerDate = entity.AnswerDate;
+        dbo.QuestionDate = entity.QuestionDate;
         dbo.WorkIssueId = entity.WorkIssueId;
+        dbo.AnswerUserId = entity.AnswerUserId;
 
         return Task.CompletedTask;
     }
@@ -41,7 +45,9 @@ public class WorkIssueItemStorage(AppDbContext context, IRequestContext requestC
         dbo.Question = newEntity.Question;
         dbo.Answer = newEntity.Answer;
         dbo.AnswerDate = newEntity.AnswerDate;
+        dbo.QuestionDate = newEntity.QuestionDate;
         dbo.WorkIssueId = newEntity.WorkIssueId;
+        dbo.AnswerUserId = newEntity.AnswerUserId;
 
         return Task.CompletedTask;
     }

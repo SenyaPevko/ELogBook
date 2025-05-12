@@ -27,6 +27,7 @@ public class UpdateWorkIssueItemCommand(
         {
             entity.Answer = args.Answer;
             entity.AnswerDate = context.RequestTime.DateTime;
+            entity.AnswerUserId = context.Auth.UserId;
         }
 
         return Task.CompletedTask;

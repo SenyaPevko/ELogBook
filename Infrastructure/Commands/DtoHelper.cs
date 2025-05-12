@@ -134,7 +134,8 @@ public static class DtoHelper
             Answer = entity.Answer,
             AnswerDate = entity.AnswerDate,
             Question = entity.Question,
-            QuestionDate = entity.QuestionDate
+            QuestionDate = entity.QuestionDate,
+            AnswerUserId = entity.AnswerUserId,
         });
     }
 }

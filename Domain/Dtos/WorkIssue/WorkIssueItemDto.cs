@@ -16,6 +16,8 @@ public class WorkIssueItemDto : EntityDto
     ///     Ответ
     /// </summary>
     public string Answer { get; set; } = null!;
+    
+    public Guid? AnswerUserId { get; set; }
 
     /// <summary>
     ///     Дата ответа
