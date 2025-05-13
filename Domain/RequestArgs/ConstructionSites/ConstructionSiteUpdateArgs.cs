@@ -23,12 +23,9 @@ public class ConstructionSiteUpdateArgs : EntityUpdateArgs
     /// </summary>
     public string? Address { get; set; }
 
-    /// <summary>
-    ///     Изображение
-    /// </summary>
-    public Uri? Image { get; set; }
-
     public ListUpdate<OrderCreationArgs>? Orders { get; set; }
 
     public ListUpdate<ConstructionSiteUserRoleCreationArgs, ConstructionSiteUserRoleUpdateArgs>? UserRoles { get; set; }
+    
+    public Guid? OrganizationId { get; set; }
 }

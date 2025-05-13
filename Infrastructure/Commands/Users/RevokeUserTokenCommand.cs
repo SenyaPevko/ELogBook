@@ -2,6 +2,7 @@ using System.Net;
 using Domain.Entities;
 using Domain.Entities.Users;
 using Domain.Models.ErrorInfo;
+using Domain.Models.Result;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.SearchRequest;

@@ -2,6 +2,7 @@ using Domain.Entities.Base;
 
 namespace Domain.Entities.RecordSheet;
 
+// todo: При добавлении записи появляется поле где можно либо вписать текстом, либо можно написать такст и приложить фотографии, так же должна быть возможность прикрепить ПДФ файлы
 public class RecordSheetItem : EntityInfo
 {
     /// <summary>

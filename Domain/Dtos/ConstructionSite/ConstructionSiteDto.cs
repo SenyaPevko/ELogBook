@@ -3,7 +3,7 @@ using Domain.Dtos.RegistrationSheet;
 using Domain.Dtos.WorkIssue;
 using Domain.Entities.ConstructionSite;
 
-namespace Domain.Dtos;
+namespace Domain.Dtos.ConstructionSite;
 
 public class ConstructionSiteDto : EntityDto
 {
@@ -23,11 +23,6 @@ public class ConstructionSiteDto : EntityDto
     public required string Address { get; set; }
 
     /// <summary>
-    ///     Изображение
-    /// </summary>
-    public required Uri Image { get; set; }
-
-    /// <summary>
     ///     Идентификатор листа регистрации
     /// </summary>
     public required RegistrationSheetDto RegistrationSheet { get; set; }
@@ -45,10 +40,12 @@ public class ConstructionSiteDto : EntityDto
     /// <summary>
     ///     Приказы
     /// </summary>
-    public List<Order> Orders { get; set; } = [];
+    public List<OrderDto> Orders { get; set; } = [];
 
     /// <summary>
     ///     Пользователи и их роли в этом проекте
     /// </summary>
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
+    
+    public Guid OrganizationId { get; set; }
 }

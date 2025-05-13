@@ -2,6 +2,7 @@ using Domain.Entities;
 using Domain.Entities.Users;
 using Domain.Models.Auth;
 using Domain.Models.ErrorInfo;
+using Domain.Models.Result;
 using Domain.RequestArgs.Auth;
 using Infrastructure.Commands.Users;
 using Microsoft.AspNetCore.Authorization;

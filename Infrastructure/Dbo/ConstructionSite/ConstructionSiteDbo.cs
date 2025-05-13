@@ -25,11 +25,6 @@ public class ConstructionSiteDbo : EntityDbo
     public string Address { get; set; } = null!;
 
     /// <summary>
-    ///     Изображение
-    /// </summary>
-    public string Image { get; set; } = null!;
-
-    /// <summary>
     ///     Идентификатор листа регистрации
     /// </summary>
     public Guid RegistrationSheetId { get; set; }

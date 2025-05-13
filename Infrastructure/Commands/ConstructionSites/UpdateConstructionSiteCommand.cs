@@ -1,35 +1,38 @@
+using Core.Helpers;
 using Domain.AccessChecker;
-using Domain.Dtos;
+using Domain.Dtos.ConstructionSite;
 using Domain.Entities.ConstructionSite;
+using Domain.FileStorage;
 using Domain.Repository;
 using Domain.RequestArgs.ConstructionSites;
 using Infrastructure.Commands.Base;
+using MongoDB.Bson;
 
 namespace Infrastructure.Commands.ConstructionSites;
 
 public class UpdateConstructionSiteCommand(
     IRepository<ConstructionSite, InvalidConstructionSiteReason> repository,
-    IAccessChecker<ConstructionSite, ConstructionSiteUpdateArgs> accessChecker)
+    IAccessChecker<ConstructionSite, ConstructionSiteUpdateArgs> accessChecker,
+    IFileStorageService fileStorage)
     : UpdateCommandBase<ConstructionSiteDto, ConstructionSite,
         ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>(repository, accessChecker)
 {
-    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity)
-    {
-        return await entity.ToDto();
-    }
+    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity) =>
+        await entity.ToDto(fileStorage);
 
-    protected override Task ApplyUpdatesAsync(ConstructionSite entity,
+    protected override async Task ApplyUpdatesAsync(ConstructionSite entity,
         ConstructionSiteUpdateArgs args)
     {
         if (args.Name is not null) entity.Name = args.Name;
+        if (args.OrganizationId is not null) entity.OrganizationId = args.OrganizationId.Value;
         if (args.Description is not null) entity.Description = args.Description;
         if (args.Address is not null) entity.Address = args.Address;
-        if (args.Image is not null) entity.Image = args.Image;
         if (args.Orders is not null)
         {
             if (args.Orders.Add is not null)
-                entity.Orders.AddRange(args.Orders.Add.Select(MapArgsToEntity));
+                entity.Orders.AddRange(await args.Orders.Add.SelectAsync(MapArgsToEntity));
             if (args.Orders.Remove is not null)
+                // todo: полагаю файл тоже нужно удалять, который order принадлежит
                 entity.Orders = entity.Orders.Where(o => !args.Orders.Remove.Contains(o.Id)).ToList();
         }
 
@@ -51,8 +54,6 @@ public class UpdateConstructionSiteCommand(
                 entity.ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles
                     .Where(r => !args.UserRoles.Remove.Contains(r.Id)).ToList();
         }
-
-        return Task.FromResult(entity);
     }
 
     private ConstructionSiteUserRole MapArgsToEntity(ConstructionSiteUserRoleCreationArgs args)
@@ -65,12 +66,12 @@ public class UpdateConstructionSiteCommand(
         };
     }
 
-    private Order MapArgsToEntity(OrderCreationArgs args)
+    private async Task<Order> MapArgsToEntity(OrderCreationArgs args)
     {
         return new Order
         {
             Id = Guid.NewGuid(),
-            Link = args.Link,
+            FileId = new ObjectId(args.FileId),
             UserInChargeId = args.UserInChargeId
         };
     }

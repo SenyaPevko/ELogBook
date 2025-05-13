@@ -1,11 +1,14 @@
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Roles;
+using Domain.Entities.Users;
+using Domain.Repository;
 using Domain.RequestArgs.ConstructionSites;
 using Infrastructure.Context;
+using Utils;
 
 namespace Infrastructure.AccessCheckers.ConstructionSites;
 
-public class ConstructionSiteAccessChecker(IRequestContext context)
+public class ConstructionSiteAccessChecker(IRequestContext context, IRepository<User> userRepository)
     : AccessCheckerBase<ConstructionSite, ConstructionSiteUpdateArgs>(context)
 {
     public override async Task<bool?> CanCreate()
@@ -35,20 +38,20 @@ public class ConstructionSiteAccessChecker(IRequestContext context)
         if (userRoles.Count == 0)
             return false;
 
-        var canUpdateOrders = updateArgs.Orders is null || CanUpdateOrders(userRoles);
+        var canUpdateOrders = updateArgs.Orders is null || await CanUpdateOrders(newEntity);
         var canUpdateName = updateArgs.Name is null || Context.Auth.Role is UserRole.Admin;
         var canUpdateDescription = updateArgs.Description is null || Context.Auth.Role is UserRole.Admin;
         var canUpdateAddress = updateArgs.Address is null || Context.Auth.Role is UserRole.Admin;
-        var canUpdateImage = updateArgs.Image is null || Context.Auth.Role is UserRole.Admin;
         var canUpdateUserRoles = updateArgs.UserRoles is null || Context.Auth.Role is UserRole.Admin;
 
-        return canUpdateOrders && canUpdateName && canUpdateDescription && canUpdateAddress && canUpdateImage &&
+        return canUpdateOrders && canUpdateName && canUpdateDescription && canUpdateAddress &&
                canUpdateUserRoles;
     }
 
-    private bool CanUpdateOrders(List<ConstructionSiteUserRoleType> userRoles)
+    private async Task<bool> CanUpdateOrders(ConstructionSite entity)
     {
-        return userRoles.Any(r =>
-            r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.AuthorSupervision);
+        var user = await userRepository.GetByIdAsync(Context.Auth.UserId!.Value, default);
+
+        return user!.OrganizationId == entity.OrganizationId;
     }
 }

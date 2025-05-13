@@ -21,11 +21,6 @@ public class ConstructionSite : EntityInfo
     public string Address { get; set; } = null!;
 
     /// <summary>
-    ///     Изображение
-    /// </summary>
-    public Uri Image { get; set; } = null!;
-
-    /// <summary>
     ///     Лист регистрации
     /// </summary>
     public RegistrationSheet.RegistrationSheet RegistrationSheet { get; set; } = null!;
@@ -49,4 +44,6 @@ public class ConstructionSite : EntityInfo
     ///     Пользователи и их роли в этом проекте
     /// </summary>
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
+    
+    public Guid OrganizationId { get; set; }
 }

@@ -1,11 +1,10 @@
-using Domain.Models.ErrorInfo;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace Domain.Entities;
+namespace Domain.Models.Result;
 
 public class ActionResult<TValue, TError> : IConvertToActionResult
-    where TError : ErrorInfo
+    where TError : ErrorInfo.ErrorInfo
 {
     private ActionResult(TValue value)
     {

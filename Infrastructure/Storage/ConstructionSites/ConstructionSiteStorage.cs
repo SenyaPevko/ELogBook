@@ -29,7 +29,6 @@ public class ConstructionSiteStorage(
         entity.Name = dbo.Name;
         entity.Description = dbo.Description;
         entity.Address = dbo.Address;
-        entity.Image = new Uri(dbo.Image);
         entity.Orders = dbo.Orders;
         entity.ConstructionSiteUserRoles = dbo.ConstructionSiteUserRoles;
 
@@ -45,7 +44,6 @@ public class ConstructionSiteStorage(
         dbo.Name = entity.Name;
         dbo.Description = entity.Description;
         dbo.Address = entity.Address;
-        dbo.Image = entity.Image.ToString();
         dbo.Orders = entity.Orders;
         dbo.ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles;
         dbo.RegistrationSheetId = entity.RegistrationSheet.Id;
@@ -62,7 +60,6 @@ public class ConstructionSiteStorage(
         dbo.Name = newEntity.Name;
         dbo.Description = newEntity.Description;
         dbo.Address = newEntity.Address;
-        dbo.Image = newEntity.Image.ToString();
         dbo.Orders = newEntity.Orders;
         dbo.ConstructionSiteUserRoles = newEntity.ConstructionSiteUserRoles;
         dbo.RegistrationSheetId = newEntity.RegistrationSheet.Id;

@@ -1,6 +1,7 @@
 using Domain.Dtos;
 using Domain.Entities;
 using Domain.Models.ErrorInfo;
+using Domain.Models.Result;
 using Domain.RequestArgs.SearchRequest;
 
 namespace Domain.Commands;

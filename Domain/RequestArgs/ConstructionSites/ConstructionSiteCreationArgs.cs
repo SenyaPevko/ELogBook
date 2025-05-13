@@ -19,8 +19,5 @@ public class ConstructionSiteCreationArgs : EntityCreationArgs
     /// </summary>
     public required string Address { get; set; }
 
-    /// <summary>
-    ///     Изображение
-    /// </summary>
-    public required Uri Image { get; set; }
+    public Guid OrganizationId { get; set; }
 }

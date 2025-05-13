@@ -5,6 +5,7 @@ using Domain.AccessChecker;
 using Domain.Auth;
 using Domain.Commands;
 using Domain.Dtos;
+using Domain.Dtos.ConstructionSite;
 using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Dtos.WorkIssue;
@@ -50,6 +51,7 @@ using Infrastructure.Storage.RecordSheets;
 using Infrastructure.Storage.RegistrationSheets;
 using Infrastructure.Storage.Users;
 using Infrastructure.Storage.WorkIssues;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
@@ -381,6 +383,16 @@ public static class DependencyInjection
                 InvalidWorkIssueItemReason>, UpdateWorkIssueItemCommand>();
         services.AddScoped<ISearchCommand<WorkIssueItemDto, WorkIssueItemSearchRequest>, SearchWorkIssueItemCommand>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddFileSettings(this IServiceCollection services)
+    {
+        services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = 500 * 1024 * 1024;
+        });
+        
         return services;
     }
 }

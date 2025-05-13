@@ -1,5 +1,6 @@
 using Core.Helpers;
 using Domain.Dtos;
+using Domain.Dtos.ConstructionSite;
 using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Dtos.WorkIssue;
@@ -9,12 +10,13 @@ using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Users;
 using Domain.Entities.WorkIssues;
+using Domain.FileStorage;
 
 namespace Infrastructure.Commands;
 
 public static class DtoHelper
 {
-    public static async Task<ConstructionSiteDto> ToDto(this ConstructionSite entity)
+    public static async Task<ConstructionSiteDto> ToDto(this ConstructionSite entity, IFileStorageService fileStorageService)
     {
         return new ConstructionSiteDto
         {
@@ -23,10 +25,10 @@ public static class DtoHelper
             Name = entity.Name,
             Description = entity.Description,
             Address = entity.Address,
-            Image = entity.Image,
-            Orders = entity.Orders,
+            Orders = (await entity.Orders.SelectAsync(o => o.ToDto(fileStorageService))).ToList(),
             ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles,
-
+            OrganizationId = entity.OrganizationId,
+            
             RegistrationSheet = await entity.RegistrationSheet.ToDto(),
             RecordSheet = await entity.RecordSheet.ToDto(),
             WorkIssue = await entity.WorkIssue.ToDto()
@@ -138,4 +140,12 @@ public static class DtoHelper
             AnswerUserId = entity.AnswerUserId,
         });
     }
+
+    public static async Task<OrderDto> ToDto(this Order entity, IFileStorageService storageService) =>
+        new()
+        {
+            Id = entity.Id,
+            UserInChargeId = entity.UserInChargeId,
+            File = await storageService.GetFileInfoAsync(entity.FileId),
+        };
 }

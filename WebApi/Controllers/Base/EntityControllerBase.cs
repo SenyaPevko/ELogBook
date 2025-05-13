@@ -3,6 +3,7 @@ using Domain.Dtos;
 using Domain.Entities;
 using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
+using Domain.Models.Result;
 using Domain.RequestArgs.Base;
 using Domain.RequestArgs.SearchRequest;
 using Microsoft.AspNetCore.Authorization;
