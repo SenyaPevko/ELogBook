@@ -12,12 +12,12 @@ public class ConstructionSiteDbo : EntityDbo
     /// <summary>
     ///     Название объекта
     /// </summary>
-    public string Name { get; set; } = null!;
+    public string ShortName { get; set; } = null!;
 
     /// <summary>
     ///     Описнаие объекта
     /// </summary>
-    public string Description { get; set; } = null!;
+    public string FullName { get; set; } = null!;
 
     /// <summary>
     ///     Адрес объекта
@@ -48,4 +48,14 @@ public class ConstructionSiteDbo : EntityDbo
     ///     Пользователи и их роли в этом проекте
     /// </summary>
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
+    
+    /// <summary>
+    ///     Генеральный подрядчик - Id организации
+    /// </summary>
+    public Guid OrganizationId { get; set; }
+
+    /// <summary>
+    ///     Исполнители отдельных видов работ (субподрядчики) - наименование работ и название организации
+    /// </summary>
+    public Guid SubOrganizationId { get; set; }
 }

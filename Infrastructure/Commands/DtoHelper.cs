@@ -11,23 +11,28 @@ using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Users;
 using Domain.Entities.WorkIssues;
 using Domain.FileStorage;
+using Domain.Repository;
 
 namespace Infrastructure.Commands;
 
 public static class DtoHelper
 {
-    public static async Task<ConstructionSiteDto> ToDto(this ConstructionSite entity, IFileStorageService fileStorageService)
+    public static async Task<ConstructionSiteDto> ToDto(
+        this ConstructionSite entity,
+        IFileStorageService fileStorageService,
+        IRepository<Organization> organizationRepository)
     {
         return new ConstructionSiteDto
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
-            Name = entity.Name,
-            Description = entity.Description,
+            ShortName = entity.ShortName,
+            FullName = entity.FullName,
             Address = entity.Address,
             Orders = (await entity.Orders.SelectAsync(o => o.ToDto(fileStorageService))).ToList(),
             ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles,
-            OrganizationId = entity.OrganizationId,
+            Organization = await (await organizationRepository.GetByIdAsync(entity.OrganizationId, default)).ToDto(),
+            SubOrganization = await (await organizationRepository.GetByIdAsync(entity.SubOrganizationId, default)).ToDto(),
             
             RegistrationSheet = await entity.RegistrationSheet.ToDto(),
             RecordSheet = await entity.RecordSheet.ToDto(),

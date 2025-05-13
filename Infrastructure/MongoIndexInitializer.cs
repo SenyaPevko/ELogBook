@@ -63,8 +63,8 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
 
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(
             new CreateIndexModel<ConstructionSiteDbo>(
-                Builders<ConstructionSiteDbo>.IndexKeys.Text(s => s.Name)
-                    .Text(s => s.Description)
+                Builders<ConstructionSiteDbo>.IndexKeys.Text(s => s.ShortName)
+                    .Text(s => s.FullName)
                     .Text(s => s.Address)));
 
         await appDbContext.ConstructionSites.Indexes.CreateOneAsync(

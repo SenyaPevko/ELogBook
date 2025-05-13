@@ -26,11 +26,13 @@ public class ConstructionSiteStorage(
         ConstructionSiteDbo dbo)
     {
         entity.Id = dbo.Id;
-        entity.Name = dbo.Name;
-        entity.Description = dbo.Description;
+        entity.ShortName = dbo.ShortName;
+        entity.FullName = dbo.FullName;
         entity.Address = dbo.Address;
         entity.Orders = dbo.Orders;
         entity.ConstructionSiteUserRoles = dbo.ConstructionSiteUserRoles;
+        entity.OrganizationId = dbo.OrganizationId;
+        entity.SubOrganizationId = dbo.SubOrganizationId;
 
         entity.RegistrationSheet = (await regSheetStorage.GetByIdAsync(dbo.RegistrationSheetId))!;
         entity.RecordSheet = (await recSheetStorage.GetByIdAsync(dbo.RecordSheetId))!;
@@ -41,14 +43,16 @@ public class ConstructionSiteStorage(
         ConstructionSiteDbo dbo)
     {
         dbo.Id = entity.Id;
-        dbo.Name = entity.Name;
-        dbo.Description = entity.Description;
+        dbo.ShortName = entity.ShortName;
+        dbo.FullName = entity.FullName;
         dbo.Address = entity.Address;
         dbo.Orders = entity.Orders;
         dbo.ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles;
         dbo.RegistrationSheetId = entity.RegistrationSheet.Id;
         dbo.RecordSheetId = entity.RecordSheet.Id;
         dbo.WorkIssueId = entity.WorkIssue.Id;
+        dbo.OrganizationId = entity.OrganizationId;
+        dbo.SubOrganizationId = entity.SubOrganizationId;
 
         return Task.CompletedTask;
     }
@@ -57,14 +61,16 @@ public class ConstructionSiteStorage(
         ConstructionSite newEntity, ConstructionSiteDbo dbo)
     {
         dbo.Id = newEntity.Id;
-        dbo.Name = newEntity.Name;
-        dbo.Description = newEntity.Description;
+        dbo.ShortName = newEntity.ShortName;
+        dbo.FullName = newEntity.FullName;
         dbo.Address = newEntity.Address;
         dbo.Orders = newEntity.Orders;
         dbo.ConstructionSiteUserRoles = newEntity.ConstructionSiteUserRoles;
         dbo.RegistrationSheetId = newEntity.RegistrationSheet.Id;
         dbo.RecordSheetId = newEntity.RecordSheet.Id;
         dbo.WorkIssueId = newEntity.WorkIssue.Id;
+        dbo.OrganizationId = newEntity.OrganizationId;
+        dbo.SubOrganizationId = newEntity.SubOrganizationId;
 
         return Task.CompletedTask;
     }
@@ -76,7 +82,7 @@ public class ConstructionSiteStorage(
         var builder = Builders<ConstructionSiteDbo>.Filter;
 
         if (!string.IsNullOrEmpty(request.Name))
-            filters.Add(builder.Regex(x => x.Name,
+            filters.Add(builder.Regex(x => x.ShortName,
                 new BsonRegularExpression(request.Name, "i")));
 
         if (!string.IsNullOrEmpty(request.Address))

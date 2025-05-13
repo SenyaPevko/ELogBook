@@ -8,12 +8,12 @@ public class ConstructionSite : EntityInfo
     /// <summary>
     ///     Название объекта
     /// </summary>
-    public string Name { get; set; } = null!;
+    public string ShortName { get; set; } = null!;
 
     /// <summary>
     ///     Описание объекта
     /// </summary>
-    public string Description { get; set; } = null!;
+    public string FullName { get; set; } = null!;
 
     /// <summary>
     ///     Адрес объекта
@@ -45,5 +45,13 @@ public class ConstructionSite : EntityInfo
     /// </summary>
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
     
+    /// <summary>
+    ///     Генеральный подрядчик - Id организации
+    /// </summary>
     public Guid OrganizationId { get; set; }
+    
+    /// <summary>
+    ///     Исполнители отдельных видов работ (субподрядчики) - наименование работ и название организации
+    /// </summary>
+    public Guid SubOrganizationId { get; set; }
 }

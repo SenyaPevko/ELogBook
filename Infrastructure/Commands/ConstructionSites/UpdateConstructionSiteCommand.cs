@@ -2,6 +2,7 @@ using Core.Helpers;
 using Domain.AccessChecker;
 using Domain.Dtos.ConstructionSite;
 using Domain.Entities.ConstructionSite;
+using Domain.Entities.Organization;
 using Domain.FileStorage;
 using Domain.Repository;
 using Domain.RequestArgs.ConstructionSites;
@@ -13,19 +14,21 @@ namespace Infrastructure.Commands.ConstructionSites;
 public class UpdateConstructionSiteCommand(
     IRepository<ConstructionSite, InvalidConstructionSiteReason> repository,
     IAccessChecker<ConstructionSite, ConstructionSiteUpdateArgs> accessChecker,
-    IFileStorageService fileStorage)
+    IFileStorageService fileStorage,
+    IRepository<Organization> organizationRepository)
     : UpdateCommandBase<ConstructionSiteDto, ConstructionSite,
         ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>(repository, accessChecker)
 {
     protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity) =>
-        await entity.ToDto(fileStorage);
+        await entity.ToDto(fileStorage, organizationRepository);
 
     protected override async Task ApplyUpdatesAsync(ConstructionSite entity,
         ConstructionSiteUpdateArgs args)
     {
-        if (args.Name is not null) entity.Name = args.Name;
+        if (args.Name is not null) entity.ShortName = args.Name;
         if (args.OrganizationId is not null) entity.OrganizationId = args.OrganizationId.Value;
-        if (args.Description is not null) entity.Description = args.Description;
+        if (args.SubOrganizationId is not null) entity.SubOrganizationId = args.SubOrganizationId.Value;
+        if (args.Description is not null) entity.FullName = args.Description;
         if (args.Address is not null) entity.Address = args.Address;
         if (args.Orders is not null)
         {

@@ -26,6 +26,8 @@ public class ConstructionSiteUpdateArgs : EntityUpdateArgs
     public ListUpdate<OrderCreationArgs>? Orders { get; set; }
 
     public ListUpdate<ConstructionSiteUserRoleCreationArgs, ConstructionSiteUserRoleUpdateArgs>? UserRoles { get; set; }
-    
+
     public Guid? OrganizationId { get; set; }
+
+    public Guid? SubOrganizationId { get; set; }
 }

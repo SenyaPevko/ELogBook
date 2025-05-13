@@ -5,19 +5,32 @@ namespace Domain.RequestArgs.ConstructionSites;
 public class ConstructionSiteCreationArgs : EntityCreationArgs
 {
     /// <summary>
-    ///     Название объекта
+    ///     Краткое наименование объекта
     /// </summary>
-    public required string Name { get; set; }
+    public required string ShortName { get; set; }
 
     /// <summary>
-    ///     Название объекта
+    ///     Наименование объекта в соответствии с документацией
     /// </summary>
-    public required string Description { get; set; }
+    public required string FullName { get; set; }
+
+    /// <summary>
+    ///     Генеральный подрядчик - Id организации
+    /// </summary>
+    public required Guid OrganizationId { get; set; }
+
+    /// <summary>
+    ///     Исполнители отдельных видов работ (субподрядчики) - наименование работ и название организации
+    /// </summary>
+    public required Guid SubOrganizationId { get; set; }
+
+    /// <summary>
+    ///     Список специалистов осуществляющих авторский надзор
+    /// </summary>
+    public required List<Guid> UserIds { get; set; }
 
     /// <summary>
     ///     Название объекта
     /// </summary>
     public required string Address { get; set; }
-
-    public Guid OrganizationId { get; set; }
 }

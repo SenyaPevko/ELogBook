@@ -35,9 +35,9 @@ public class ConstructionSiteRepository(
         if (existingAddresses.Count != 0)
             writeContext.AddInvalidData(new ErrorDetail<InvalidConstructionSiteReason>
             {
-                Path = nameof(entity.Name),
+                Path = nameof(entity.ShortName),
                 Reason = InvalidConstructionSiteReason.AddressAlreadyExists,
-                Value = entity.Name
+                Value = entity.ShortName
             });
     }
 
@@ -56,8 +56,7 @@ public class ConstructionSiteRepository(
         CancellationToken cancellationToken)
     {
         var regSheet = new RegistrationSheet { Id = Guid.NewGuid(), ConstructionSiteId = entity.Id };
-        // todo: у RecordSheet есть поле number - нужно завести счетчик в бд и просто инкрементить его - наверн
-        // нужно сначала вообще понять что этот номер значит - уточнить у заказчика
+        // todo: непонятно что делать с полем Number - заказчик сказал, что уточнит и скажет
         var recSheet = new RecordSheet { Id = Guid.NewGuid(), ConstructionSiteId = entity.Id };
         var workIssue = new WorkIssue { Id = Guid.NewGuid(), ConstructionSiteId = entity.Id };
 

@@ -52,6 +52,6 @@ public class ConstructionSiteAccessChecker(IRequestContext context, IRepository<
     {
         var user = await userRepository.GetByIdAsync(Context.Auth.UserId!.Value, default);
 
-        return user!.OrganizationId == entity.OrganizationId;
+        return user!.OrganizationId == entity.OrganizationId || user.OrganizationId == entity.SubOrganizationId;
     }
 }

@@ -8,14 +8,14 @@ namespace Domain.Dtos.ConstructionSite;
 public class ConstructionSiteDto : EntityDto
 {
     /// <summary>
-    ///     Название объекта
+    ///     Краткое наименование объекта
     /// </summary>
-    public required string Name { get; set; }
+    public required string ShortName { get; set; }
 
     /// <summary>
-    ///     Название объекта
+    ///     Наименование объекта в соответствии с документацией
     /// </summary>
-    public required string Description { get; set; }
+    public required string FullName { get; set; }
 
     /// <summary>
     ///     Название объекта
@@ -47,5 +47,13 @@ public class ConstructionSiteDto : EntityDto
     /// </summary>
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
     
-    public Guid OrganizationId { get; set; }
+    /// <summary>
+    ///     Генеральный подрядчик - организация
+    /// </summary>
+    public required OrganizationDto Organization { get; set; }
+    
+    /// <summary>
+    ///     Исполнители отдельных видов работ (субподрядчики) - организация
+    /// </summary>
+    public required OrganizationDto SubOrganization { get; set; }
 }
