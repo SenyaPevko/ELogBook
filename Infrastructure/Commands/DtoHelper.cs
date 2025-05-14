@@ -35,7 +35,7 @@ public static class DtoHelper
             SubOrganization = await (await organizationRepository.GetByIdAsync(entity.SubOrganizationId, default)).ToDto(),
             
             RegistrationSheet = await entity.RegistrationSheet.ToDto(),
-            RecordSheet = await entity.RecordSheet.ToDto(),
+            RecordSheet = await entity.RecordSheet.ToDto(fileStorageService),
             WorkIssue = await entity.WorkIssue.ToDto()
         };
     }
@@ -51,14 +51,14 @@ public static class DtoHelper
         };
     }
 
-    public static async Task<RecordSheetDto> ToDto(this RecordSheet entity)
+    public static async Task<RecordSheetDto> ToDto(this RecordSheet entity, IFileStorageService fileStorageService)
     {
         return new RecordSheetDto
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
             Number = entity.Number,
-            Items = (await entity.Items.SelectAsync(item => item.ToDto())).ToList(),
+            Items = (await entity.Items.SelectAsync(item => item.ToDto(fileStorageService))).ToList(),
             ConstructionSiteId = entity.ConstructionSiteId
         };
     }
@@ -117,9 +117,8 @@ public static class DtoHelper
         });
     }
 
-    public static Task<RecordSheetItemDto> ToDto(this RecordSheetItem entity)
-    {
-        return Task.FromResult(new RecordSheetItemDto
+    public static async Task<RecordSheetItemDto> ToDto(this RecordSheetItem entity, IFileStorageService fileStorage) =>
+        new()
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
@@ -128,9 +127,12 @@ public static class DtoHelper
             Directions = entity.Directions,
             SpecialistSignature = entity.SpecialistSignature,
             ComplianceNote = entity.ComplianceNoteSignature,
-            RepresentativeSignature = entity.RepresentativeSignature
-        });
-    }
+            RepresentativeSignature = entity.RepresentativeSignature,
+            
+            // todo: надо с null что то делать
+            DeviationFiles = (await entity.DeviationFilesIds?.SelectAsync(fileStorage.GetFileInfoAsync)).ToList(),
+            DirectionFiles = (await entity.DirectionFilesIds?.SelectAsync(fileStorage.GetFileInfoAsync)).ToList(),
+        };
 
     public static Task<WorkIssueItemDto> ToDto(this WorkIssueItem entity)
     {

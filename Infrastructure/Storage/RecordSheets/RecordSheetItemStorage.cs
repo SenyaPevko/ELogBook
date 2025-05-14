@@ -32,7 +32,9 @@ public class RecordSheetItemStorage(AppDbContext context, IRequestContext reques
         entity.Id = dbo.Id;
         entity.Date = dbo.Date;
         entity.Deviations = dbo.Deviations;
+        entity.DeviationFilesIds = dbo.DeviationFilesIds;
         entity.Directions = dbo.Directions;
+        entity.DirectionFilesIds = dbo.DirectionFilesIds;
         entity.SpecialistSignature = specialist!.GetSignature();
         entity.SpecialistId = dbo.SpecialistId;
         entity.RepresentativeId = dbo.RepresentativeId;
@@ -45,7 +47,9 @@ public class RecordSheetItemStorage(AppDbContext context, IRequestContext reques
         dbo.Id = entity.Id;
         dbo.Date = entity.Date;
         dbo.Deviations = entity.Deviations;
+        dbo.DeviationFilesIds = entity.DeviationFilesIds;
         dbo.Directions = entity.Directions;
+        dbo.DirectionFilesIds = entity.DirectionFilesIds;
         dbo.SpecialistId = entity.SpecialistId;
         dbo.RepresentativeId = entity.RepresentativeId;
         dbo.ComplianceNoteUserId = entity.ComplianceNoteUserId;
@@ -60,7 +64,9 @@ public class RecordSheetItemStorage(AppDbContext context, IRequestContext reques
         dbo.Id = newEntity.Id;
         dbo.Date = newEntity.Date;
         dbo.Deviations = newEntity.Deviations;
+        dbo.DeviationFilesIds = newEntity.DeviationFilesIds;
         dbo.Directions = newEntity.Directions;
+        dbo.DirectionFilesIds = newEntity.DirectionFilesIds;
         dbo.SpecialistId = newEntity.SpecialistId;
         dbo.RepresentativeId = newEntity.RepresentativeId;
         dbo.ComplianceNoteUserId = newEntity.ComplianceNoteUserId;

@@ -386,6 +386,7 @@ public static class DependencyInjection
         return services;
     }
 
+    // todo: добавить остальное связанное с файлами
     private static IServiceCollection AddFileSettings(this IServiceCollection services)
     {
         services.Configure<FormOptions>(options =>

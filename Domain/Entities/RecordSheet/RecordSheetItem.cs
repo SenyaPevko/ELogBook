@@ -1,4 +1,5 @@
 using Domain.Entities.Base;
+using MongoDB.Bson;
 
 namespace Domain.Entities.RecordSheet;
 
@@ -14,11 +15,15 @@ public class RecordSheetItem : EntityInfo
     ///     Выявленные отступления ...
     /// </summary>
     public string Deviations { get; set; } = null!;
+    
+    public List<ObjectId> DeviationFilesIds { get; set; } = [];
 
     /// <summary>
     ///     Указания об устранении отступлений ...
     /// </summary>
     public string Directions { get; set; } = null!;
+    
+    public List<ObjectId> DirectionFilesIds { get; set; } = [];
 
     /// <summary>
     ///     Подпись специалиста ...

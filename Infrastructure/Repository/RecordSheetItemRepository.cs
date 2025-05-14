@@ -1,14 +1,17 @@
 using Domain;
 using Domain.Entities.RecordSheet;
+using Domain.FileStorage;
 using Domain.Models.ErrorInfo;
 using Domain.RequestArgs.SearchRequest;
 using Domain.Storage;
+using MongoDB.Bson;
 
 namespace Infrastructure.Repository;
 
 public class RecordSheetItemRepository(
     IStorage<RecordSheetItem, RecordSheetItemSearchRequest> storage,
-    IStorage<RecordSheet> recSheetStorage)
+    IStorage<RecordSheet> recSheetStorage,
+    IFileStorageService fileStorage)
     : RepositoryBase<RecordSheetItem, InvalidRecordSheetItemReason, RecordSheetItemSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(RecordSheetItem entity,
@@ -22,6 +25,24 @@ public class RecordSheetItemRepository(
                 Reason = InvalidRecordSheetItemReason.ReferenceNotFound,
                 Value = entity.RecordSheetId.ToString()
             });
+
+        await ValidateFiles(entity.DeviationFilesIds, nameof(entity.DeviationFilesIds), writeContext);
+        await ValidateFiles(entity.DirectionFilesIds, nameof(entity.DirectionFilesIds), writeContext);
+    }
+
+    private async Task ValidateFiles(List<ObjectId> fileIds, string path, IWriteContext<InvalidRecordSheetItemReason> writeContext)
+    {
+        foreach (var fileId in fileIds)
+        {
+            var metadata = await fileStorage.GetFileInfoAsync(fileId);
+            if (metadata is null)
+                writeContext.AddInvalidData(new ErrorDetail<InvalidRecordSheetItemReason>
+                {
+                    Path = $"{path}/{fileId}",
+                    Reason = InvalidRecordSheetItemReason.ReferenceNotFound,
+                    Value = fileId.ToString()
+                });
+        }
     }
 
     protected override Task ValidateUpdateAsync(
