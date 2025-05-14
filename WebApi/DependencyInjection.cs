@@ -16,6 +16,7 @@ using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
 using Domain.Entities.WorkIssues;
+using Domain.FileStorage;
 using Domain.Models.Auth;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
@@ -45,6 +46,7 @@ using Infrastructure.Commands.Users;
 using Infrastructure.Commands.WorkIssueItems;
 using Infrastructure.Context;
 using Infrastructure.Repository;
+using Infrastructure.Storage;
 using Infrastructure.Storage.ConstructionSites;
 using Infrastructure.Storage.Organizations;
 using Infrastructure.Storage.RecordSheets;
@@ -74,6 +76,9 @@ public static class DependencyInjection
 
         services.AddScoped<IRequestContext>(_ => RequestContextHolder.Current);
 
+        services.AddFileSettings();
+        services.AddFilesLogic();
+        
         services.AddStorages();
         services.AddRepositories();
         services.AddAccessCheckers();
@@ -385,8 +390,14 @@ public static class DependencyInjection
 
         return services;
     }
-
-    // todo: добавить остальное связанное с файлами
+    
+    private static IServiceCollection AddFilesLogic(this IServiceCollection services)
+    {
+        services.AddScoped<IFileStorageService, FileStorageService>();
+        
+        return services;
+    }
+    
     private static IServiceCollection AddFileSettings(this IServiceCollection services)
     {
         services.Configure<FormOptions>(options =>

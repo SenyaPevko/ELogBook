@@ -8,7 +8,7 @@ namespace Infrastructure.Storage;
 
 public class FileStorageService(IMongoDatabase database) : IFileStorageService
 {
-    private readonly GridFSBucket _gridFsBucket = new GridFSBucket(database);
+    private readonly GridFSBucket _gridFsBucket = new(database);
 
     public async Task<ObjectId> UploadFileAsync(Stream fileStream, string fileName, string contentType)
     {

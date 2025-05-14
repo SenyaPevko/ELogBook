@@ -2,13 +2,15 @@ using System.Net;
 using Domain.FileStorage;
 using Domain.Models.ErrorInfo;
 using Domain.Models.Result;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
 namespace ELogBook.Controllers;
 
 [ApiController]
-[Route("api/files")]
+[Authorize]
+[Route("api/" + "[controller]")]
 public class FilesController(IFileStorageService fileStorage) : ControllerBase
 {
     [HttpPost("upload")]
