@@ -6,6 +6,7 @@ using Domain.Repository;
 using Domain.RequestArgs.RecordSheetItems;
 using Infrastructure.Commands.Base;
 using Infrastructure.Context;
+using MongoDB.Bson;
 
 namespace Infrastructure.Commands.RecordSheetItems;
 
@@ -31,9 +32,9 @@ public class CreateRecordSheetItemCommand(
             RecordSheetId = args.RecordSheetId,
             SpecialistId = context.Auth.UserId!.Value,
             Directions = args.Directions,
-            DirectionFilesIds = args.DirectionFilesIds,
+            DirectionFilesIds = args.DirectionFilesIds.Select(i => new ObjectId(i)).ToList(),
             Deviations = args.Deviations,
-            DeviationFilesIds = args.DeviationFilesIds,
+            DeviationFilesIds = args.DeviationFilesIds.Select(i => new ObjectId(i)).ToList(),
         });
     }
 }
