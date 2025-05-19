@@ -22,9 +22,66 @@
 4. `api/recordSheetItems` - это ряды в таблице учетного листа:
    1. Все поля вроде понятные
    2. `recordSheetId` - `id` учетного листа, в который нужно ряд добавить
-5. `api/registrationSheetItems` - суть та же что и с `recordSheetItems`
+5. `api/registrationSheetItems` - суть та же что и с `recordSheetItems` только это про регистрационный лист
+6. `api/workIssueItems` - то же самое только про рабочие вопросы
 
 
+## Методы обновления/редактирования:
+У каждого метода обновления своя модель, где перечисленны поля, 
+которые можно обновить. Условно нужно поменять поле Name, передаем 
+модель в метод изменения с заполненным полем Name и ничем другим
+
+### Списки
+Есть поля, которые представлены списком в сущности, 
+такие поля в модели изменения представлены классом из двух списков
+Add - список на добавления, Remove - список на удаление.
+
+Remove - это вроде в основном список id сущностей.
+
+### Пример
+Вот пример как добавлять в constructionSite роль для пользователя:
+```http request
+PATCH /api/ConstructionSites/009ee80a-bf00-4e36-a1b1-650b22c9081e HTTP/1.1
+Host: localhost:5144
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImM0NGVmNmExLTY4ODctNGQzOC04ODZlLWI2MDUyM2RjNDljZCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzQ3NjcwNTc5LCJpc3MiOiJFTG9nQm9va0FwcCIsImF1ZCI6IkVMb2dCb29rQXBwVXNlcnMifQ.HXgJveORAiteXDv9FExeiAUag4nxoZO-H2zMAl4fvJg
+Content-Type: application/json
+Content-Length: 162
+
+{
+  "userRoles": {
+    "add": [
+      {
+        "userId": "49105b9a-d991-4352-b6eb-7561ba74cccc",
+        "role": "AuthorSupervision"
+      }
+    ]
+  }
+}
+```
+
+1. `/api/recordSheetItems/{id}` - тут патч нужен для того, 
+чтобы сделать кнопку "ознакомлен" - когда заказчик и 
+производитель работ ознакомливаются с записью:
+   1. `representativeId` - тот кто ознакомился с записью
+   2. `complianceNoteUserId` - тот кто выполнил указания
+
+с остальными моделями думаю и так все понятно
+
+
+## Методы поиска:
+Тут тоже у каждого метода есть своя модель с полями по 
+которым искать нужно
+
+тут вроде из swagger все понятно должно быть.
+
+1. `/api/constructionSites`:
+   1. `UserRoleUserId` - `id` пользователя - это поиск всех объектов, 
+которые доступны для пользователя
+
+Есть поиск по списку значений:
+2. `api/users`:
+   1. `Emails` - найдет всех пользователей с такими почтами
+Не помню, но вроде такое на фронте не нужно. Так для понимая описал тут
 
 ## Notification - SignalR:
 я пока не доделал, можно пока не смотреть сюда
