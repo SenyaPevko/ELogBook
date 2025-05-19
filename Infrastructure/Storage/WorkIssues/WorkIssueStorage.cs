@@ -1,5 +1,6 @@
 using Domain.Entities.WorkIssues;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.WorkIssueItems;
+using Domain.RequestArgs.WorkIssues;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo.WorkIssues;

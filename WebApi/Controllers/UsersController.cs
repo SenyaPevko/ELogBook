@@ -1,6 +1,5 @@
 using Domain.Dtos;
 using Domain.Entities.Users;
-using Domain.RequestArgs.SearchRequest;
 using Domain.RequestArgs.Users;
 using ELogBook.Controllers.Base;
 

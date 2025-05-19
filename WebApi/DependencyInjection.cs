@@ -6,10 +6,12 @@ using Domain.Auth;
 using Domain.Commands;
 using Domain.Dtos;
 using Domain.Dtos.ConstructionSite;
+using Domain.Dtos.Notifications;
 using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Dtos.WorkIssue;
 using Domain.Entities.ConstructionSite;
+using Domain.Entities.Notifications;
 using Domain.Entities.Organization;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
@@ -21,17 +23,22 @@ using Domain.Models.Auth;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.ConstructionSites;
+using Domain.RequestArgs.Notifications;
 using Domain.RequestArgs.Organizations;
 using Domain.RequestArgs.RecordSheetItems;
+using Domain.RequestArgs.RecordSheets;
 using Domain.RequestArgs.RegistrationSheetItems;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.RegistrationSheets;
 using Domain.RequestArgs.Users;
 using Domain.RequestArgs.WorkIssueItems;
+using Domain.RequestArgs.WorkIssues;
 using Domain.Settings;
+using Domain.SignalR;
 using Domain.Storage;
 using ELogBook.Handlers;
 using Infrastructure;
 using Infrastructure.AccessCheckers.ConstructionSites;
+using Infrastructure.AccessCheckers.Notifications;
 using Infrastructure.AccessCheckers.Organizations;
 using Infrastructure.AccessCheckers.RecordSheets;
 using Infrastructure.AccessCheckers.RegistrationSheets;
@@ -39,6 +46,7 @@ using Infrastructure.AccessCheckers.Users;
 using Infrastructure.AccessCheckers.WorkIssues;
 using Infrastructure.Auth;
 using Infrastructure.Commands.ConstructionSites;
+using Infrastructure.Commands.Notifications;
 using Infrastructure.Commands.Organizations;
 using Infrastructure.Commands.RecordSheetItems;
 using Infrastructure.Commands.RegistrationSheetItems;
@@ -46,8 +54,11 @@ using Infrastructure.Commands.Users;
 using Infrastructure.Commands.WorkIssueItems;
 using Infrastructure.Context;
 using Infrastructure.Repository;
+using Infrastructure.Repository.Notifications;
+using Infrastructure.SignalR;
 using Infrastructure.Storage;
 using Infrastructure.Storage.ConstructionSites;
+using Infrastructure.Storage.Notifications;
 using Infrastructure.Storage.Organizations;
 using Infrastructure.Storage.RecordSheets;
 using Infrastructure.Storage.RegistrationSheets;
@@ -70,11 +81,13 @@ public static class DependencyInjection
     {
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IJwtService, JwtService>();
+        services.AddSingleton<IAuthService, AuthService>();
+        services.AddSingleton<IJwtService, JwtService>();
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
         services.AddScoped<IRequestContext>(_ => RequestContextHolder.Current);
+
+        services.AddSignalrDependencies();
 
         services.AddFileSettings();
         services.AddFilesLogic();
@@ -156,8 +169,14 @@ public static class DependencyInjection
 
     public static IServiceCollection AddSwagger(this IServiceCollection services)
     {
+        var libraryXmlFile = $"{typeof(ConstructionSiteCreationArgs).Assembly.GetName().Name}.xml";
+        var libraryXmlPath = Path.Combine(AppContext.BaseDirectory, libraryXmlFile);
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(c =>
+        {
+            c.IncludeXmlComments(libraryXmlPath);
+        });
+        services.AddSwaggerGenNewtonsoftSupport();
 
         return services;
     }
@@ -192,6 +211,9 @@ public static class DependencyInjection
 
         services.AddScoped<IStorage<WorkIssueItem>, WorkIssueItemStorage>();
         services.AddScoped<IStorage<WorkIssueItem, WorkIssueItemSearchRequest>, WorkIssueItemStorage>();
+        
+        services.AddScoped<IStorage<Notification>, NotificationStorage>();
+        services.AddScoped<IStorage<Notification, NotificationSearchRequest>, NotificationStorage>();
 
         return services;
     }
@@ -251,6 +273,12 @@ public static class DependencyInjection
         services
             .AddScoped<IRepository<WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>,
                 WorkIssueItemRepository>();
+        
+        services.AddScoped<IRepository<Notification>, NotificationRepository>();
+        services.AddScoped<IRepository<Notification, InvalidNotificationReason>, NotificationRepository>();
+        services
+            .AddScoped<IRepository<Notification, InvalidNotificationReason, NotificationSearchRequest>,
+                NotificationRepository>();
 
         return services;
     }
@@ -283,6 +311,9 @@ public static class DependencyInjection
         services.AddScoped<IAccessChecker<WorkIssueItem, WorkIssueItemUpdateArgs>, WorkIssueItemAccessChecker>();
 
         services.AddScoped<IAccessChecker<WorkIssue>, WorkIssueAccessChecker>();
+        
+        services.AddScoped<IAccessChecker<Notification>, NotificationAccessChecker>();
+        services.AddScoped<IAccessChecker<Notification, NotificationUpdateArgs>, NotificationAccessChecker>();
 
         return services;
     }
@@ -295,6 +326,7 @@ public static class DependencyInjection
         services.AddRegistrationSheetItemCommands();
         services.AddRecordSheetItemCommands();
         services.AddWorkIssueItemCommands();
+        services.AddNotificationCommands();
 
         return services;
     }
@@ -391,6 +423,14 @@ public static class DependencyInjection
         return services;
     }
     
+    private static IServiceCollection AddNotificationCommands(this IServiceCollection services)
+    {
+        services.AddScoped<IUpdateCommand<RecordSheetItemNotificationDto, NotificationUpdateArgs, InvalidNotificationReason>, UpdateNotificationCommand>();
+        services.AddScoped<ISearchCommand<RecordSheetItemNotificationDto, NotificationSearchRequest>, SearchNotificationCommand>();
+
+        return services;
+    }
+    
     private static IServiceCollection AddFilesLogic(this IServiceCollection services)
     {
         services.AddScoped<IFileStorageService, FileStorageService>();
@@ -404,6 +444,14 @@ public static class DependencyInjection
         {
             options.MultipartBodyLengthLimit = 500 * 1024 * 1024;
         });
+        
+        return services;
+    }
+    
+    private static IServiceCollection AddSignalrDependencies(this IServiceCollection services)
+    {
+        services.AddSignalR();
+        services.AddSingleton<IConnectionManager, ConnectionManager>();
         
         return services;
     }

@@ -2,7 +2,7 @@ using Domain.Entities.ConstructionSite;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.WorkIssues;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.ConstructionSites;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo.ConstructionSite;

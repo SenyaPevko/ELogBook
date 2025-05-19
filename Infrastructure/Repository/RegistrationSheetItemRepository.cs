@@ -1,7 +1,8 @@
 using Domain;
 using Domain.Entities.RegistrationSheet;
 using Domain.Models.ErrorInfo;
-using Domain.RequestArgs.SearchRequest;
+using Domain.Repository;
+using Domain.RequestArgs.RegistrationSheetItems;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;

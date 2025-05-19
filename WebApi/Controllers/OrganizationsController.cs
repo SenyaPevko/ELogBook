@@ -1,7 +1,6 @@
 using Domain.Dtos;
 using Domain.Entities.Organization;
 using Domain.RequestArgs.Organizations;
-using Domain.RequestArgs.SearchRequest;
 using ELogBook.Controllers.Base;
 
 namespace ELogBook.Controllers;

@@ -2,7 +2,7 @@ using Domain.Entities.ConstructionSite;
 using Domain.Entities.Roles;
 using Domain.Entities.WorkIssues;
 using Domain.Repository;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.ConstructionSites;
 using Domain.RequestArgs.WorkIssueItems;
 using Infrastructure.Context;
 

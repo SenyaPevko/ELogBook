@@ -1,5 +1,5 @@
 using Domain.Entities.Base;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Base;
 
 namespace Domain.Storage;
 
@@ -13,6 +13,8 @@ public interface IStorage<TEntity>
     public Task UpdateAsync(TEntity entity);
 
     public Task DeleteAsync(TEntity entity);
+
+    public Task AddManyAsync(List<TEntity> entities);
 }
 
 public interface IStorage<TEntity, in TSearchRequest> : IStorage<TEntity>

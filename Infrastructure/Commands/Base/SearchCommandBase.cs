@@ -7,7 +7,7 @@ using Domain.Entities.Base;
 using Domain.Models.ErrorInfo;
 using Domain.Models.Result;
 using Domain.Repository;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Base;
 using Infrastructure.Helpers;
 
 namespace Infrastructure.Commands.Base;

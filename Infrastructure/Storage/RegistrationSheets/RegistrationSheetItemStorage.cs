@@ -1,7 +1,8 @@
 using Domain.Entities.Organization;
 using Domain.Entities.RegistrationSheet;
 using Domain.Entities.Users;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Organizations;
+using Domain.RequestArgs.RegistrationSheetItems;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo.RegistrationSheets;

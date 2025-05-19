@@ -2,7 +2,7 @@ using Domain.AccessChecker;
 using Domain.Dtos;
 using Domain.Entities.Organization;
 using Domain.Repository;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Organizations;
 using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.Organizations;

@@ -1,9 +1,15 @@
 using Domain;
+using Domain.Entities.ConstructionSite;
+using Domain.Entities.Notifications;
 using Domain.Entities.RecordSheet;
+using Domain.Entities.Roles;
 using Domain.FileStorage;
 using Domain.Models.ErrorInfo;
-using Domain.RequestArgs.SearchRequest;
+using Domain.Repository;
+using Domain.RequestArgs.ConstructionSites;
+using Domain.RequestArgs.RecordSheetItems;
 using Domain.Storage;
+using Infrastructure.WriteContext;
 using MongoDB.Bson;
 
 namespace Infrastructure.Repository;
@@ -11,7 +17,9 @@ namespace Infrastructure.Repository;
 public class RecordSheetItemRepository(
     IStorage<RecordSheetItem, RecordSheetItemSearchRequest> storage,
     IStorage<RecordSheet> recSheetStorage,
-    IFileStorageService fileStorage)
+    IFileStorageService fileStorage,
+    IRepository<Notification, InvalidNotificationReason> notificationRepository,
+    IStorage<ConstructionSite, ConstructionSiteSearchRequest> constructionSiteStorage)
     : RepositoryBase<RecordSheetItem, InvalidRecordSheetItemReason, RecordSheetItemSearchRequest>(storage)
 {
     protected override async Task ValidateCreationAsync(RecordSheetItem entity,
@@ -30,7 +38,8 @@ public class RecordSheetItemRepository(
         await ValidateFiles(entity.DirectionFilesIds, nameof(entity.DirectionFilesIds), writeContext);
     }
 
-    private async Task ValidateFiles(List<ObjectId> fileIds, string path, IWriteContext<InvalidRecordSheetItemReason> writeContext)
+    private async Task ValidateFiles(List<ObjectId> fileIds, string path,
+        IWriteContext<InvalidRecordSheetItemReason> writeContext)
     {
         foreach (var fileId in fileIds)
         {
@@ -84,5 +93,53 @@ public class RecordSheetItemRepository(
         var recSheet = await recSheetStorage.GetByIdAsync(entity.RecordSheetId);
         recSheet!.Items.Add(entity);
         await recSheetStorage.UpdateAsync(recSheet);
+
+        await NotifyAboutCreation(entity, writeContext, cancellationToken);
+    }
+
+    private async Task NotifyAboutCreation(RecordSheetItem entity,
+        IWriteContext<InvalidRecordSheetItemReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        var constructionSite = (await constructionSiteStorage.SearchAsync(new ConstructionSiteSearchRequest
+            { RecordSheetId = entity.RecordSheetId })).FirstOrDefault();
+        if (constructionSite is null)
+        {
+            writeContext.AddInvalidData(new ErrorDetail<InvalidRecordSheetItemReason>
+            {
+                Path = nameof(entity.RecordSheetId),
+                Reason = InvalidRecordSheetItemReason.ReferenceNotFound,
+                Value = entity.RecordSheetId.ToString()
+            });
+            return;
+        }
+
+        var targetUsers = constructionSite.ConstructionSiteUserRoles
+            .Where(x => x.Role is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator)
+            .Select(x => x.UserId)
+            .ToList();
+        if (targetUsers.Count == 0) 
+            return;
+
+        var notifications = targetUsers.Select(userId => new Notification
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            Title = "Новая запись в учетном листе",
+            Message = $"Добавлена новая запись в учетный лист для объекта {constructionSite.ShortName}",
+            IsRead = false,
+            RelatedEntityId = entity.Id,
+            NotificationType = NotificationType.RecordSheetItemCreationNotification
+        }).ToList();
+
+
+        var bulkWriteContext = new BulkWriteContext<Notification, InvalidNotificationReason>();
+        await notificationRepository.AddManyAsync(notifications, bulkWriteContext, cancellationToken);
+
+        if (!bulkWriteContext.IsSuccess)
+            writeContext.AddInvalidData(new ErrorDetail<InvalidRecordSheetItemReason>
+            {
+                Reason = InvalidRecordSheetItemReason.FailedNotifyUsers,
+            });
     }
 }

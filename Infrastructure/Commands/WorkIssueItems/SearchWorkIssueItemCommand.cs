@@ -2,7 +2,7 @@ using Domain.AccessChecker;
 using Domain.Dtos.WorkIssue;
 using Domain.Entities.WorkIssues;
 using Domain.Repository;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.WorkIssueItems;
 using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.WorkIssueItems;

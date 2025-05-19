@@ -1,4 +1,4 @@
-namespace Domain.RequestArgs.SearchRequest;
+namespace Domain.RequestArgs.Base;
 
 public abstract class SearchRequestBase
 {

@@ -1,7 +1,7 @@
 using Domain;
 using Domain.Entities.Base;
 using Domain.Repository;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Base;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;
@@ -39,6 +39,22 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
 
         await AfterCreateAsync(entity, writeContext, cancellationToken);
     }
+    
+    public virtual async Task AddManyAsync(List<TEntity> entities, IBulkWriteContext<TEntity, TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+        await PreprocessBulkCreationAsync(entities, writeContext, cancellationToken);
+        if (!writeContext.IsSuccess)
+            return;
+
+        await ValidateBulkCreationAsync(entities, writeContext, cancellationToken);
+        if (!writeContext.IsSuccess)
+            return;
+
+        await storage.AddManyAsync(entities);
+
+        await AfterBulkCreateAsync(entities, writeContext, cancellationToken);
+    }
 
     public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
@@ -66,6 +82,13 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
     protected abstract Task ValidateCreationAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
         CancellationToken cancellationToken);
 
+    protected virtual async Task ValidateBulkCreationAsync(
+        List<TEntity> entities,
+        IBulkWriteContext<TEntity, TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+    }
+
     protected abstract Task ValidateUpdateAsync(TEntity oldEntity, TEntity newEntity,
         IWriteContext<TInvalidReason> writeContext, CancellationToken cancellationToken);
 
@@ -76,9 +99,23 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
     {
     }
 
+    protected virtual async Task PreprocessBulkCreationAsync(
+        List<TEntity> entities,
+        IBulkWriteContext<TEntity, TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+    }
+
     protected virtual async Task AfterCreateAsync(
         TEntity entity,
         IWriteContext<TInvalidReason> writeContext,
+        CancellationToken cancellationToken)
+    {
+    }
+    
+    protected virtual async Task AfterBulkCreateAsync(
+        List<TEntity> entities,
+        IBulkWriteContext<TEntity, TInvalidReason> writeContext,
         CancellationToken cancellationToken)
     {
     }

@@ -2,7 +2,9 @@ using Domain;
 using Domain.Entities.Organization;
 using Domain.Entities.Users;
 using Domain.Models.ErrorInfo;
-using Domain.RequestArgs.SearchRequest;
+using Domain.Repository;
+using Domain.RequestArgs.Organizations;
+using Domain.RequestArgs.Users;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;

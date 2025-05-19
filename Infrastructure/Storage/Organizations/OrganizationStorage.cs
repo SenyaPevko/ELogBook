@@ -1,5 +1,5 @@
 using Domain.Entities.Organization;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Organizations;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
 using Infrastructure.Storage.Base;

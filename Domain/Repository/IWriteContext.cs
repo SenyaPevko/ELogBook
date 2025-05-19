@@ -1,6 +1,6 @@
 using Domain.Models.ErrorInfo;
 
-namespace Domain;
+namespace Domain.Repository;
 
 public interface IWriteContext<TInvalidReason>
     where TInvalidReason : Enum

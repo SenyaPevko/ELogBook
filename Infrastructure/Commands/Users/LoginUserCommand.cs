@@ -7,7 +7,7 @@ using Domain.Models.ErrorInfo;
 using Domain.Models.Result;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Users;
 using Infrastructure.WriteContext;
 using Microsoft.AspNetCore.Identity;
 

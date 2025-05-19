@@ -1,10 +1,12 @@
 using Core.Helpers;
 using Domain.Dtos;
 using Domain.Dtos.ConstructionSite;
+using Domain.Dtos.Notifications;
 using Domain.Dtos.RecordSheet;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Dtos.WorkIssue;
 using Domain.Entities.ConstructionSite;
+using Domain.Entities.Notifications;
 using Domain.Entities.Organization;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.RegistrationSheet;
@@ -154,5 +156,16 @@ public static class DtoHelper
             Id = entity.Id,
             UserInChargeId = entity.UserInChargeId,
             File = await storageService.GetFileInfoAsync(entity.FileId),
+        };
+    
+    public static async Task<RecordSheetItemNotificationDto> ToDto(this Notification entity) =>
+        new()
+        {
+            Id = entity.Id,
+            UpdateInfo = entity.UpdateInfo,
+            Title = entity.Title,
+            Message = entity.Message,
+            IsRead = entity.IsRead,
+            RecordSheetItemId = entity.RelatedEntityId
         };
 }

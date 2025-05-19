@@ -2,7 +2,7 @@ using Domain.AccessChecker;
 using Domain.Dtos.RegistrationSheet;
 using Domain.Entities.RegistrationSheet;
 using Domain.Repository;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.RegistrationSheetItems;
 using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.RegistrationSheetItems;

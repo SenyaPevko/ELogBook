@@ -5,7 +5,7 @@ using Domain.Entities.ConstructionSite;
 using Domain.Entities.Organization;
 using Domain.FileStorage;
 using Domain.Repository;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.ConstructionSites;
 using Infrastructure.Commands.Base;
 
 namespace Infrastructure.Commands.ConstructionSites;

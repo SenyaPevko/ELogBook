@@ -1,5 +1,5 @@
 using Domain.Entities.Users;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Users;
 using Infrastructure.Context;
 using Infrastructure.Dbo.User;
 using Infrastructure.Storage.Base;

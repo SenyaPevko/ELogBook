@@ -1,4 +1,6 @@
-namespace Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Base;
+
+namespace Domain.RequestArgs.Organizations;
 
 public class OrganizationSearchRequest : SearchRequestBase
 {

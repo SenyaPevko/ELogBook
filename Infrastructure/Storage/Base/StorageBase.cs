@@ -1,5 +1,6 @@
+using Core.Helpers;
 using Domain.Entities.Base;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Base;
 using Domain.Storage;
 using Infrastructure.Context;
 using Infrastructure.Dbo;
@@ -86,14 +87,32 @@ public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
 {
     protected abstract IMongoCollection<TDbo> Collection { get; }
 
-    public virtual async Task AddAsync(TEntity entity)
+    private async Task<TDbo> CreateDbo(TEntity entity)
     {
         var dbo = DboHelper.CreateEntityDbo<TDbo>(requestContext);
         dbo.Id = entity.Id;
         await MapDboFromEntityAsync(entity, dbo);
+        
+        return dbo;
+    }
+    
+    public virtual async Task AddAsync(TEntity entity)
+    {
+        var dbo = await CreateDbo(entity);
 
         await Collection.InsertOneAsync(dbo);
         DboHelper.UpdateEntityInfo(entity, dbo);
+    }
+    
+    public virtual async Task AddManyAsync(List<TEntity> entities)
+    {
+        var dbos = await entities.SelectAsync(CreateDbo);
+        var idToEntity = entities.ToDictionary(e => e.Id);
+        
+        await Collection.InsertManyAsync(dbos);
+
+        foreach (var dbo in dbos)
+            DboHelper.UpdateEntityInfo(idToEntity[dbo.Id], dbo);
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id)

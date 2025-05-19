@@ -1,7 +1,8 @@
 using Domain;
 using Domain.Entities.WorkIssues;
 using Domain.Models.ErrorInfo;
-using Domain.RequestArgs.SearchRequest;
+using Domain.Repository;
+using Domain.RequestArgs.WorkIssueItems;
 using Domain.Storage;
 
 namespace Infrastructure.Repository;

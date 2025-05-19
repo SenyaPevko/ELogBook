@@ -15,7 +15,7 @@ public class ConstructionSiteDbo : EntityDbo
     public string ShortName { get; set; } = null!;
 
     /// <summary>
-    ///     Описнаие объекта
+    ///     Описание объекта
     /// </summary>
     public string FullName { get; set; } = null!;
 

@@ -1,5 +1,5 @@
 using Domain.Entities.Base;
-using Domain.RequestArgs.SearchRequest;
+using Domain.RequestArgs.Base;
 
 namespace Domain.Repository;
 
@@ -19,6 +19,9 @@ public interface IRepository<TEntity, TInvalidReason> : IRepository<TEntity>
         CancellationToken cancellationToken);
 
     public Task UpdateAsync(TEntity entity, IWriteContext<TInvalidReason> writeContext,
+        CancellationToken cancellationToken);
+
+    Task AddManyAsync(List<TEntity> entities, IBulkWriteContext<TEntity, TInvalidReason> writeContext,
         CancellationToken cancellationToken);
 }
 

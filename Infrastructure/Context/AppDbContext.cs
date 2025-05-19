@@ -1,6 +1,7 @@
 using Domain.Settings;
 using Infrastructure.Dbo;
 using Infrastructure.Dbo.ConstructionSite;
+using Infrastructure.Dbo.Notifications;
 using Infrastructure.Dbo.RecordSheets;
 using Infrastructure.Dbo.RegistrationSheets;
 using Infrastructure.Dbo.User;
@@ -48,4 +49,7 @@ public class AppDbContext
 
     public IMongoCollection<WorkIssueDbo> WorkIssues =>
         _database.GetCollection<WorkIssueDbo>("workIssues");
+    
+    public IMongoCollection<NotificationDbo> Notifications =>
+        _database.GetCollection<NotificationDbo>("notifications");
 }
