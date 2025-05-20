@@ -38,6 +38,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("refresh")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponse, UpdateErrorInfo<InvalidUserReason>>> Refresh(
         [FromServices] RefreshUserTokenCommand command,
         [FromBody] RefreshTokenRequest request)
