@@ -18,7 +18,7 @@ public class RecordSheetItemRepository(
     IStorage<RecordSheetItem, RecordSheetItemSearchRequest> storage,
     IStorage<RecordSheet> recSheetStorage,
     IFileStorageService fileStorage,
-    IRepository<Notification, InvalidNotificationReason> notificationRepository,
+    IRepository<RecordSheetItemNotification, InvalidNotificationReason> notificationRepository,
     IStorage<ConstructionSite, ConstructionSiteSearchRequest> constructionSiteStorage)
     : RepositoryBase<RecordSheetItem, InvalidRecordSheetItemReason, RecordSheetItemSearchRequest>(storage)
 {
@@ -121,19 +121,20 @@ public class RecordSheetItemRepository(
         if (targetUsers.Count == 0) 
             return;
 
-        var notifications = targetUsers.Select(userId => new Notification
+        var notifications = targetUsers.Select(userId => new RecordSheetItemNotification
         {
             Id = Guid.NewGuid(),
             UserId = userId,
             Title = "Новая запись в учетном листе",
             Message = $"Добавлена новая запись в учетный лист для объекта {constructionSite.ShortName}",
             IsRead = false,
-            RelatedEntityId = entity.Id,
-            NotificationType = NotificationType.RecordSheetItemCreationNotification
+            RecordSheetItemId = entity.Id,
+            RecordSheetId = entity.RecordSheetId,
+            ConstructionSiteId = constructionSite.Id,
         }).ToList();
 
 
-        var bulkWriteContext = new BulkWriteContext<Notification, InvalidNotificationReason>();
+        var bulkWriteContext = new BulkWriteContext<RecordSheetItemNotification, InvalidNotificationReason>();
         await notificationRepository.AddManyAsync(notifications, bulkWriteContext, cancellationToken);
 
         if (!bulkWriteContext.IsSuccess)

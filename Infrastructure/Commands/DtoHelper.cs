@@ -158,7 +158,7 @@ public static class DtoHelper
             File = await storageService.GetFileInfoAsync(entity.FileId),
         };
     
-    public static async Task<RecordSheetItemNotificationDto> ToDto(this Notification entity) =>
+    public static async Task<RecordSheetItemNotificationDto> ToDto(this RecordSheetItemNotification entity) =>
         new()
         {
             Id = entity.Id,
@@ -166,6 +166,8 @@ public static class DtoHelper
             Title = entity.Title,
             Message = entity.Message,
             IsRead = entity.IsRead,
-            RecordSheetItemId = entity.RelatedEntityId
+            RecordSheetItemId = entity.RecordSheetItemId,
+            RecordSheetId = entity.RecordSheetId,
+            ConstructionSiteId = entity.ConstructionSiteId
         };
 }

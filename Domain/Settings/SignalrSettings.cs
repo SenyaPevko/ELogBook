@@ -7,5 +7,5 @@ public static class SignalrSettings
         public const string ReceiveNotification = "ReceiveNotification";
     }
     
-    public const string NotificationHubPath = "/notificationHub";
+    public const string NotificationHubPath = "/hubs/notifications";
 }

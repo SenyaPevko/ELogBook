@@ -12,18 +12,20 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Infrastructure.Repository.Notifications;
 
-public class NotificationRepository(
-    IStorage<Notification, NotificationSearchRequest> storage,
+// todo: когда будут добавляться новые типы уведомлений, то логику этого репозитория и соответствующего стореджа
+// нужно будет сводить к базовому абстрактному классу и для уведомлений создавать наследники
+public class RecordSheetItemNotificationRepository(
+    IStorage<RecordSheetItemNotification, NotificationSearchRequest> storage,
     IHubContext<NotificationHub> hubContext,
     IConnectionManager connectionManager)
-    : RepositoryBase<Notification, InvalidNotificationReason, NotificationSearchRequest>(storage)
+    : RepositoryBase<RecordSheetItemNotification, InvalidNotificationReason, NotificationSearchRequest>(storage)
 {
-    protected override async Task ValidateCreationAsync(Notification entity,
+    protected override async Task ValidateCreationAsync(RecordSheetItemNotification entity,
         IWriteContext<InvalidNotificationReason> writeContext, CancellationToken cancellationToken)
     {
     }
 
-    protected override async Task ValidateUpdateAsync(Notification oldEntity, Notification newEntity,
+    protected override async Task ValidateUpdateAsync(RecordSheetItemNotification oldEntity, RecordSheetItemNotification newEntity,
         IWriteContext<InvalidNotificationReason> writeContext,
         CancellationToken cancellationToken)
     {
@@ -36,21 +38,22 @@ public class NotificationRepository(
             });
     }
 
-    protected override async Task AfterCreateAsync(Notification entity,
+    protected override async Task AfterCreateAsync(RecordSheetItemNotification entity,
         IWriteContext<InvalidNotificationReason> writeContext, CancellationToken cancellationToken) =>
         await NotifyUser(entity, cancellationToken);
 
-    protected override async Task AfterBulkCreateAsync(List<Notification> entities,
-        IBulkWriteContext<Notification, InvalidNotificationReason> writeContext, CancellationToken cancellationToken) =>
+    protected override async Task AfterBulkCreateAsync(List<RecordSheetItemNotification> entities,
+        IBulkWriteContext<RecordSheetItemNotification, InvalidNotificationReason> writeContext, CancellationToken cancellationToken) =>
         await entities.SelectAsync(e => NotifyUser(e, cancellationToken));
 
 
-    private async Task NotifyUser(Notification entity, CancellationToken cancellationToken)
+    private async Task NotifyUser(RecordSheetItemNotification entity, CancellationToken cancellationToken)
     {
         var connections = connectionManager.GetConnections(entity.UserId).ToList();
         if (connections.Count != 0)
             await hubContext.Clients.Clients(connections).SendAsync(
-                SignalrSettings.ClientMethods.ReceiveNotification, entity.ToDto(),
+                SignalrSettings.ClientMethods.ReceiveNotification, 
+                await entity.ToDto(),
                 cancellationToken: cancellationToken);
     }
 }

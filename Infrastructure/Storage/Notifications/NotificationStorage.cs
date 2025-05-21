@@ -8,56 +8,61 @@ using MongoDB.Driver;
 namespace Infrastructure.Storage.Notifications;
 
 public class NotificationStorage(AppDbContext dbContext, IRequestContext requestContext)
-    : StorageBase<Notification, NotificationDbo, NotificationSearchRequest>(requestContext)
+    : StorageBase<RecordSheetItemNotification, RecordSheetItemNotificationDbo, NotificationSearchRequest>(requestContext)
 {
-    protected override IMongoCollection<NotificationDbo> Collection => dbContext.Notifications;
+    protected override IMongoCollection<RecordSheetItemNotificationDbo> Collection => dbContext.Notifications;
 
-    protected override Task MapEntityFromDboAsync(Notification entity, NotificationDbo dbo)
+    protected override Task MapEntityFromDboAsync(RecordSheetItemNotification entity, RecordSheetItemNotificationDbo dbo)
     {
         entity.Id = dbo.Id;
         entity.UserId = dbo.UserId;
         entity.Title = dbo.Title;
         entity.Message = dbo.Message;
         entity.IsRead = dbo.IsRead;
-        entity.RelatedEntityId = dbo.RelatedEntityId;
-        entity.NotificationType = dbo.NotificationType;
+        entity.RecordSheetItemId = dbo.RecordSheetItemId;
+        entity.RecordSheetId = dbo.RecordSheetId;
+        entity.ConstructionSiteId = dbo.ConstructionSiteId;
         entity.UpdateInfo = dbo.ToUpdateInfo();
 
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Notification entity, NotificationDbo dbo)
+    protected override Task MapDboFromEntityAsync(RecordSheetItemNotification entity, RecordSheetItemNotificationDbo dbo)
     {
         dbo.Id = entity.Id;
         dbo.UserId = entity.UserId;
         dbo.Title = entity.Title;
         dbo.Message = entity.Message;
         dbo.IsRead = entity.IsRead;
-        dbo.RelatedEntityId = entity.RelatedEntityId;
+        dbo.RecordSheetItemId = entity.RecordSheetItemId;
+        dbo.RecordSheetId = entity.RecordSheetId;
+        dbo.ConstructionSiteId = entity.ConstructionSiteId;
         dbo.NotificationType = entity.NotificationType;
 
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(Notification? existingEntity, Notification newEntity,
-        NotificationDbo dbo)
+    protected override Task MapDboFromEntityAsync(RecordSheetItemNotification? existingEntity, RecordSheetItemNotification newEntity,
+        RecordSheetItemNotificationDbo dbo)
     {
         dbo.Id = newEntity.Id;
         dbo.UserId = newEntity.UserId;
         dbo.Title = newEntity.Title;
         dbo.Message = newEntity.Message;
         dbo.IsRead = newEntity.IsRead;
-        dbo.RelatedEntityId = newEntity.RelatedEntityId;
+        dbo.RecordSheetItemId = newEntity.RecordSheetItemId;
+        dbo.RecordSheetId = newEntity.RecordSheetId;
+        dbo.ConstructionSiteId = newEntity.ConstructionSiteId;
         dbo.NotificationType = newEntity.NotificationType;
 
         return Task.CompletedTask;
     }
 
-    protected override List<FilterDefinition<NotificationDbo>> BuildSpecificFilters(
+    protected override List<FilterDefinition<RecordSheetItemNotificationDbo>> BuildSpecificFilters(
         NotificationSearchRequest request)
     {
-        var filters = new List<FilterDefinition<NotificationDbo>>();
-        var builder = Builders<NotificationDbo>.Filter;
+        var filters = new List<FilterDefinition<RecordSheetItemNotificationDbo>>();
+        var builder = Builders<RecordSheetItemNotificationDbo>.Filter;
 
         if (request.UserId is not null) 
             filters.Add(builder.Eq(x => x.UserId, request.UserId));

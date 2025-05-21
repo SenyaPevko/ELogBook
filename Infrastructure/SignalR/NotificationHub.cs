@@ -1,15 +1,15 @@
-using System.Security.Claims;
 using Domain.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Infrastructure.SignalR;
 
+[Authorize]
 public class NotificationHub(IConnectionManager connectionManager) : Hub
 {
     public override async Task OnConnectedAsync()
     {
-        Console.WriteLine($"OnConnectedAsync");
-        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userId = Context.UserIdentifier;
         if(userId is not null && Guid.TryParse(userId, out var userGuidId))
             connectionManager.AddConnection(userGuidId, Context.ConnectionId);
         
@@ -18,7 +18,7 @@ public class NotificationHub(IConnectionManager connectionManager) : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userId = Context.UserIdentifier;
         if(userId is not null && Guid.TryParse(userId, out var userGuidId))
             connectionManager.RemoveConnection(userGuidId, Context.ConnectionId);
         

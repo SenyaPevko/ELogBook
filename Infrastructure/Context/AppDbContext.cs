@@ -50,6 +50,6 @@ public class AppDbContext
     public IMongoCollection<WorkIssueDbo> WorkIssues =>
         _database.GetCollection<WorkIssueDbo>("workIssues");
     
-    public IMongoCollection<NotificationDbo> Notifications =>
-        _database.GetCollection<NotificationDbo>("notifications");
+    public IMongoCollection<RecordSheetItemNotificationDbo> Notifications =>
+        _database.GetCollection<RecordSheetItemNotificationDbo>("notifications");
 }

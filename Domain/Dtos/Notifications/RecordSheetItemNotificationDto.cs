@@ -5,5 +5,7 @@ public class RecordSheetItemNotificationDto : EntityDto
     public string Title { get; set; }
     public string Message { get; set; }
     public bool IsRead { get; set; }
-    public Guid? RecordSheetItemId { get; set; }
+    public Guid RecordSheetItemId { get; set; }
+    public Guid RecordSheetId { get; set; }
+    public Guid ConstructionSiteId { get; set; }
 }

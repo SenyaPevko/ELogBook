@@ -4,9 +4,9 @@ using Infrastructure.Context;
 
 namespace Infrastructure.AccessCheckers.Notifications;
 
-public class NotificationAccessChecker(IRequestContext context) : AccessCheckerBase<Notification, NotificationUpdateArgs>(context)
+public class NotificationAccessChecker(IRequestContext context) : AccessCheckerBase<RecordSheetItemNotification, NotificationUpdateArgs>(context)
 {
-    public override async Task<bool> CanUpdate(Notification entity)
+    public override async Task<bool> CanUpdate(RecordSheetItemNotification entity)
     {
         return entity.UserId == Context.Auth.UserId;
     }

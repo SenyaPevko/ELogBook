@@ -212,8 +212,8 @@ public static class DependencyInjection
         services.AddScoped<IStorage<WorkIssueItem>, WorkIssueItemStorage>();
         services.AddScoped<IStorage<WorkIssueItem, WorkIssueItemSearchRequest>, WorkIssueItemStorage>();
         
-        services.AddScoped<IStorage<Notification>, NotificationStorage>();
-        services.AddScoped<IStorage<Notification, NotificationSearchRequest>, NotificationStorage>();
+        services.AddScoped<IStorage<RecordSheetItemNotification>, NotificationStorage>();
+        services.AddScoped<IStorage<RecordSheetItemNotification, NotificationSearchRequest>, NotificationStorage>();
 
         return services;
     }
@@ -274,11 +274,11 @@ public static class DependencyInjection
             .AddScoped<IRepository<WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>,
                 WorkIssueItemRepository>();
         
-        services.AddScoped<IRepository<Notification>, NotificationRepository>();
-        services.AddScoped<IRepository<Notification, InvalidNotificationReason>, NotificationRepository>();
+        services.AddScoped<IRepository<RecordSheetItemNotification>, RecordSheetItemNotificationRepository>();
+        services.AddScoped<IRepository<RecordSheetItemNotification, InvalidNotificationReason>, RecordSheetItemNotificationRepository>();
         services
-            .AddScoped<IRepository<Notification, InvalidNotificationReason, NotificationSearchRequest>,
-                NotificationRepository>();
+            .AddScoped<IRepository<RecordSheetItemNotification, InvalidNotificationReason, NotificationSearchRequest>,
+                RecordSheetItemNotificationRepository>();
 
         return services;
     }
@@ -312,8 +312,8 @@ public static class DependencyInjection
 
         services.AddScoped<IAccessChecker<WorkIssue>, WorkIssueAccessChecker>();
         
-        services.AddScoped<IAccessChecker<Notification>, NotificationAccessChecker>();
-        services.AddScoped<IAccessChecker<Notification, NotificationUpdateArgs>, NotificationAccessChecker>();
+        services.AddScoped<IAccessChecker<RecordSheetItemNotification>, NotificationAccessChecker>();
+        services.AddScoped<IAccessChecker<RecordSheetItemNotification, NotificationUpdateArgs>, NotificationAccessChecker>();
 
         return services;
     }
@@ -425,8 +425,8 @@ public static class DependencyInjection
     
     private static IServiceCollection AddNotificationCommands(this IServiceCollection services)
     {
-        services.AddScoped<IUpdateCommand<RecordSheetItemNotificationDto, NotificationUpdateArgs, InvalidNotificationReason>, UpdateNotificationCommand>();
-        services.AddScoped<ISearchCommand<RecordSheetItemNotificationDto, NotificationSearchRequest>, SearchNotificationCommand>();
+        services.AddScoped<IUpdateCommand<RecordSheetItemNotificationDto, NotificationUpdateArgs, InvalidNotificationReason>, UpdateRecordSheetItemNotificationCommand>();
+        services.AddScoped<ISearchCommand<RecordSheetItemNotificationDto, NotificationSearchRequest>, SearchRecordSheetItemNotificationCommand>();
 
         return services;
     }
@@ -452,6 +452,16 @@ public static class DependencyInjection
     {
         services.AddSignalR();
         services.AddSingleton<IConnectionManager, ConnectionManager>();
+        services.AddCors(options =>
+        {
+            options.AddPolicy("SignalRPolicy", policy =>
+            {
+                policy.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .SetIsOriginAllowed(_ => true)
+                    .AllowCredentials();
+            });
+        });
         
         return services;
     }

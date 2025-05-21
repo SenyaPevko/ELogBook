@@ -12,7 +12,7 @@ namespace ELogBook.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/" + "[controller]")]
-public class NotificationsController : ControllerBase
+public class RecordSheetItemNotificationsController : ControllerBase
 {
     /// <summary>
     ///     Поиск
