@@ -34,8 +34,9 @@ public static class DtoHelper
             Orders = (await entity.Orders.SelectAsync(o => o.ToDto(fileStorageService))).ToList(),
             ConstructionSiteUserRoles = entity.ConstructionSiteUserRoles,
             Organization = await (await organizationRepository.GetByIdAsync(entity.OrganizationId, default)).ToDto(),
-            SubOrganization = await (await organizationRepository.GetByIdAsync(entity.SubOrganizationId, default)).ToDto(),
-            
+            SubOrganization =
+                await (await organizationRepository.GetByIdAsync(entity.SubOrganizationId, default)).ToDto(),
+
             RegistrationSheet = await entity.RegistrationSheet.ToDto(),
             RecordSheet = await entity.RecordSheet.ToDto(fileStorageService),
             WorkIssue = await entity.WorkIssue.ToDto()
@@ -119,8 +120,9 @@ public static class DtoHelper
         });
     }
 
-    public static async Task<RecordSheetItemDto> ToDto(this RecordSheetItem entity, IFileStorageService fileStorage) =>
-        new()
+    public static async Task<RecordSheetItemDto> ToDto(this RecordSheetItem entity, IFileStorageService fileStorage)
+    {
+        return new RecordSheetItemDto
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
@@ -130,11 +132,12 @@ public static class DtoHelper
             SpecialistSignature = entity.SpecialistSignature,
             ComplianceNote = entity.ComplianceNoteSignature,
             RepresentativeSignature = entity.RepresentativeSignature,
-            
+
             // todo: надо с null что то делать
             DeviationFiles = (await entity.DeviationFilesIds?.SelectAsync(fileStorage.GetFileInfoAsync)).ToList(),
-            DirectionFiles = (await entity.DirectionFilesIds?.SelectAsync(fileStorage.GetFileInfoAsync)).ToList(),
+            DirectionFiles = (await entity.DirectionFilesIds?.SelectAsync(fileStorage.GetFileInfoAsync)).ToList()
         };
+    }
 
     public static Task<WorkIssueItemDto> ToDto(this WorkIssueItem entity)
     {
@@ -146,20 +149,23 @@ public static class DtoHelper
             AnswerDate = entity.AnswerDate,
             Question = entity.Question,
             QuestionDate = entity.QuestionDate,
-            AnswerUserId = entity.AnswerUserId,
+            AnswerUserId = entity.AnswerUserId
         });
     }
 
-    public static async Task<OrderDto> ToDto(this Order entity, IFileStorageService storageService) =>
-        new()
+    public static async Task<OrderDto> ToDto(this Order entity, IFileStorageService storageService)
+    {
+        return new OrderDto
         {
             Id = entity.Id,
             UserInChargeId = entity.UserInChargeId,
-            File = await storageService.GetFileInfoAsync(entity.FileId),
+            File = await storageService.GetFileInfoAsync(entity.FileId)
         };
-    
-    public static async Task<RecordSheetItemNotificationDto> ToDto(this RecordSheetItemNotification entity) =>
-        new()
+    }
+
+    public static async Task<RecordSheetItemNotificationDto> ToDto(this RecordSheetItemNotification entity)
+    {
+        return new RecordSheetItemNotificationDto
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
@@ -170,4 +176,5 @@ public static class DtoHelper
             RecordSheetId = entity.RecordSheetId,
             ConstructionSiteId = entity.ConstructionSiteId
         };
+    }
 }

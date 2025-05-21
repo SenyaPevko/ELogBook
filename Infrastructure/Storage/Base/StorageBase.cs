@@ -87,15 +87,6 @@ public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
 {
     protected abstract IMongoCollection<TDbo> Collection { get; }
 
-    private async Task<TDbo> CreateDbo(TEntity entity)
-    {
-        var dbo = DboHelper.CreateEntityDbo<TDbo>(requestContext);
-        dbo.Id = entity.Id;
-        await MapDboFromEntityAsync(entity, dbo);
-        
-        return dbo;
-    }
-    
     public virtual async Task AddAsync(TEntity entity)
     {
         var dbo = await CreateDbo(entity);
@@ -103,12 +94,12 @@ public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
         await Collection.InsertOneAsync(dbo);
         DboHelper.UpdateEntityInfo(entity, dbo);
     }
-    
+
     public virtual async Task AddManyAsync(List<TEntity> entities)
     {
         var dbos = await entities.SelectAsync(CreateDbo);
         var idToEntity = entities.ToDictionary(e => e.Id);
-        
+
         await Collection.InsertManyAsync(dbos);
 
         foreach (var dbo in dbos)
@@ -136,6 +127,15 @@ public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
     public async Task DeleteAsync(TEntity entity)
     {
         await Collection.DeleteOneAsync(x => x.Id == entity.Id);
+    }
+
+    private async Task<TDbo> CreateDbo(TEntity entity)
+    {
+        var dbo = DboHelper.CreateEntityDbo<TDbo>(requestContext);
+        dbo.Id = entity.Id;
+        await MapDboFromEntityAsync(entity, dbo);
+
+        return dbo;
     }
 
     protected async Task<TEntity> ToEntityAsync(TDbo dbo)

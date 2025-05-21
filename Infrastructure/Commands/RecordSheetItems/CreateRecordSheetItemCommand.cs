@@ -34,7 +34,7 @@ public class CreateRecordSheetItemCommand(
             Directions = args.Directions,
             DirectionFilesIds = args.DirectionFilesIds.Select(i => new ObjectId(i)).ToList(),
             Deviations = args.Deviations,
-            DeviationFilesIds = args.DeviationFilesIds.Select(i => new ObjectId(i)).ToList(),
+            DeviationFilesIds = args.DeviationFilesIds.Select(i => new ObjectId(i)).ToList()
         });
     }
 }

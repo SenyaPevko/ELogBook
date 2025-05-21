@@ -27,7 +27,7 @@ public class RecordSheetItemNotificationsController : ControllerBase
     {
         return await command.ExecuteAsync(request, HttpContext.RequestAborted);
     }
-    
+
     /// <summary>
     ///     Обновить
     /// </summary>
@@ -37,7 +37,8 @@ public class RecordSheetItemNotificationsController : ControllerBase
     /// <returns></returns>
     [HttpPatch("{id:guid}")]
     public async Task<ActionResult<RecordSheetItemNotificationDto, UpdateErrorInfo<InvalidNotificationReason>>> Update(
-        [FromServices] IUpdateCommand<RecordSheetItemNotificationDto, NotificationUpdateArgs, InvalidNotificationReason> command,
+        [FromServices]
+        IUpdateCommand<RecordSheetItemNotificationDto, NotificationUpdateArgs, InvalidNotificationReason> command,
         [FromBody] NotificationUpdateArgs request,
         [FromRoute] Guid id)
     {

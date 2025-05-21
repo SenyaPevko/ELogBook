@@ -1,4 +1,3 @@
-using Domain;
 using Domain.Entities.Base;
 using Domain.Repository;
 using Domain.RequestArgs.Base;
@@ -39,8 +38,9 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
 
         await AfterCreateAsync(entity, writeContext, cancellationToken);
     }
-    
-    public virtual async Task AddManyAsync(List<TEntity> entities, IBulkWriteContext<TEntity, TInvalidReason> writeContext,
+
+    public virtual async Task AddManyAsync(List<TEntity> entities,
+        IBulkWriteContext<TEntity, TInvalidReason> writeContext,
         CancellationToken cancellationToken)
     {
         await PreprocessBulkCreationAsync(entities, writeContext, cancellationToken);
@@ -112,7 +112,7 @@ public abstract class RepositoryBase<TEntity, TInvalidReason>(IStorage<TEntity> 
         CancellationToken cancellationToken)
     {
     }
-    
+
     protected virtual async Task AfterBulkCreateAsync(
         List<TEntity> entities,
         IBulkWriteContext<TEntity, TInvalidReason> writeContext,

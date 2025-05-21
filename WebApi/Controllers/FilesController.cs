@@ -18,8 +18,8 @@ public class FilesController(IFileStorageService fileStorage) : ControllerBase
     {
         await using var stream = file.OpenReadStream();
         var fileId = await fileStorage.UploadFileAsync(
-            stream, 
-            file.FileName, 
+            stream,
+            file.FileName,
             file.ContentType);
 
         return Ok(new { FileId = fileId.ToString() });
@@ -32,7 +32,7 @@ public class FilesController(IFileStorageService fileStorage) : ControllerBase
         var metadata = await fileStorage.GetFileInfoAsync(fileObjectId);
         if (metadata is null)
             return new ErrorInfo("File not found", $"Couldn't find file with id {fileId}", HttpStatusCode.NotFound);
-        
+
         var bytes = await fileStorage.DownloadFileAsync(new ObjectId(fileId));
         return File(bytes, metadata.ContentType);
     }

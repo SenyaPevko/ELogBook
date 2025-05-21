@@ -1,4 +1,3 @@
-using Domain;
 using Domain.Entities.Organization;
 using Domain.Entities.Users;
 using Domain.Models.ErrorInfo;

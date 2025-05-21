@@ -8,7 +8,8 @@ using Infrastructure.Commands.Base;
 namespace Infrastructure.Commands.Notifications;
 
 public class SearchRecordSheetItemNotificationCommand(
-    IRepository<RecordSheetItemNotification, InvalidNotificationReason, NotificationSearchRequest> repository, IAccessChecker<RecordSheetItemNotification> accessChecker)
+    IRepository<RecordSheetItemNotification, InvalidNotificationReason, NotificationSearchRequest> repository,
+    IAccessChecker<RecordSheetItemNotification> accessChecker)
     : SearchCommandBase<RecordSheetItemNotificationDto, RecordSheetItemNotification, InvalidNotificationReason,
         NotificationSearchRequest>(repository, accessChecker)
 {

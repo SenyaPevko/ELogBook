@@ -21,6 +21,8 @@ public class BulkWriteContext<TEntity, TInvalidReason> : IBulkWriteContext<TEnti
             Errors.Add(entity.Id.ToString(), invalidData);
     }
 
-    public void AddInvalidData(TEntity entity, ErrorDetail<TInvalidReason> invalidData) =>
+    public void AddInvalidData(TEntity entity, ErrorDetail<TInvalidReason> invalidData)
+    {
         AddInvalidData(entity, [invalidData]);
+    }
 }

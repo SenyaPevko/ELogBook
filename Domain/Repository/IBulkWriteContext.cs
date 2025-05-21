@@ -11,7 +11,7 @@ public interface IBulkWriteContext<in TEntity, TInvalidReason>
 
     public bool IsSuccess { get; }
 
-    public void AddInvalidData(TEntity entity, List<ErrorDetail<TInvalidReason>> invalidData); 
-    
-    public void AddInvalidData(TEntity entity, ErrorDetail<TInvalidReason> invalidData); 
+    public void AddInvalidData(TEntity entity, List<ErrorDetail<TInvalidReason>> invalidData);
+
+    public void AddInvalidData(TEntity entity, ErrorDetail<TInvalidReason> invalidData);
 }

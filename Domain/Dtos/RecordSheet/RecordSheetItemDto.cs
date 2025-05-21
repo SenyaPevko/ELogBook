@@ -13,14 +13,14 @@ public class RecordSheetItemDto : EntityDto
     ///     Выявленные отступления ...
     /// </summary>
     public required string Deviations { get; set; }
-    
+
     public List<FileInfo> DeviationFiles { get; set; } = [];
 
     /// <summary>
     ///     Указания об устранении отступлений ...
     /// </summary>
     public required string Directions { get; set; }
-    
+
     public List<FileInfo> DirectionFiles { get; set; } = [];
 
     /// <summary>

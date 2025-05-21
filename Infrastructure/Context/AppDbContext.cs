@@ -49,7 +49,7 @@ public class AppDbContext
 
     public IMongoCollection<WorkIssueDbo> WorkIssues =>
         _database.GetCollection<WorkIssueDbo>("workIssues");
-    
+
     public IMongoCollection<RecordSheetItemNotificationDbo> Notifications =>
         _database.GetCollection<RecordSheetItemNotificationDbo>("notifications");
 }

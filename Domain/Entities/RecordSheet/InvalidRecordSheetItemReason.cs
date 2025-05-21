@@ -4,5 +4,5 @@ public enum InvalidRecordSheetItemReason
 {
     ReferenceNotFound = 1,
     RecordHasBeenSigned = 2,
-    FailedNotifyUsers = 3,
+    FailedNotifyUsers = 3
 }

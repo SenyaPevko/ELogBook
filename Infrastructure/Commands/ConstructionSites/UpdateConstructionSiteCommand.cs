@@ -19,8 +19,10 @@ public class UpdateConstructionSiteCommand(
     : UpdateCommandBase<ConstructionSiteDto, ConstructionSite,
         ConstructionSiteUpdateArgs, InvalidConstructionSiteReason>(repository, accessChecker)
 {
-    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity) =>
-        await entity.ToDto(fileStorage, organizationRepository);
+    protected override async Task<ConstructionSiteDto> MapToDtoAsync(ConstructionSite entity)
+    {
+        return await entity.ToDto(fileStorage, organizationRepository);
+    }
 
     protected override async Task ApplyUpdatesAsync(ConstructionSite entity,
         ConstructionSiteUpdateArgs args)

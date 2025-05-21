@@ -4,7 +4,8 @@ using Infrastructure.Context;
 
 namespace Infrastructure.AccessCheckers.Notifications;
 
-public class NotificationAccessChecker(IRequestContext context) : AccessCheckerBase<RecordSheetItemNotification, NotificationUpdateArgs>(context)
+public class NotificationAccessChecker(IRequestContext context)
+    : AccessCheckerBase<RecordSheetItemNotification, NotificationUpdateArgs>(context)
 {
     public override async Task<bool> CanUpdate(RecordSheetItemNotification entity)
     {

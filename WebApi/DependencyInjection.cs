@@ -91,7 +91,7 @@ public static class DependencyInjection
 
         services.AddFileSettings();
         services.AddFilesLogic();
-        
+
         services.AddStorages();
         services.AddRepositories();
         services.AddAccessCheckers();
@@ -172,10 +172,7 @@ public static class DependencyInjection
         var libraryXmlFile = $"{typeof(ConstructionSiteCreationArgs).Assembly.GetName().Name}.xml";
         var libraryXmlPath = Path.Combine(AppContext.BaseDirectory, libraryXmlFile);
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(c =>
-        {
-            c.IncludeXmlComments(libraryXmlPath);
-        });
+        services.AddSwaggerGen(c => { c.IncludeXmlComments(libraryXmlPath); });
         services.AddSwaggerGenNewtonsoftSupport();
 
         return services;
@@ -211,7 +208,7 @@ public static class DependencyInjection
 
         services.AddScoped<IStorage<WorkIssueItem>, WorkIssueItemStorage>();
         services.AddScoped<IStorage<WorkIssueItem, WorkIssueItemSearchRequest>, WorkIssueItemStorage>();
-        
+
         services.AddScoped<IStorage<RecordSheetItemNotification>, NotificationStorage>();
         services.AddScoped<IStorage<RecordSheetItemNotification, NotificationSearchRequest>, NotificationStorage>();
 
@@ -273,9 +270,11 @@ public static class DependencyInjection
         services
             .AddScoped<IRepository<WorkIssueItem, InvalidWorkIssueItemReason, WorkIssueItemSearchRequest>,
                 WorkIssueItemRepository>();
-        
+
         services.AddScoped<IRepository<RecordSheetItemNotification>, RecordSheetItemNotificationRepository>();
-        services.AddScoped<IRepository<RecordSheetItemNotification, InvalidNotificationReason>, RecordSheetItemNotificationRepository>();
+        services
+            .AddScoped<IRepository<RecordSheetItemNotification, InvalidNotificationReason>,
+                RecordSheetItemNotificationRepository>();
         services
             .AddScoped<IRepository<RecordSheetItemNotification, InvalidNotificationReason, NotificationSearchRequest>,
                 RecordSheetItemNotificationRepository>();
@@ -311,9 +310,11 @@ public static class DependencyInjection
         services.AddScoped<IAccessChecker<WorkIssueItem, WorkIssueItemUpdateArgs>, WorkIssueItemAccessChecker>();
 
         services.AddScoped<IAccessChecker<WorkIssue>, WorkIssueAccessChecker>();
-        
+
         services.AddScoped<IAccessChecker<RecordSheetItemNotification>, NotificationAccessChecker>();
-        services.AddScoped<IAccessChecker<RecordSheetItemNotification, NotificationUpdateArgs>, NotificationAccessChecker>();
+        services
+            .AddScoped<IAccessChecker<RecordSheetItemNotification, NotificationUpdateArgs>,
+                NotificationAccessChecker>();
 
         return services;
     }
@@ -422,32 +423,33 @@ public static class DependencyInjection
 
         return services;
     }
-    
+
     private static IServiceCollection AddNotificationCommands(this IServiceCollection services)
     {
-        services.AddScoped<IUpdateCommand<RecordSheetItemNotificationDto, NotificationUpdateArgs, InvalidNotificationReason>, UpdateRecordSheetItemNotificationCommand>();
-        services.AddScoped<ISearchCommand<RecordSheetItemNotificationDto, NotificationSearchRequest>, SearchRecordSheetItemNotificationCommand>();
+        services
+            .AddScoped<IUpdateCommand<RecordSheetItemNotificationDto, NotificationUpdateArgs, InvalidNotificationReason>
+                , UpdateRecordSheetItemNotificationCommand>();
+        services
+            .AddScoped<ISearchCommand<RecordSheetItemNotificationDto, NotificationSearchRequest>,
+                SearchRecordSheetItemNotificationCommand>();
 
         return services;
     }
-    
+
     private static IServiceCollection AddFilesLogic(this IServiceCollection services)
     {
         services.AddScoped<IFileStorageService, FileStorageService>();
-        
+
         return services;
     }
-    
+
     private static IServiceCollection AddFileSettings(this IServiceCollection services)
     {
-        services.Configure<FormOptions>(options =>
-        {
-            options.MultipartBodyLengthLimit = 500 * 1024 * 1024;
-        });
-        
+        services.Configure<FormOptions>(options => { options.MultipartBodyLengthLimit = 500 * 1024 * 1024; });
+
         return services;
     }
-    
+
     private static IServiceCollection AddSignalrDependencies(this IServiceCollection services)
     {
         services.AddSignalR();
@@ -462,7 +464,7 @@ public static class DependencyInjection
                     .AllowCredentials();
             });
         });
-        
+
         return services;
     }
 }

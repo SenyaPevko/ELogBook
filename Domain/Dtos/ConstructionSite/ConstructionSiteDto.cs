@@ -46,12 +46,12 @@ public class ConstructionSiteDto : EntityDto
     ///     Пользователи и их роли в этом проекте
     /// </summary>
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
-    
+
     /// <summary>
     ///     Генеральный подрядчик - организация
     /// </summary>
     public required OrganizationDto Organization { get; set; }
-    
+
     /// <summary>
     ///     Исполнители отдельных видов работ (субподрядчики) - организация
     /// </summary>

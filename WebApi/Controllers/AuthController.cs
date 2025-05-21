@@ -1,4 +1,3 @@
-using Domain.Entities;
 using Domain.Entities.Users;
 using Domain.Models.Auth;
 using Domain.Models.ErrorInfo;

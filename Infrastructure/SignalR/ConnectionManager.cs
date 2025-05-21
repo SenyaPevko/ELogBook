@@ -10,8 +10,12 @@ public class ConnectionManager : IConnectionManager
     public void AddConnection(Guid userId, string connectionId)
     {
         _connections.AddOrUpdate(userId,
-            [connectionId], 
-            (_, set) => { set.Add(connectionId); return set; });
+            [connectionId],
+            (_, set) =>
+            {
+                set.Add(connectionId);
+                return set;
+            });
     }
 
     public void RemoveConnection(Guid userId, string connectionId)
@@ -24,6 +28,8 @@ public class ConnectionManager : IConnectionManager
         }
     }
 
-    public IEnumerable<string> GetConnections(Guid userId) => 
-        _connections.TryGetValue(userId, out var set) ? set : Enumerable.Empty<string>();
+    public IEnumerable<string> GetConnections(Guid userId)
+    {
+        return _connections.TryGetValue(userId, out var set) ? set : Enumerable.Empty<string>();
+    }
 }

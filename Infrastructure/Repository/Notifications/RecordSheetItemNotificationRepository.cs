@@ -25,7 +25,8 @@ public class RecordSheetItemNotificationRepository(
     {
     }
 
-    protected override async Task ValidateUpdateAsync(RecordSheetItemNotification oldEntity, RecordSheetItemNotification newEntity,
+    protected override async Task ValidateUpdateAsync(RecordSheetItemNotification oldEntity,
+        RecordSheetItemNotification newEntity,
         IWriteContext<InvalidNotificationReason> writeContext,
         CancellationToken cancellationToken)
     {
@@ -39,12 +40,17 @@ public class RecordSheetItemNotificationRepository(
     }
 
     protected override async Task AfterCreateAsync(RecordSheetItemNotification entity,
-        IWriteContext<InvalidNotificationReason> writeContext, CancellationToken cancellationToken) =>
+        IWriteContext<InvalidNotificationReason> writeContext, CancellationToken cancellationToken)
+    {
         await NotifyUser(entity, cancellationToken);
+    }
 
     protected override async Task AfterBulkCreateAsync(List<RecordSheetItemNotification> entities,
-        IBulkWriteContext<RecordSheetItemNotification, InvalidNotificationReason> writeContext, CancellationToken cancellationToken) =>
+        IBulkWriteContext<RecordSheetItemNotification, InvalidNotificationReason> writeContext,
+        CancellationToken cancellationToken)
+    {
         await entities.SelectAsync(e => NotifyUser(e, cancellationToken));
+    }
 
 
     private async Task NotifyUser(RecordSheetItemNotification entity, CancellationToken cancellationToken)
@@ -52,8 +58,8 @@ public class RecordSheetItemNotificationRepository(
         var connections = connectionManager.GetConnections(entity.UserId).ToList();
         if (connections.Count != 0)
             await hubContext.Clients.Clients(connections).SendAsync(
-                SignalrSettings.ClientMethods.ReceiveNotification, 
+                SignalrSettings.ClientMethods.ReceiveNotification,
                 await entity.ToDto(),
-                cancellationToken: cancellationToken);
+                cancellationToken);
     }
 }

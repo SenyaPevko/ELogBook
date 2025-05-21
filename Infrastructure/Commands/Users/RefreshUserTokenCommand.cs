@@ -1,7 +1,6 @@
 using System.Net;
 using System.Security.Claims;
 using Domain.Auth;
-using Domain.Entities;
 using Domain.Entities.Users;
 using Domain.Models.Auth;
 using Domain.Models.ErrorInfo;

@@ -8,11 +8,13 @@ using MongoDB.Driver;
 namespace Infrastructure.Storage.Notifications;
 
 public class NotificationStorage(AppDbContext dbContext, IRequestContext requestContext)
-    : StorageBase<RecordSheetItemNotification, RecordSheetItemNotificationDbo, NotificationSearchRequest>(requestContext)
+    : StorageBase<RecordSheetItemNotification, RecordSheetItemNotificationDbo, NotificationSearchRequest>(
+        requestContext)
 {
     protected override IMongoCollection<RecordSheetItemNotificationDbo> Collection => dbContext.Notifications;
 
-    protected override Task MapEntityFromDboAsync(RecordSheetItemNotification entity, RecordSheetItemNotificationDbo dbo)
+    protected override Task MapEntityFromDboAsync(RecordSheetItemNotification entity,
+        RecordSheetItemNotificationDbo dbo)
     {
         entity.Id = dbo.Id;
         entity.UserId = dbo.UserId;
@@ -27,7 +29,8 @@ public class NotificationStorage(AppDbContext dbContext, IRequestContext request
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(RecordSheetItemNotification entity, RecordSheetItemNotificationDbo dbo)
+    protected override Task MapDboFromEntityAsync(RecordSheetItemNotification entity,
+        RecordSheetItemNotificationDbo dbo)
     {
         dbo.Id = entity.Id;
         dbo.UserId = entity.UserId;
@@ -42,7 +45,8 @@ public class NotificationStorage(AppDbContext dbContext, IRequestContext request
         return Task.CompletedTask;
     }
 
-    protected override Task MapDboFromEntityAsync(RecordSheetItemNotification? existingEntity, RecordSheetItemNotification newEntity,
+    protected override Task MapDboFromEntityAsync(RecordSheetItemNotification? existingEntity,
+        RecordSheetItemNotification newEntity,
         RecordSheetItemNotificationDbo dbo)
     {
         dbo.Id = newEntity.Id;
@@ -64,7 +68,7 @@ public class NotificationStorage(AppDbContext dbContext, IRequestContext request
         var filters = new List<FilterDefinition<RecordSheetItemNotificationDbo>>();
         var builder = Builders<RecordSheetItemNotificationDbo>.Filter;
 
-        if (request.UserId is not null) 
+        if (request.UserId is not null)
             filters.Add(builder.Eq(x => x.UserId, request.UserId));
 
         return filters;

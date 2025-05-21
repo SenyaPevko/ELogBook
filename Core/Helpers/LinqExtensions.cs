@@ -8,7 +8,7 @@ public static class LinqExtensions
     {
         return await Task.WhenAll(source.Select(selector));
     }
-    
+
     public static async Task SelectAsync<TSource>(
         this IEnumerable<TSource> source,
         Func<TSource, Task> selector)

@@ -1,4 +1,3 @@
-using Domain;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Notifications;
 using Domain.Entities.RecordSheet;
@@ -118,7 +117,7 @@ public class RecordSheetItemRepository(
             .Where(x => x.Role is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator)
             .Select(x => x.UserId)
             .ToList();
-        if (targetUsers.Count == 0) 
+        if (targetUsers.Count == 0)
             return;
 
         var notifications = targetUsers.Select(userId => new RecordSheetItemNotification
@@ -130,7 +129,7 @@ public class RecordSheetItemRepository(
             IsRead = false,
             RecordSheetItemId = entity.Id,
             RecordSheetId = entity.RecordSheetId,
-            ConstructionSiteId = constructionSite.Id,
+            ConstructionSiteId = constructionSite.Id
         }).ToList();
 
 
@@ -140,7 +139,7 @@ public class RecordSheetItemRepository(
         if (!bulkWriteContext.IsSuccess)
             writeContext.AddInvalidData(new ErrorDetail<InvalidRecordSheetItemReason>
             {
-                Reason = InvalidRecordSheetItemReason.FailedNotifyUsers,
+                Reason = InvalidRecordSheetItemReason.FailedNotifyUsers
             });
     }
 }

@@ -4,7 +4,6 @@ using Domain.Entities.Users;
 using Domain.Repository;
 using Domain.RequestArgs.ConstructionSites;
 using Infrastructure.Context;
-using Utils;
 
 namespace Infrastructure.AccessCheckers.ConstructionSites;
 

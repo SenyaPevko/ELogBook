@@ -20,8 +20,8 @@ public class UpdateRecordSheetItemNotificationCommand(
 
     protected override Task ApplyUpdatesAsync(RecordSheetItemNotification entity, NotificationUpdateArgs args)
     {
-        if(args.IsRead is not null) entity.IsRead = args.IsRead.Value;
-        
+        if (args.IsRead is not null) entity.IsRead = args.IsRead.Value;
+
         return Task.CompletedTask;
     }
 }

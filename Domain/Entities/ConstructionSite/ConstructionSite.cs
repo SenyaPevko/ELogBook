@@ -44,12 +44,12 @@ public class ConstructionSite : EntityInfo
     ///     Пользователи и их роли в этом проекте
     /// </summary>
     public List<ConstructionSiteUserRole> ConstructionSiteUserRoles { get; set; } = [];
-    
+
     /// <summary>
     ///     Генеральный подрядчик - Id организации
     /// </summary>
     public Guid OrganizationId { get; set; }
-    
+
     /// <summary>
     ///     Исполнители отдельных видов работ (субподрядчики) - наименование работ и название организации
     /// </summary>
