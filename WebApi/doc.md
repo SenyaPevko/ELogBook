@@ -94,3 +94,4 @@ Content-Length: 162
 1. Есть один хаб для уведомлений `/hubs/notifications`
 2. Есть один метод `ReceiveNotification` - это уведомления о создании 
 нового учетного листа. Тут отсылается модель `RecordSheetItemNotificationDto`
+3. На сигналр навешана та же авторизация, что и на http методы
