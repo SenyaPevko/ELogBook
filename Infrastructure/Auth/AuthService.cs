@@ -21,8 +21,8 @@ public class AuthService(IJwtService jwtService) : IAuthService
         };
     }
 
-    public ClaimsPrincipal? ValidateToken(string token)
+    public ClaimsPrincipal? ValidateToken(string token, bool validateLifeTime = true)
     {
-        return jwtService.ValidateToken(token);
+        return jwtService.ValidateToken(token, validateLifeTime);
     }
 }

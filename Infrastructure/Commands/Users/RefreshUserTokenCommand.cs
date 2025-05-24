@@ -19,7 +19,7 @@ public class RefreshUserTokenCommand(
         RefreshTokenRequest request,
         CancellationToken cancellationToken)
     {
-        var principal = authService.ValidateToken(request.Token);
+        var principal = authService.ValidateToken(request.Token, false);
         if (principal == null)
             return new UpdateErrorInfo<InvalidUserReason>("Could not refresh token", "Token is invalid",
                 HttpStatusCode.Conflict);

@@ -45,7 +45,7 @@ public class JwtService(IOptions<JwtSettings> settings) : IJwtService
         return Convert.ToBase64String(randomNumber);
     }
 
-    public ClaimsPrincipal? ValidateToken(string token)
+    public ClaimsPrincipal? ValidateToken(string token, bool validateLifeTime = true)
     {
         try
         {
@@ -57,7 +57,7 @@ public class JwtService(IOptions<JwtSettings> settings) : IJwtService
                 ValidIssuer = _settings.Issuer,
                 ValidateAudience = true,
                 ValidAudience = _settings.Audience,
-                ValidateLifetime = true,
+                ValidateLifetime = validateLifeTime,
                 IssuerSigningKey = key,
                 ValidateIssuerSigningKey = true,
                 ClockSkew = TimeSpan.Zero

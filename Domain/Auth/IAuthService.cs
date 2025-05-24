@@ -8,5 +8,5 @@ public interface IAuthService
 {
     AuthResponse GenerateTokens(User user);
 
-    ClaimsPrincipal? ValidateToken(string token);
+    ClaimsPrincipal? ValidateToken(string token, bool validateLifeTime = true);
 }
