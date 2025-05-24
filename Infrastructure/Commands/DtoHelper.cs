@@ -139,9 +139,8 @@ public static class DtoHelper
         };
     }
 
-    public static Task<WorkIssueItemDto> ToDto(this WorkIssueItem entity)
-    {
-        return Task.FromResult(new WorkIssueItemDto
+    public static async Task<WorkIssueItemDto> ToDto(this WorkIssueItem entity) => 
+        new ()
         {
             Id = entity.Id,
             UpdateInfo = entity.UpdateInfo,
@@ -149,9 +148,10 @@ public static class DtoHelper
             AnswerDate = entity.AnswerDate,
             Question = entity.Question,
             QuestionDate = entity.QuestionDate,
-            AnswerUserId = entity.AnswerUserId
-        });
-    }
+            AnswerUserId = entity.AnswerUserId,
+            QuestionedBy = await entity.QuestionedBy.ToDto(),
+            AnsweredBy = entity.AnsweredBy is null ? null :  await entity.AnsweredBy.ToDto(),
+        };
 
     public static async Task<OrderDto> ToDto(this Order entity, IFileStorageService storageService)
     {

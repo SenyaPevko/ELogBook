@@ -6,6 +6,11 @@ public class WorkIssueItemDto : EntityDto
     ///     Вопрос
     /// </summary>
     public string Question { get; set; } = null!;
+    
+    /// <summary>
+    /// Пользователь задавший вопрос
+    /// </summary>
+    public UserDto QuestionedBy { get; set; } = null!;
 
     /// <summary>
     ///     Дата вопроса
@@ -16,6 +21,11 @@ public class WorkIssueItemDto : EntityDto
     ///     Ответ
     /// </summary>
     public string Answer { get; set; } = null!;
+    
+    /// <summary>
+    /// Пользователь давший ответ
+    /// </summary>
+    public UserDto? AnsweredBy { get; set; } = null!;
 
     public Guid? AnswerUserId { get; set; }
 

@@ -93,6 +93,7 @@ public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
 
         await Collection.InsertOneAsync(dbo);
         DboHelper.UpdateEntityInfo(entity, dbo);
+        await MapEntityFromDboAsync(entity, dbo);
     }
 
     public virtual async Task AddManyAsync(List<TEntity> entities)
@@ -103,7 +104,10 @@ public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
         await Collection.InsertManyAsync(dbos);
 
         foreach (var dbo in dbos)
+        {
             DboHelper.UpdateEntityInfo(idToEntity[dbo.Id], dbo);
+            await MapEntityFromDboAsync(idToEntity[dbo.Id], dbo);
+        }
     }
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id)
@@ -122,6 +126,7 @@ public abstract class StorageBase<TEntity, TDbo>(IRequestContext requestContext)
 
         await Collection.ReplaceOneAsync(x => x.Id == entity.Id, existingDbo!);
         DboHelper.UpdateEntityInfo(entity, existingDbo!);
+        await MapEntityFromDboAsync(entity, existingDbo!);
     }
 
     public async Task DeleteAsync(TEntity entity)
