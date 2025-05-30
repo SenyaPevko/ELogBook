@@ -9,14 +9,14 @@ namespace Domain.RequestArgs.ConstructionSites;
 public class ConstructionSiteUpdateArgs : EntityUpdateArgs
 {
     /// <summary>
-    ///     Название объекта
+    ///     Краткое наименование объекта
     /// </summary>
-    public string? Name { get; set; }
+    public string? ShortName { get; set; }
 
     /// <summary>
-    ///     Название объекта
+    ///     Наименование объекта в соответствии с документацией
     /// </summary>
-    public string? Description { get; set; }
+    public string? FullName { get; set; }
 
     /// <summary>
     ///     Название объекта

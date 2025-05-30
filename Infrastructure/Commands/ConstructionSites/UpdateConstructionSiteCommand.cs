@@ -27,10 +27,10 @@ public class UpdateConstructionSiteCommand(
     protected override async Task ApplyUpdatesAsync(ConstructionSite entity,
         ConstructionSiteUpdateArgs args)
     {
-        if (args.Name is not null) entity.ShortName = args.Name;
+        if (args.FullName is not null) entity.FullName = args.FullName;
+        if (args.ShortName is not null) entity.ShortName = args.ShortName;
         if (args.OrganizationId is not null) entity.OrganizationId = args.OrganizationId.Value;
         if (args.SubOrganizationId is not null) entity.SubOrganizationId = args.SubOrganizationId.Value;
-        if (args.Description is not null) entity.FullName = args.Description;
         if (args.Address is not null) entity.Address = args.Address;
         if (args.Orders is not null)
         {
