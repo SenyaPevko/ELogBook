@@ -42,9 +42,11 @@ public class ConstructionSiteAccessChecker(IRequestContext context, IRepository<
         var canUpdateShortName = updateArgs.ShortName is null || Context.Auth.Role is UserRole.Admin;
         var canUpdateAddress = updateArgs.Address is null || Context.Auth.Role is UserRole.Admin;
         var canUpdateUserRoles = updateArgs.UserRoles is null || Context.Auth.Role is UserRole.Admin;
+        var canUpdateOrganization = updateArgs.OrganizationId is null || Context.Auth.Role is UserRole.Admin;
+        var canUpdateSubOrganization = updateArgs.SubOrganizationId is null || Context.Auth.Role is UserRole.Admin;
 
         return canUpdateOrders && canUpdateShortName && canUpdateFullName && canUpdateAddress &&
-               canUpdateUserRoles;
+               canUpdateUserRoles && canUpdateOrganization && canUpdateSubOrganization;
     }
 
     private async Task<bool> CanUpdateOrders(ConstructionSite entity)
