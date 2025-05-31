@@ -108,4 +108,14 @@ public class ConstructionSiteStorage(
 
         return filters;
     }
+    
+    protected override bool IsEmptySearchRequest(ConstructionSiteSearchRequest request)
+    {
+        return request.Name is null && 
+               request.Address is null && 
+               request.UserRoleUserId is null &&
+               request.RecordSheetId is null && 
+               request.RegistrationSheetId is null && 
+               request.WorkIssueId is null;
+    }
 }

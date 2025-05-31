@@ -53,4 +53,9 @@ public class OrganizationStorage(AppDbContext context, IRequestContext requestCo
 
         return filters;
     }
+    
+    protected override bool IsEmptySearchRequest(OrganizationSearchRequest request)
+    {
+        return request.Name is null;
+    }
 }

@@ -19,6 +19,11 @@ public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext
 
     public async Task<List<TEntity>> SearchAsync(TSearchRequest request)
     {
+        if (IsEmptySearchRequest(request))
+        {
+            return new List<TEntity>();
+        }
+
         var filters = BuildBaseFilters(request);
 
         var specificFilters = BuildSpecificFilters(request);
@@ -41,6 +46,17 @@ public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext
         var dbos = await cursor.ToListAsync();
         return await ConvertToEntitiesAsync(dbos);
     }
+
+    protected virtual bool IsEmptySearchRequest(TSearchRequest request)
+    {
+        return (request.Ids == null || request.Ids.Count == 0) &&
+               string.IsNullOrEmpty(request.SortBy) &&
+               !request.Page.HasValue &&
+               !request.PageSize.HasValue &&
+               IsSpecificSearchRequestEmpty(request);
+    }
+
+    protected virtual bool IsSpecificSearchRequestEmpty(TSearchRequest request) => true;
 
     protected virtual List<FilterDefinition<TDbo>> BuildBaseFilters(TSearchRequest request)
     {
