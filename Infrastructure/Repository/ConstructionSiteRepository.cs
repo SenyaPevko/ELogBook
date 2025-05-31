@@ -36,9 +36,9 @@ public class ConstructionSiteRepository(
         if (existingAddresses.Count != 0)
             writeContext.AddInvalidData(new ErrorDetail<InvalidConstructionSiteReason>
             {
-                Path = nameof(entity.ShortName),
+                Path = nameof(entity.Address),
                 Reason = InvalidConstructionSiteReason.AddressAlreadyExists,
-                Value = entity.ShortName
+                Value = entity.Address
             });
     }
 

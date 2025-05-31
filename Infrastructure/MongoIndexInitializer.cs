@@ -5,6 +5,7 @@ using Infrastructure.Dbo.RecordSheets;
 using Infrastructure.Dbo.RegistrationSheets;
 using Infrastructure.Dbo.User;
 using Infrastructure.Dbo.WorkIssues;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Infrastructure;
@@ -27,7 +28,7 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
             new CreateIndexModel<UserDbo>(
                 Builders<UserDbo>.IndexKeys.Ascending(u => u.Email),
                 new CreateIndexOptions { Background = true, Unique = true }));
-
+        
         await appDbContext.Users.Indexes.CreateOneAsync(
             new CreateIndexModel<UserDbo>(
                 Builders<UserDbo>.IndexKeys.Ascending(u => u.RefreshToken),
@@ -35,7 +36,7 @@ public class MongoIndexInitializer(AppDbContext appDbContext)
                 {
                     Background = true,
                     Unique = true,
-                    PartialFilterExpression = Builders<UserDbo>.Filter.Exists(u => u.RefreshToken)
+                    PartialFilterExpression = Builders<UserDbo>.Filter.Type(u => u.RefreshToken, BsonType.String)
                 }));
     }
 
