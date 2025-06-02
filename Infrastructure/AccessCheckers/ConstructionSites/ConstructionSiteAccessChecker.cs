@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
@@ -8,7 +9,7 @@ using Infrastructure.Context;
 namespace Infrastructure.AccessCheckers.ConstructionSites;
 
 public class ConstructionSiteAccessChecker(IRequestContext context, IRepository<User> userRepository)
-    : AccessCheckerBase<ConstructionSite, ConstructionSiteUpdateArgs>(context)
+    : AccessCheckerBase<ConstructionSite, ConstructionSiteUpdateArgs>(context), IConstructionSiteAccessChecker
 {
     public override async Task<bool?> CanCreate()
     {
@@ -49,7 +50,7 @@ public class ConstructionSiteAccessChecker(IRequestContext context, IRepository<
                canUpdateUserRoles && canUpdateOrganization && canUpdateSubOrganization;
     }
 
-    private async Task<bool> CanUpdateOrders(ConstructionSite entity)
+    public async Task<bool> CanUpdateOrders(ConstructionSite entity)
     {
         var user = await userRepository.GetByIdAsync(Context.Auth.UserId!.Value, default);
 

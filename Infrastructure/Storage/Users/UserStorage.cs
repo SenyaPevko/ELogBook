@@ -81,10 +81,10 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
         return filters;
     }
     
-    protected override bool IsEmptySearchRequest(UserSearchRequest request)
+    protected override bool IsSpecificSearchRequestEmpty(UserSearchRequest request)
     {
         return (request.Emails is null || request.Emails.Count == 0) &&
-               request.Emails is null &&
+               request.Email is null &&
                request.RefreshToken is null;
     }
 }

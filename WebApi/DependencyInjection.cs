@@ -20,6 +20,7 @@ using Domain.Entities.Users;
 using Domain.Entities.WorkIssues;
 using Domain.FileStorage;
 using Domain.Models.Auth;
+using Domain.Permissions.ConstructionSite;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
 using Domain.RequestArgs.ConstructionSites;
@@ -53,6 +54,9 @@ using Infrastructure.Commands.RegistrationSheetItems;
 using Infrastructure.Commands.Users;
 using Infrastructure.Commands.WorkIssueItems;
 using Infrastructure.Context;
+using Infrastructure.Permissions;
+using Infrastructure.Permissions.Base;
+using Infrastructure.Permissions.ConstructionSitePermissionServices;
 using Infrastructure.Repository;
 using Infrastructure.Repository.Notifications;
 using Infrastructure.SignalR;
@@ -106,6 +110,7 @@ public static class DependencyInjection
         });
 
         services.AddCommands();
+        services.AddPermissionsDependencies();
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
@@ -290,6 +295,8 @@ public static class DependencyInjection
         services.AddScoped<IAccessChecker<ConstructionSite>, ConstructionSiteAccessChecker>();
         services
             .AddScoped<IAccessChecker<ConstructionSite, ConstructionSiteUpdateArgs>, ConstructionSiteAccessChecker>();
+        services
+            .AddScoped<IConstructionSiteAccessChecker, ConstructionSiteAccessChecker>();
 
         services.AddScoped<IAccessChecker<Organization>, OrganizationAccessChecker>();
         services.AddScoped<IAccessChecker<Organization, OrganizationUpdateArgs>, OrganizationAccessChecker>();
@@ -464,6 +471,16 @@ public static class DependencyInjection
                     .AllowCredentials();
             });
         });
+
+        return services;
+    }
+
+    private static IServiceCollection AddPermissionsDependencies(this IServiceCollection services)
+    {
+        services.AddScoped<IEntityPermissionService<ConstructionSitePermission>, ConstructionSitePermissionService>();
+        services.AddScoped<IEntityPermissionService<RegistrationSheetItemPermission>, RegistrationSheetItemPermissionService>();
+        services.AddScoped<IEntityPermissionService<RecordSheetItemPermission>, RecordSheetItemPermissionService>();
+        services.AddScoped<IPermissionService, PermissionService>();
 
         return services;
     }

@@ -74,7 +74,7 @@ public class NotificationStorage(AppDbContext dbContext, IRequestContext request
         return filters;
     }
     
-    protected override bool IsEmptySearchRequest(NotificationSearchRequest request)
+    protected override bool IsSpecificSearchRequestEmpty(NotificationSearchRequest request)
     {
         return request.UserId is null;
     }

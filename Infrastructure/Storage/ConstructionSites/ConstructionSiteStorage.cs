@@ -109,7 +109,7 @@ public class ConstructionSiteStorage(
         return filters;
     }
     
-    protected override bool IsEmptySearchRequest(ConstructionSiteSearchRequest request)
+    protected override bool IsSpecificSearchRequestEmpty(ConstructionSiteSearchRequest request)
     {
         return request.Name is null && 
                request.Address is null && 
