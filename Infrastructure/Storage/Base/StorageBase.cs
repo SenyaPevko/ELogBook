@@ -19,7 +19,7 @@ public abstract class StorageBase<TEntity, TDbo, TSearchRequest>(IRequestContext
 
     public async Task<List<TEntity>> SearchAsync(TSearchRequest request)
     {
-        if (IsEmptySearchRequest(request))
+        if (IsEmptySearchRequest(request) && request.GetAll is not true)
         {
             return new List<TEntity>();
         }
