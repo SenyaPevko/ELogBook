@@ -5,6 +5,7 @@ using Domain.FileStorage;
 using Domain.Repository;
 using Domain.RequestArgs.RecordSheetItems;
 using Infrastructure.Commands.Base;
+using MongoDB.Bson;
 
 namespace Infrastructure.Commands.RecordSheetItems;
 
@@ -26,6 +27,22 @@ public class UpdateRecordSheetItemCommand(
         if (args.Directions is not null) entity.Directions = args.Directions;
         if (args.RepresentativeId is not null) entity.RepresentativeId = args.RepresentativeId.Value;
         if (args.ComplianceNoteUserId is not null) entity.ComplianceNoteUserId = args.ComplianceNoteUserId.Value;
+        
+        if (args.DeviationFilesIds is not null)
+        {
+            if (args.DeviationFilesIds.Add is not null)
+                entity.DeviationFilesIds.AddRange(args.DeviationFilesIds.Add.Select(x=>new ObjectId(x)));
+            if (args.DeviationFilesIds.Remove is not null)
+                entity.DeviationFilesIds = entity.DeviationFilesIds.Except(args.DeviationFilesIds.Remove.Select(x=>new ObjectId(x))).ToList();
+        }
+        
+        if (args.DirectionFilesIds is not null)
+        {
+            if (args.DirectionFilesIds.Add is not null)
+                entity.DirectionFilesIds.AddRange(args.DirectionFilesIds.Add.Select(x=>new ObjectId(x)));
+            if (args.DirectionFilesIds.Remove is not null)
+                entity.DirectionFilesIds = entity.DirectionFilesIds.Except(args.DirectionFilesIds.Remove.Select(x=>new ObjectId(x))).ToList();
+        }
 
         return Task.CompletedTask;
     }

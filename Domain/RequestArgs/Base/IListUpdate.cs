@@ -14,8 +14,8 @@ public class ListUpdate<TCreationArgs>
     public HashSet<Guid>? Remove { get; set; }
 }
 
-public class ListUpdate
+public class ListUpdateOfId<T>
 {
-    public List<Guid>? Add { get; set; }
-    public HashSet<Guid>? Remove { get; set; }
+    public List<T>? Add { get; set; }
+    public HashSet<T>? Remove { get; set; }
 }

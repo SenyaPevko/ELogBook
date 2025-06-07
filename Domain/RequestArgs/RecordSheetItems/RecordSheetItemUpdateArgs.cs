@@ -8,11 +8,15 @@ public class RecordSheetItemUpdateArgs : EntityUpdateArgs
     ///     Выявленные отступления ...
     /// </summary>
     public string? Deviations { get; set; }
+    
+    public ListUpdateOfId<string>? DeviationFilesIds { get; set; }
 
     /// <summary>
     ///     Указания об устранении отступлений ...
     /// </summary>
     public string? Directions { get; set; }
+    
+    public ListUpdateOfId<string>? DirectionFilesIds { get; set; }
 
     /// <summary>
     ///     Id представителя ознакомленного с записью ...
