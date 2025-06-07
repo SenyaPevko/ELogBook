@@ -19,6 +19,7 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
         entity.Surname = dbo.Surname;
         entity.Patronymic = dbo.Patronymic;
         entity.Email = dbo.Email;
+        entity.Phone = dbo.Phone;
         entity.OrganizationName = dbo.OrganizationName;
         entity.OrganizationId = dbo.OrganizationId;
         entity.UserRole = dbo.UserRole;
@@ -36,6 +37,7 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
         dbo.Surname = entity.Surname;
         dbo.Patronymic = entity.Patronymic;
         dbo.Email = entity.Email;
+        dbo.Phone = entity.Phone;
         dbo.OrganizationName = entity.OrganizationName;
         dbo.OrganizationId = entity.OrganizationId;
         dbo.UserRole = entity.UserRole;
@@ -54,6 +56,7 @@ public class UserStorage(AppDbContext context, IRequestContext requestContext)
         dbo.Surname = newEntity.Surname;
         dbo.Patronymic = newEntity.Patronymic;
         dbo.Email = newEntity.Email;
+        dbo.Phone = newEntity.Phone;
         dbo.OrganizationName = newEntity.OrganizationName;
         dbo.OrganizationId = newEntity.OrganizationId;
         dbo.UserRole = newEntity.UserRole;

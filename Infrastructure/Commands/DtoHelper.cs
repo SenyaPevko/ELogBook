@@ -87,6 +87,7 @@ public static class DtoHelper
             Surname = entity.Surname,
             Patronymic = entity.Patronymic,
             Email = entity.Email,
+            Phone = entity.Phone,
             OrganizationName = entity.OrganizationName,
             OrganizationId = entity.OrganizationId,
             UserRole = entity.UserRole

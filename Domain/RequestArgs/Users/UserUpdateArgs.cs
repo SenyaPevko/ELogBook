@@ -18,6 +18,11 @@ public class UserUpdateArgs : EntityUpdateArgs
     ///     Отчество
     /// </summary>
     public string? Patronymic { get; set; }
+    
+    /// <summary>
+    ///     Номер телефона
+    /// </summary>
+    public string? Phone { get; set; }
 
     /// <summary>
     ///     Id организации - проставляет админ при первой выдаче прав

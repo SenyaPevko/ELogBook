@@ -23,6 +23,11 @@ public class RegisterRequest : EntityCreationArgs
     ///     Почтовый адрес
     /// </summary>
     public required string Email { get; set; }
+    
+    /// <summary>
+    ///     Номер телефона
+    /// </summary>
+    public string? Phone { get; set; }
 
     /// <summary>
     ///     Название организации

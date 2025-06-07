@@ -25,6 +25,8 @@ public class UserDbo : EntityDbo
     ///     Почтовый адрес
     /// </summary>
     public string Email { get; set; } = null!;
+    
+    public string? Phone { get; set; }
 
     /// <summary>
     ///     Название организации

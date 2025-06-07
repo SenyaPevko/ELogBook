@@ -23,6 +23,11 @@ public class UserDto : EntityDto
     ///     Почтовый адрес
     /// </summary>
     public string Email { get; set; } = null!;
+    
+    /// <summary>
+    ///     Номер телефона
+    /// </summary>
+    public string? Phone { get; set; }
 
     /// <summary>
     ///     Название организации

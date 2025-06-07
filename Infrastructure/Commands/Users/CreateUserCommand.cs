@@ -26,6 +26,7 @@ public class CreateUserCommand(
             Surname = args.Surname,
             Patronymic = args.Patronymic,
             Email = args.Email,
+            Phone = args.Phone,
             OrganizationName = args.OrganizationName,
             UserRole = UserRole.Unknown
         };

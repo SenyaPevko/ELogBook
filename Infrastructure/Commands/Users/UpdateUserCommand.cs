@@ -24,6 +24,7 @@ public class UpdateUserCommand(
         if (args.Surname is not null) entity.Surname = args.Surname;
         if (args.Patronymic is not null) entity.Patronymic = args.Patronymic;
         if (args.OrganizationId is not null) entity.OrganizationId = args.OrganizationId;
+        if (args.Phone is not null) entity.Phone = args.Phone;
 
         return Task.CompletedTask;
     }
