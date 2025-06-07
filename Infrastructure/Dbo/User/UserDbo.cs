@@ -31,7 +31,7 @@ public class UserDbo : EntityDbo
     /// <summary>
     ///     Название организации
     /// </summary>
-    public string OrganizationName { get; set; } = null!;
+    public string? OrganizationName { get; set; }
 
     /// <summary>
     ///     Id организации - проставляет админ при первой выдаче прав

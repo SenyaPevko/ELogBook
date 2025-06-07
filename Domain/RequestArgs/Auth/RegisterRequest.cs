@@ -32,7 +32,12 @@ public class RegisterRequest : EntityCreationArgs
     /// <summary>
     ///     Название организации
     /// </summary>
-    public required string OrganizationName { get; set; }
+    public string? OrganizationName { get; set; }
+    
+    /// <summary>
+    ///     Идентификатор организации
+    /// </summary>
+    public Guid? OrganizationId { get; set; }
 
     /// <summary>
     ///     Пароль

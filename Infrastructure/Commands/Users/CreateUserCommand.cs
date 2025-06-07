@@ -28,6 +28,7 @@ public class CreateUserCommand(
             Email = args.Email,
             Phone = args.Phone,
             OrganizationName = args.OrganizationName,
+            OrganizationId = args.OrganizationId,
             UserRole = UserRole.Unknown
         };
 

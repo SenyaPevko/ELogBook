@@ -30,7 +30,7 @@ public class User : EntityInfo
     /// <summary>
     ///     Название организации
     /// </summary>
-    public string OrganizationName { get; set; } = null!;
+    public string? OrganizationName { get; set; } = null!;
 
     /// <summary>
     ///     Id организации - проставляет админ при первой выдаче прав
