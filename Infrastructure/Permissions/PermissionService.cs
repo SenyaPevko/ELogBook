@@ -12,6 +12,9 @@ public class PermissionService(
     IEntityPermissionService<ConstructionSitePermission> constructionSitePermissionService, 
     IEntityPermissionService<RegistrationSheetItemPermission> regSheetItemPermissionService,
     IEntityPermissionService<RecordSheetItemPermission> recSheetItemPermissionService,
+    IEntityPermissionService<WorkIssueItemPermission> workIssueItemPermissionService,
+    IEntityPermissionService<OrganizationPermission> organizationPermissionService,
+    IEntityPermissionService<UserPermission> userPermissionService,
     IRepository<User> userRepository,
     IRequestContext requestContext) 
     : IPermissionService
@@ -22,28 +25,43 @@ public class PermissionService(
         if (user is null)
             return new GlobalPermission();
         
-        var constructionPermission = await GetUserConstructionSitePermissionsAsync(null,null, null, cancellationToken);
+        var constructionPermission = await GetUserConstructionSitePermissionsAsync(null, cancellationToken);
+        var organizationPermission = await GetUserOrganizationPermissionsAsync(null, cancellationToken);
+        var userPermission = await GetUserPermissionsAsync(null, cancellationToken);
 
         return new GlobalPermission
         {
             CanAccessAdminPanel = user.UserRole is UserRole.Admin,
             ConstructionSitePermission = constructionPermission,
+            OrganizationPermission = organizationPermission,
+            UserPermission = userPermission,
         };
+    }
+
+    public async Task<OrganizationPermission> GetUserOrganizationPermissionsAsync(Guid? entityId, CancellationToken cancellationToken)
+    {
+        return await organizationPermissionService.GetUserPermissions(entityId, cancellationToken);
+    }
+    
+    public async Task<UserPermission> GetUserPermissionsAsync(Guid? entityId, CancellationToken cancellationToken)
+    {
+        return await userPermissionService.GetUserPermissions(entityId, cancellationToken);
     }
 
     public async Task<ConstructionSitePermission> GetUserConstructionSitePermissionsAsync(
         Guid? constructionSiteId,
-        Guid? recSheetItemId,
-        Guid? regSheetItemId,
         CancellationToken cancellationToken)
     {
         var constructionPermission = await constructionSitePermissionService.GetUserPermissions(
             constructionSiteId, cancellationToken);
         var regSheetItemPermission = await regSheetItemPermissionService.GetUserPermissions(
-            regSheetItemId,
+            constructionSiteId,
             cancellationToken);
         var recSheetItemPermission = await recSheetItemPermissionService.GetUserPermissions(
-            recSheetItemId,
+            constructionSiteId,
+            cancellationToken);
+        var workIssueItemPermission = await workIssueItemPermissionService.GetUserPermissions(
+            constructionSiteId,
             cancellationToken);
 
         return new ConstructionSitePermission
@@ -52,7 +70,8 @@ public class PermissionService(
             CanRead = constructionPermission.CanRead,
             CanUpdate = constructionPermission.CanUpdate,
             RecordSheetItemPermission = recSheetItemPermission,
-            RegistrationSheetItemPermission = regSheetItemPermission
+            RegistrationSheetItemPermission = regSheetItemPermission,
+            WorkIssueItemPermission = workIssueItemPermission
         };
     }
 }

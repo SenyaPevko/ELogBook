@@ -17,7 +17,6 @@ public class PermissionsController : ControllerBase
     /// <param name="service"></param>
     /// <returns></returns>
     [HttpGet("global")]
-    [AllowAnonymous]
     public async Task<ActionResult<GlobalPermission>> GetUserGlobalPermissionsAsync([FromServices] IPermissionService service)
     {
         return await service.GetUserGlobalPermissionsAsync(HttpContext.RequestAborted);
@@ -28,21 +27,42 @@ public class PermissionsController : ControllerBase
     /// </summary>
     /// <param name="service"></param>
     /// <param name="constructionSiteId"></param>
-    /// <param name="recordSheetItemId"></param>
-    /// <param name="registrationSheetItemId"></param>
     /// <returns></returns>
     [HttpGet("constructionSite/{constructionSiteId:guid}")]
-    [AllowAnonymous]
     public async Task<ActionResult<ConstructionSitePermission>> GetUserConstructionSitePermissionsAsync(
         [FromServices] IPermissionService service,
-        [FromRoute] Guid? constructionSiteId,
-        [FromQuery] Guid? recordSheetItemId,
-        [FromQuery] Guid? registrationSheetItemId)
+        [FromRoute] Guid? constructionSiteId)
     {
         return await service.GetUserConstructionSitePermissionsAsync(
             constructionSiteId,
-            recordSheetItemId,
-            registrationSheetItemId,
             HttpContext.RequestAborted);
+    }
+
+    /// <summary>
+    /// Разрешения в рамках организации
+    /// </summary>
+    /// <param name="service"></param>
+    /// <param name="organizationId"></param>
+    /// <returns></returns>
+    [HttpGet("organization/{organizationId:guid}")]
+    public async Task<ActionResult<OrganizationPermission>> GetUserOrganizationPermissionsAsync(
+        [FromServices] IPermissionService service,
+        [FromRoute] Guid? organizationId)
+    {
+        return await service.GetUserOrganizationPermissionsAsync(organizationId, HttpContext.RequestAborted);
+    }
+    
+    /// <summary>
+    /// Разрешения в рамках организации
+    /// </summary>
+    /// <param name="service"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    [HttpGet("user/{userId:guid}")]
+    public async Task<ActionResult<UserPermission>> GetUserPermissionsAsync(
+        [FromServices] IPermissionService service,
+        [FromRoute] Guid? userId)
+    {
+        return await service.GetUserPermissionsAsync(userId, HttpContext.RequestAborted);
     }
 }

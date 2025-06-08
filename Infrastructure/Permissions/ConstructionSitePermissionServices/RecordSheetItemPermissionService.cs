@@ -1,28 +1,44 @@
 using Domain.AccessChecker;
 using Domain.Entities.RecordSheet;
 using Domain.Permissions.ConstructionSite;
-using Domain.Repository;
+using Domain.RequestArgs.Base;
 using Domain.RequestArgs.RecordSheetItems;
-using Infrastructure.Permissions.Base;
 
 namespace Infrastructure.Permissions.ConstructionSitePermissionServices;
 
-public class RecordSheetItemPermissionService(
-    IAccessChecker<RecordSheetItem, RecordSheetItemUpdateArgs> accessChecker,
-    IRepository<RecordSheetItem> repository)
-    : EntityPermissionServiceBase<RecordSheetItem, RecordSheetItemUpdateArgs,
-        RecordSheetItemPermission>(accessChecker, repository)
+public class RecordSheetItemPermissionService(IRecordSheetItemAccessChecker accessChecker)
+    : EntityUnderConstructionSitePermissionServiceBase<RecordSheetItem, RecordSheetItemUpdateArgs,
+        RecordSheetItemPermission>(accessChecker, accessChecker)
 {
-    protected override async Task FillPermissions(Guid? entityId, RecordSheetItemPermission permissions, CancellationToken cancellationToken)
+    protected override async Task FillPermissions(Guid? constructionSiteId, RecordSheetItemPermission permissions)
     {
-        if (entityId is null)
+        if (constructionSiteId is null)
             return;
-        
-        var entity = await Repository.GetByIdAsync(entityId.Value, cancellationToken);
-        if (entity is null)
-            return;
-        
-        /*
-        permissions.CanUpdateOrders = await accessChecker.CanUpdateOrders(entity);*/
+
+        var userRoles = await accessChecker.GetUserRoleTypes(constructionSiteId.Value);
+
+        permissions.CanUpdateDeviations = accessChecker.CanUpdateDeviations(userRoles);
+        permissions.CanUpdateDirections = accessChecker.CanUpdateDirections(userRoles);
+        permissions.CanUpdateRepresentativeId = accessChecker.CanUpdateRepresentativeId(userRoles);
+        permissions.CanUpdateComplianceNoteUserId = accessChecker.CanUpdateComplianceNoteUserId(userRoles);
     }
+
+    protected override RecordSheetItemUpdateArgs FillUpdateArgs() =>
+        new()
+        {
+            Deviations = string.Empty,
+            DeviationFilesIds = new ListUpdateOfId<string>
+            {
+                Add = [string.Empty],
+                Remove = [string.Empty],
+            },
+            Directions = string.Empty,
+            DirectionFilesIds = new ListUpdateOfId<string>
+            {
+                Add = [string.Empty],
+                Remove = [string.Empty],
+            },
+            RepresentativeId = Guid.Empty,
+            ComplianceNoteUserId = Guid.Empty,
+        };
 }

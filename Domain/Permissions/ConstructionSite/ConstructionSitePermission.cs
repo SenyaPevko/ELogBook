@@ -9,4 +9,6 @@ public class ConstructionSitePermission : EntityPermissionsBase
     public RegistrationSheetItemPermission RegistrationSheetItemPermission { get; set; } = null!;
     
     public RecordSheetItemPermission RecordSheetItemPermission { get; set; } = null!;
+    
+    public WorkIssueItemPermission WorkIssueItemPermission { get; set; } = null!;
 }

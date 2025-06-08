@@ -14,7 +14,7 @@ public class OrganizationAccessChecker(IRequestContext context)
         if (baseResult is not null)
             return baseResult;
 
-        return Context.Auth.Role is UserRole.Admin;
+        return true;
     }
 
     public override async Task<bool?> CanCreate()

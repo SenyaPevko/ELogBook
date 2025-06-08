@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Entities.Roles;
 using Domain.Entities.Users;
 using Domain.RequestArgs.Users;
@@ -5,7 +6,8 @@ using Infrastructure.Context;
 
 namespace Infrastructure.AccessCheckers.Users;
 
-public class UserAccessChecker(IRequestContext context) : AccessCheckerBase<User, UserUpdateArgs>(context)
+public class UserAccessChecker(IRequestContext context) 
+    : AccessCheckerBase<User, UserUpdateArgs>(context), IUserAccessChecker
 {
     public override async Task<bool> CanUpdate(User entity)
     {
@@ -17,9 +19,11 @@ public class UserAccessChecker(IRequestContext context) : AccessCheckerBase<User
 
     public override async Task<bool> CanUpdate(UserUpdateArgs updateArgs, User oldEntity, User newEntity)
     {
-        if (updateArgs.OrganizationId is not null)
-            return context.Auth.Role is UserRole.Admin;
+        return updateArgs.OrganizationId is null || CanUpdateOrganization();
+    }
 
-        return true;
+    public bool CanUpdateOrganization()
+    {
+        return context.Auth.Role is UserRole.Admin;
     }
 }

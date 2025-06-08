@@ -1,4 +1,3 @@
-using Domain.Permissions;
 using Domain.Permissions.Base;
 
 namespace Infrastructure.Permissions.Base;

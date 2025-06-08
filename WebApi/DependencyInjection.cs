@@ -20,6 +20,7 @@ using Domain.Entities.Users;
 using Domain.Entities.WorkIssues;
 using Domain.FileStorage;
 using Domain.Models.Auth;
+using Domain.Permissions;
 using Domain.Permissions.ConstructionSite;
 using Domain.Repository;
 using Domain.RequestArgs.Auth;
@@ -291,12 +292,12 @@ public static class DependencyInjection
     {
         services.AddScoped<IAccessChecker<User>, UserAccessChecker>();
         services.AddScoped<IAccessChecker<User, UserUpdateArgs>, UserAccessChecker>();
+        services.AddScoped<IUserAccessChecker, UserAccessChecker>();
 
         services.AddScoped<IAccessChecker<ConstructionSite>, ConstructionSiteAccessChecker>();
         services
             .AddScoped<IAccessChecker<ConstructionSite, ConstructionSiteUpdateArgs>, ConstructionSiteAccessChecker>();
-        services
-            .AddScoped<IConstructionSiteAccessChecker, ConstructionSiteAccessChecker>();
+        services.AddScoped<IConstructionSiteAccessChecker, ConstructionSiteAccessChecker>();
 
         services.AddScoped<IAccessChecker<Organization>, OrganizationAccessChecker>();
         services.AddScoped<IAccessChecker<Organization, OrganizationUpdateArgs>, OrganizationAccessChecker>();
@@ -305,16 +306,19 @@ public static class DependencyInjection
 
         services.AddScoped<IAccessChecker<RecordSheetItem>, RecordSheetItemAccessChecker>();
         services.AddScoped<IAccessChecker<RecordSheetItem, RecordSheetItemUpdateArgs>, RecordSheetItemAccessChecker>();
+        services.AddScoped<IRecordSheetItemAccessChecker, RecordSheetItemAccessChecker>();
 
         services.AddScoped<IAccessChecker<RegistrationSheet>, RegistrationSheetAccessChecker>();
 
         services.AddScoped<IAccessChecker<RegistrationSheetItem>, RegistrationSheetItemAccessChecker>();
+        services.AddScoped<IRegistrationSheetItemAccessChecker, RegistrationSheetItemAccessChecker>();
         services
             .AddScoped<IAccessChecker<RegistrationSheetItem, RegistrationSheetItemUpdateArgs>,
                 RegistrationSheetItemAccessChecker>();
 
         services.AddScoped<IAccessChecker<WorkIssueItem>, WorkIssueItemAccessChecker>();
         services.AddScoped<IAccessChecker<WorkIssueItem, WorkIssueItemUpdateArgs>, WorkIssueItemAccessChecker>();
+        services.AddScoped<IWorkIssueItemAccessChecker, WorkIssueItemAccessChecker>();
 
         services.AddScoped<IAccessChecker<WorkIssue>, WorkIssueAccessChecker>();
 
@@ -480,6 +484,9 @@ public static class DependencyInjection
         services.AddScoped<IEntityPermissionService<ConstructionSitePermission>, ConstructionSitePermissionService>();
         services.AddScoped<IEntityPermissionService<RegistrationSheetItemPermission>, RegistrationSheetItemPermissionService>();
         services.AddScoped<IEntityPermissionService<RecordSheetItemPermission>, RecordSheetItemPermissionService>();
+        services.AddScoped<IEntityPermissionService<WorkIssueItemPermission>, WorkIssueItemPermissionService>();
+        services.AddScoped<IEntityPermissionService<OrganizationPermission>, OrganizationPermissionService>();
+        services.AddScoped<IEntityPermissionService<UserPermission>, UserPermissionService>();
         services.AddScoped<IPermissionService, PermissionService>();
 
         return services;

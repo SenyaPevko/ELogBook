@@ -1,3 +1,4 @@
+using Domain.AccessChecker;
 using Domain.Entities.ConstructionSite;
 using Domain.Entities.RecordSheet;
 using Domain.Entities.Roles;
@@ -11,29 +12,41 @@ namespace Infrastructure.AccessCheckers.RecordSheets;
 public class RecordSheetItemAccessChecker(
     IRequestContext context,
     IRepository<ConstructionSite, InvalidConstructionSiteReason, ConstructionSiteSearchRequest> constructionSiteStorage)
-    : AccessCheckerBase<RecordSheetItem, RecordSheetItemUpdateArgs>(context)
+    : AccessCheckerBase<RecordSheetItem, RecordSheetItemUpdateArgs>(context), IRecordSheetItemAccessChecker
 {
     public override async Task<bool> CanCreate(RecordSheetItem entity)
     {
         var userRoles = await GetUserRoleTypes(entity);
 
-        return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+        return CanCreate(userRoles);
     }
 
     public override async Task<bool> CanUpdate(RecordSheetItem entity)
     {
         var userRoles = await GetUserRoleTypes(entity);
 
+        return CanUpdate(userRoles);
+    }
+
+    public bool CanCreate(List<ConstructionSiteUserRoleType> userRoles)
+    {
+        return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+    }
+    
+    public bool CanRead(List<ConstructionSiteUserRoleType> userRoles)
+    {
+        return true;
+    }
+    
+    public bool CanUpdate(List<ConstructionSiteUserRoleType> userRoles)
+    {
         return userRoles.Any(r =>
             r is ConstructionSiteUserRoleType.AuthorSupervision or ConstructionSiteUserRoleType.Customer
                 or ConstructionSiteUserRoleType.Operator);
     }
-
-    public override async Task<bool> CanUpdate(RecordSheetItemUpdateArgs updateArgs, RecordSheetItem oldEntity,
-        RecordSheetItem newEntity)
+    
+    public bool CanUpdate(RecordSheetItemUpdateArgs updateArgs, List<ConstructionSiteUserRoleType> userRoles)
     {
-        var userRoles = await GetUserRoleTypes(oldEntity);
-
         var canUpdateDeviations = updateArgs.Deviations is null || CanUpdateDeviations(userRoles);
         var canUpdateDirections = updateArgs.Directions is null || CanUpdateDirections(userRoles);
         var canUpdateRepresentativeId = updateArgs.RepresentativeId is null || CanUpdateRepresentativeId(userRoles);
@@ -43,7 +56,23 @@ public class RecordSheetItemAccessChecker(
         return canUpdateDeviations && canUpdateDirections && canUpdateRepresentativeId && canUpdateComplianceNoteUserId;
     }
 
-    private async Task<List<ConstructionSiteUserRoleType>> GetUserRoleTypes(RecordSheetItem entity)
+    public override async Task<bool> CanUpdate(RecordSheetItemUpdateArgs updateArgs, RecordSheetItem oldEntity,
+        RecordSheetItem newEntity)
+    {
+        var userRoles = await GetUserRoleTypes(oldEntity);
+
+        return CanUpdate(updateArgs, userRoles);
+    }
+
+    public async Task<List<ConstructionSiteUserRoleType>> GetUserRoleTypes(Guid constructionSiteId)
+    {
+        // todo: небезопасный First, хотя логичный - нужно переписывать логику валидации зависимостей и связанности, чтобы такой фигни не было
+        var constructionSite = await constructionSiteStorage.GetByIdAsync(constructionSiteId, default);
+
+        return constructionSite is null ? [] : constructionSite.GetUserRoleTypes(Context);
+    }
+    
+    public async Task<List<ConstructionSiteUserRoleType>> GetUserRoleTypes(RecordSheetItem entity)
     {
         // todo: небезопасный First, хотя логичный - нужно переписывать логику валидации зависимостей и связанности, чтобы такой фигни не было
         var constructionSite = (await constructionSiteStorage.SearchAsync(new ConstructionSiteSearchRequest
@@ -52,22 +81,22 @@ public class RecordSheetItemAccessChecker(
         return constructionSite.GetUserRoleTypes(Context);
     }
 
-    private bool CanUpdateDeviations(List<ConstructionSiteUserRoleType> userRoles)
+    public bool CanUpdateDeviations(List<ConstructionSiteUserRoleType> userRoles)
     {
         return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
     }
 
-    private bool CanUpdateDirections(List<ConstructionSiteUserRoleType> userRoles)
+    public bool CanUpdateDirections(List<ConstructionSiteUserRoleType> userRoles)
     {
         return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
     }
 
-    private bool CanUpdateRepresentativeId(List<ConstructionSiteUserRoleType> userRoles)
+    public bool CanUpdateRepresentativeId(List<ConstructionSiteUserRoleType> userRoles)
     {
         return userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator);
     }
 
-    private bool CanUpdateComplianceNoteUserId(List<ConstructionSiteUserRoleType> userRoles)
+    public bool CanUpdateComplianceNoteUserId(List<ConstructionSiteUserRoleType> userRoles)
     {
         return userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator);
     }

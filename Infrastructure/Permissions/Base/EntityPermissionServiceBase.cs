@@ -21,12 +21,15 @@ public abstract class EntityPermissionServiceBase<TEntity, TUpdateArgs, TPermiss
     {
         var entity = entityId is null ? null : await Repository.GetByIdAsync(entityId.Value, cancellationToken);
 
-        return new TPermission
+        var permission = new TPermission
         {
             CanCreate = await CanCreate(entity, cancellationToken),
             CanUpdate = await CanUpdate(entity, cancellationToken),
             CanRead = await CanRead(entity, cancellationToken),
         };
+        await FillPermissions(entityId, permission, cancellationToken);
+        
+        return permission;
     }
 
     protected virtual async Task FillPermissions(Guid? entityId, TPermission permissions, CancellationToken cancellationToken)
@@ -45,8 +48,8 @@ public abstract class EntityPermissionServiceBase<TEntity, TUpdateArgs, TPermiss
     protected virtual async Task<bool> CanUpdate(TEntity? entity, CancellationToken cancellationToken)
     {
         var canUpdate = await AccessChecker.CanUpdate();
-        /*if (entity is not null)
-            canUpdate ??= await AccessChecker.CanUpdate(entity);*/
+        if (entity is not null)
+            canUpdate ??= await AccessChecker.CanUpdate(entity) && await AccessChecker.CanUpdate(FillUpdateArgs(), entity, entity);
         
         return canUpdate ?? false;
     }
@@ -59,4 +62,6 @@ public abstract class EntityPermissionServiceBase<TEntity, TUpdateArgs, TPermiss
         
         return canRead ?? false;
     }
+
+    protected abstract TUpdateArgs FillUpdateArgs();
 }
