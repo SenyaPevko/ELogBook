@@ -70,12 +70,15 @@ public class NotificationStorage(AppDbContext dbContext, IRequestContext request
 
         if (request.UserId is not null)
             filters.Add(builder.Eq(x => x.UserId, request.UserId));
+        
+        if (request.IsRead is not null)
+            filters.Add(builder.Eq(x => x.IsRead, request.IsRead));
 
         return filters;
     }
     
     protected override bool IsSpecificSearchRequestEmpty(NotificationSearchRequest request)
     {
-        return request.UserId is null;
+        return request.UserId is null && request.IsRead is null;
     }
 }
