@@ -1,4 +1,5 @@
 using Domain.AccessChecker;
+using Domain.Entities.Roles;
 using Domain.Entities.Users;
 using Domain.Permissions;
 using Domain.Repository;
@@ -16,6 +17,7 @@ public class UserPermissionService(
     protected override async Task FillPermissions(Guid? entityId, UserPermission permissions, CancellationToken cancellationToken)
     {
         permissions.CanUpdateOrganization = accessChecker.CanUpdateOrganization();
+        permissions.CanUpdateUserRole = accessChecker.CanUpdateUserRole();
     }
     
     protected override UserUpdateArgs FillUpdateArgs() =>
@@ -26,5 +28,6 @@ public class UserPermissionService(
             Patronymic = string.Empty,
             Phone = string.Empty,
             OrganizationId = Guid.Empty,
+            UserRole = UserRole.Unknown
         };
 }

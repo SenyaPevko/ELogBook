@@ -19,10 +19,18 @@ public class UserAccessChecker(IRequestContext context)
 
     public override async Task<bool> CanUpdate(UserUpdateArgs updateArgs, User oldEntity, User newEntity)
     {
-        return updateArgs.OrganizationId is null || CanUpdateOrganization();
+        var canUpdateOrganization = updateArgs.OrganizationId is null || CanUpdateOrganization();
+        var canUpdateUserRole = updateArgs.UserRole is null || CanUpdateUserRole();
+        
+        return canUpdateUserRole && canUpdateOrganization; 
     }
 
     public bool CanUpdateOrganization()
+    {
+        return context.Auth.Role is UserRole.Admin;
+    }
+    
+    public bool CanUpdateUserRole()
     {
         return context.Auth.Role is UserRole.Admin;
     }

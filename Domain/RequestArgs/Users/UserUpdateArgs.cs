@@ -1,3 +1,4 @@
+using Domain.Entities.Roles;
 using Domain.RequestArgs.Base;
 
 namespace Domain.RequestArgs.Users;
@@ -28,4 +29,6 @@ public class UserUpdateArgs : EntityUpdateArgs
     ///     Id организации - проставляет админ при первой выдаче прав
     /// </summary>
     public Guid? OrganizationId { get; set; }
+    
+    public UserRole? UserRole { get; set; }
 }

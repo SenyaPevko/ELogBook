@@ -6,4 +6,5 @@ namespace Domain.AccessChecker;
 public interface IUserAccessChecker : IAccessChecker<User, UserUpdateArgs>
 {
     bool CanUpdateOrganization();
+    bool CanUpdateUserRole();
 }
