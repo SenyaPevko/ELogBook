@@ -37,6 +37,9 @@ public class ConstructionSiteAccessChecker(IRequestContext context, IRepository<
 
         if (userRoles.Count == 0)
             return false;
+        
+        if(userRoles.Any(x => x == ConstructionSiteUserRoleType.Admin))
+            return true;
 
         var canUpdateOrders = updateArgs.Orders is null || await CanUpdateOrders(newEntity);
         var canUpdateFullName = updateArgs.FullName is null || Context.Auth.Role is UserRole.Admin;

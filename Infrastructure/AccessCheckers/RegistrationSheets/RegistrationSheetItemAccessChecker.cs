@@ -25,6 +25,9 @@ public class RegistrationSheetItemAccessChecker(
     public override async Task<bool> CanUpdate(RegistrationSheetItem entity)
     {
         var userRoles = await GetUserRoleTypes(entity);
+        if (userRoles.Any(x => x == ConstructionSiteUserRoleType.Admin))
+            return true;
+        
         var passedTime = Context.RequestTime - entity.UpdateInfo.CreatedAt;
 
         return userRoles.Any(r => r is ConstructionSiteUserRoleType.AuthorSupervision) && passedTime.TotalDays < 5;
@@ -41,7 +44,8 @@ public class RegistrationSheetItemAccessChecker(
 
     public bool CanCreate(List<ConstructionSiteUserRoleType> userRoles)
     {
-        return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+        return userRoles.Any(x =>
+            x is ConstructionSiteUserRoleType.Admin or ConstructionSiteUserRoleType.AuthorSupervision);
     }
 
     public bool CanRead(List<ConstructionSiteUserRoleType> userRoles)
@@ -51,7 +55,7 @@ public class RegistrationSheetItemAccessChecker(
 
     public bool CanUpdate(List<ConstructionSiteUserRoleType> userRoles)
     {
-        return userRoles.Any(r => r is ConstructionSiteUserRoleType.AuthorSupervision);
+        return userRoles.Any(r => r is ConstructionSiteUserRoleType.AuthorSupervision or ConstructionSiteUserRoleType.Admin);
     }
 
     public bool CanUpdate(RegistrationSheetItemUpdateArgs updateArgs, List<ConstructionSiteUserRoleType> userRoles)

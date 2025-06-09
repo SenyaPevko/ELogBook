@@ -39,7 +39,7 @@ public class WorkIssueItemAccessChecker(
 
     public bool CanCreate(List<ConstructionSiteUserRoleType> userRoles)
     {
-        return userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator);
+        return userRoles.Any(r => r is ConstructionSiteUserRoleType.Customer or ConstructionSiteUserRoleType.Operator or ConstructionSiteUserRoleType.Admin);
     }
 
     public bool CanRead(List<ConstructionSiteUserRoleType> userRoles)
@@ -49,7 +49,7 @@ public class WorkIssueItemAccessChecker(
 
     public bool CanUpdate(List<ConstructionSiteUserRoleType> userRoles)
     {
-        return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+        return userRoles.Any(x => x is ConstructionSiteUserRoleType.AuthorSupervision or ConstructionSiteUserRoleType.Admin);
     }
 
     public bool CanUpdate(WorkIssueItemUpdateArgs updateArgs, List<ConstructionSiteUserRoleType> userRoles)

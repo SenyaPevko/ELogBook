@@ -30,7 +30,7 @@ public class RecordSheetItemAccessChecker(
 
     public bool CanCreate(List<ConstructionSiteUserRoleType> userRoles)
     {
-        return userRoles.Contains(ConstructionSiteUserRoleType.AuthorSupervision);
+        return userRoles.Any(x =>x is ConstructionSiteUserRoleType.AuthorSupervision or ConstructionSiteUserRoleType.Admin);
     }
     
     public bool CanRead(List<ConstructionSiteUserRoleType> userRoles)
@@ -42,11 +42,14 @@ public class RecordSheetItemAccessChecker(
     {
         return userRoles.Any(r =>
             r is ConstructionSiteUserRoleType.AuthorSupervision or ConstructionSiteUserRoleType.Customer
-                or ConstructionSiteUserRoleType.Operator);
+                or ConstructionSiteUserRoleType.Operator or ConstructionSiteUserRoleType.Admin);
     }
     
     public bool CanUpdate(RecordSheetItemUpdateArgs updateArgs, List<ConstructionSiteUserRoleType> userRoles)
     {
+        if (userRoles.Contains(ConstructionSiteUserRoleType.Admin))
+            return true;
+        
         var canUpdateDeviations = updateArgs.Deviations is null || CanUpdateDeviations(userRoles);
         var canUpdateDirections = updateArgs.Directions is null || CanUpdateDirections(userRoles);
         var canUpdateRepresentativeId = updateArgs.RepresentativeId is null || CanUpdateRepresentativeId(userRoles);
