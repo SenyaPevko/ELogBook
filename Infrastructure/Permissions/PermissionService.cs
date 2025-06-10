@@ -69,6 +69,7 @@ public class PermissionService(
             CanCreate = constructionPermission.CanCreate,
             CanRead = constructionPermission.CanRead,
             CanUpdate = constructionPermission.CanUpdate,
+            CanUpdateOrders = constructionPermission.CanUpdateOrders,
             RecordSheetItemPermission = recSheetItemPermission,
             RegistrationSheetItemPermission = regSheetItemPermission,
             WorkIssueItemPermission = workIssueItemPermission
